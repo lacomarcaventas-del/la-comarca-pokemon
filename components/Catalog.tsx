@@ -1,6 +1,6 @@
 "use client";
-import {useEffect,useState} from "react";
-import {supabaseBrowser} from "../lib/supabase";
+import{useEffect,useState}from"react";
+import{supabaseBrowser}from"../lib/supabase";
 type Card={id:string,name:string,card_number:string|null,rarity:string|null,language:string,condition:string,image_url:string|null,price:number,stock:number,set_id:string|null,sets?:{name:string}|null};
 type CartItem={card:Card,qty:number};
 export default function Catalog(){
@@ -14,10 +14,8 @@ export default function Catalog(){
 }
 function OrderForm({cart,onDone}:{cart:CartItem[],onDone:()=>void}){
  const [name,setName]=useState(""),[phone,setPhone]=useState(""),[email,setEmail]=useState(""),[notes,setNotes]=useState(""),[busy,setBusy]=useState(false),[msg,setMsg]=useState("");
- const orderTotal=cart.reduce((a,i)=>a+Number(i.card.price)*i.qty,0);
- async function send(e:any){e.preventDefault();setBusy(true);setMsg("");const sb=supabaseBrowser();const items=cart.map(i=>({card_id:i.card.id,quantity:i.qty}));const {data:order,error}=await sb.rpc("create_order_with_items",{p_customer_name:name,p_customer_email:email||null,p_customer_phone:phone,p_notes:notes||null,p_items:items});if(error){setMsg(error.message);setBusy(false);return}
- const orderPayload={id:order,customer_name:name,customer_phone:phone,customer_email:email||"",notes:notes||"",total:orderTotal,items:cart.map(i=>({name:i.card.name,quantity:i.qty,unit_price:i.card.price}))};
- const {data:mailData,error:mailError}=await sb.functions.invoke("send-order-email",{body:{order:orderPayload}});
- let mailMessage="Aviso enviado a La Comarca."; if(mailError){mailMessage="No se pudo enviar el aviso por correo: "+mailError.message;} else if(mailData?.id===undefined && mailData?.error){mailMessage="No se pudo enviar el aviso por correo: "+mailData.error;}
- setMsg("Pedido recibido. Folio: "+String(order).slice(0,8).toUpperCase()+". "+mailMessage);setBusy(false);setTimeout(onDone,2500)}
+ async function send(e:any){e.preventDefault();setBusy(true);setMsg("");const sb=supabaseBrowser();const items=cart.map(i=>({card_id:i.card.id,quantity:i.qty}));const {data:result,error}=await sb.rpc("create_order_transactional",{p_customer_name:name,p_customer_email:email||null,p_customer_phone:phone,p_notes:notes||null,p_items:items});if(error){setMsg(error.message);setBusy(false);return}const orderId=result?.order_id;const orderTotal=Number(result?.total||0);if(!orderId){setMsg("No se pudo crear el pedido.");setBusy(false);return}
+ const orderPayload={id:orderId,customer_name:name,customer_phone:phone,customer_email:email||"",notes:notes||"",total:orderTotal,items:cart.map(i=>({name:i.card.name,quantity:i.qty,unit_price:i.card.price}))};
+ const {data:mailData,error:mailError}=await sb.functions.invoke("send-order-email",{body:{order:orderPayload}});let mailMessage="Aviso enviado a La Comarca.";if(mailError)mailMessage="No se pudo enviar el aviso por correo: "+mailError.message;else if(mailData?.id===undefined&&mailData?.error)mailMessage="No se pudo enviar el aviso por correo: "+mailData.error;
+ setMsg("Pedido recibido. Folio: "+String(orderId).slice(0,8).toUpperCase()+". "+mailMessage);setBusy(false);setTimeout(onDone,2500)}
  return <form onSubmit={send} className="panel"><h3>Datos del pedido</h3><label>Nombre</label><input required value={name} onChange={e=>setName(e.target.value)}/><label>WhatsApp / teléfono</label><input required value={phone} onChange={e=>setPhone(e.target.value)}/><label>Correo</label><input type="email" value={email} onChange={e=>setEmail(e.target.value)}/><label>Notas</label><textarea value={notes} onChange={e=>setNotes(e.target.value)}/><button className="btn" disabled={busy}>{busy?"Confirmando...":"Enviar pedido"}</button>{msg&&<p>{msg}</p>}</form>}
