@@ -1,8 +1,22 @@
 import Link from "next/link";
 import FacebookFeed from "../components/FacebookFeed";
-export default function Home(){
-  return <>
-    <header className="top"><b>La Comarca</b><nav className="topNav"><Link href="/cuenta">👤 Mi cuenta</Link></nav></header>
-    <main className="wrap hero"><div className="panel"><h1>La Comarca</h1><p>Consulta nuestro catálogo de cartas disponibles y arma tu carrito.</p><div className="actions"><Link href="/catalogo"><button className="btn">Ver catálogo</button></Link><Link href="/cuenta"><button className="btn2">👤 Mi cuenta / Iniciar sesión</button></Link></div></div><FacebookFeed/></main>
-  </>
-}
+import BrandLogo from "../components/BrandLogo";
+
+const lines=[
+  ["Pokémon","1,248","pokemon"],["Magic: The Gathering","842","magic"],["Yu-Gi-Oh!","1,034","yugioh"],["One Piece","656","onepiece"],
+  ["Lorcana","426","lorcana"],["Weiss Schwarz","318","weiss"],["Gundam","285","gundam"],["D&D","192","dnd"]
+];
+
+export default function Home(){return <div className="siteShell">
+  <header className="top siteTop"><Link href="/" className="logoLink"><BrandLogo/></Link><nav className="mainNav"><Link className="active" href="/catalogo">Catálogo</Link><a href="#lineas">Categorías</a><a href="#destacados">Ofertas</a><a href="#destacados">Preordenes</a><a href="#comunidad">Comunidad</a></nav><div className="topActions"><Link href="/cuenta">♙ Mi cuenta</Link><Link href="/catalogo" className="cartMini">🛒 Carrito</Link></div></header>
+  <main>
+    <section className="storeHero"><div className="heroGlow"/><div className="heroContent wrap"><div className="heroCopy"><span className="eyebrow">ESPECIALISTAS EN TCG</span><h1>CREANDO DIVERSIÓN<br/><em>PARA TODOS</em></h1><p>Cartas · Juegos · Coleccionismo · Hobby</p><small>Tu próxima aventura comienza aquí.</small><div className="actions"><Link href="/catalogo" className="btn heroBtn">Explorar el catálogo →</Link><Link href="/cuenta" className="btn2 heroBtn2">Mi cuenta</Link></div></div><div className="heroBrand"><BrandLogo/><span>TCG · JUEGOS · COLECCIONISMO · HOBBY</span></div></div></section>
+    <section className="wrap searchBand"><div className="searchBig">⌕ <span>Buscar cartas, productos, sets...</span></div><div className="quickFilters"><span>Categoría⌄</span><span>Set⌄</span><span>Idioma⌄</span><span>Condición⌄</span><span>Precio⌄</span><Link href="/catalogo">Todos los filtros →</Link></div></section>
+    <section id="lineas" className="wrap sectionBlock"><div className="sectionTitle"><h2>Explora nuestras líneas</h2><span>La Comarca · TCG & Hobby</span></div><div className="lineGrid">{lines.map(([name,count,key])=><Link href={`/catalogo?category=${encodeURIComponent(name)}`} className={`lineCard ${key}`} key={key}><div className="lineMark">{key==='pokemon'?'POKÉMON':key==='magic'?'MAGIC':key==='yugioh'?'Yu-Gi-Oh!':key==='onepiece'?'ONE PIECE':key==='lorcana'?'Disney LORCANA':key==='weiss'?'Weiss Schwarz':key==='gundam'?'GUNDAM':'D&D'}</div><strong>{name}</strong><small>{count} productos</small></Link>)}</div></section>
+    <section id="destacados" className="wrap sectionBlock"><div className="sectionTitle"><h2>Destacados de La Comarca</h2><Link href="/catalogo">Ver todos →</Link></div><div className="featureGrid"><Feature tag="NUEVO" title="Pokémon TCG" product="Mega Evolution Elite Trainer Box" price="$890 MXN"/><Feature tag="PREORDEN" title="Magic: The Gathering" product="El Señor de los Anillos Bundle" price="$1,600 MXN"/><Feature tag="OFERTA" title="Yu-Gi-Oh!" product="Rarity Collection 25th Anniversary Box" price="$2,250 MXN"/><Feature tag="ÚLTIMAS PIEZAS" title="One Piece Card Game" product="OP-06 Wings of the Captain Box" price="$1,950 MXN"/></div></section>
+    <section id="comunidad" className="wrap benefits"><div><b>◈</b><span><strong>Envíos a todo México</strong><small>Envíos seguros y rápidos</small></span></div><div><b>◇</b><span><strong>Tienda 100% segura</strong><small>Protección en tus compras</small></span></div><div><b>♧</b><span><strong>Atención personalizada</strong><small>Estamos para ayudarte</small></span></div><div><b>♙</b><span><strong>Comunidad La Comarca</strong><small>Eventos, torneos y más</small></span></div></section>
+    <section className="wrap feedSection"><div className="sectionTitle"><h2>Últimas publicaciones</h2><a href="https://www.facebook.com/ComarcaTCG" target="_blank" rel="noreferrer">Ver Facebook →</a></div><FacebookFeed/></section>
+  </main>
+  <footer className="siteFooter"><BrandLogo/><span>La Comarca · Campeche, México · TCG · Juegos · Coleccionismo · Hobby</span></footer>
+</div>}
+function Feature({tag,title,product,price}:{tag:string,title:string,product:string,price:string}){return <article className="featureCard"><span className="tag">{tag}</span><div className="featureArt">✦</div><div className="featureInfo"><small>{title}</small><strong>{product}</strong><em>INGLÉS</em><b>{price}</b><span>Stock disponible</span></div><button aria-label={`Agregar ${product}`}>🛒</button></article>}
