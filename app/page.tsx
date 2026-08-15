@@ -15,5 +15,4 @@ export default function Home(){return <div className="siteShell">
     <section className="wrap feedSection"><div className="sectionTitle"><h2>Últimas publicaciones</h2><a href="https://www.facebook.com/ComarcaTCG" target="_blank" rel="noreferrer">Ver Facebook →</a></div><FacebookFeed/></section>
   </main>
   <footer className="siteFooter"><BrandLogo/><span>La Comarca · Campeche, México · TCG · Juegos · Coleccionismo · Hobby</span></footer>
-  <style jsx>{`.navPills a{padding:9px 16px!important;border:1px solid #5c4327!important;border-bottom-color:#5c4327!important;border-radius:999px;color:#d9d0c4;transition:.18s ease;background:rgba(13,20,29,.72)}.navPills a:hover{color:#fff!important;border-color:#e0a04f!important;background:linear-gradient(135deg,#25170d,#151b24);transform:translateY(-1px);box-shadow:0 6px 18px #0007}.navPills a:first-child{color:#f0b45b;border-color:#8a5b2a!important}`}</style>
 </div>}
