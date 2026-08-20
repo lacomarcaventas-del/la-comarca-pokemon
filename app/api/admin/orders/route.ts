@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 function config(){
-  const url=process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  return {url,anon};
+  // Keep server routes aligned with the browser Supabase configuration.
+  const url=process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://wwqkeeducvxxvdpdxxnu.supabase.co';
+  const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_kPyc-lUnT2-pL9yUF-ITlg_Kr6Ylnwh';
+  return {url,key};
 }
 
 async function adminClient(req:NextRequest){
-  const {url,anon}=config();
-  if(!url||!anon)throw new Error('Configuración de Supabase incompleta.');
+  const {url,key}=config();
   const auth=req.headers.get('authorization')||'';
   const token=auth.startsWith('Bearer ')?auth.slice(7):'';
-  const client=createClient(url,anon,{global:{headers:{Authorization:`Bearer ${token}`}}});
+  if(!token)throw new Error('No autorizado.');
+  const client=createClient(url,key,{global:{headers:{Authorization:`Bearer ${token}`}}});
   const {data:{user},error}=await client.auth.getUser();
   if(error||!user)throw new Error('No autorizado.');
   const {data:profile,error:profileError}=await client.from('profiles').select('role').eq('id',user.id).maybeSingle();
@@ -30,10 +31,7 @@ function errorResponse(e:any,fallback:string){
 export async function GET(req:NextRequest){
   try{
     const admin=await adminClient(req);
-    const {data,error}=await admin
-      .from('orders')
-      .select('*,order_items(quantity,unit_price,cards(name,card_number))')
-      .order('created_at',{ascending:false});
+    const {data,error}=await admin.from('orders').select('*,order_items(quantity,unit_price,cards(name,card_number))').order('created_at',{ascending:false});
     if(error)throw error;
     const ids=(data||[]).map((o:any)=>o.id);
     let history:any[]=[];
@@ -43,9 +41,7 @@ export async function GET(req:NextRequest){
       history=r.data||[];
     }
     return NextResponse.json({orders:data||[],history});
-  }catch(e:any){
-    return errorResponse(e,'No se pudieron cargar los pedidos.');
-  }
+  }catch(e:any){return errorResponse(e,'No se pudieron cargar los pedidos.');}
 }
 
 export async function PATCH(req:NextRequest){
@@ -62,7 +58,5 @@ export async function PATCH(req:NextRequest){
     const {data,error}=await admin.from('orders').update(patch).eq('id',orderId).select().single();
     if(error)throw error;
     return NextResponse.json({ok:true,order:data});
-  }catch(e:any){
-    return errorResponse(e,'No se pudo actualizar el pedido.');
-  }
+  }catch(e:any){return errorResponse(e,'No se pudo actualizar el pedido.');}
 }
