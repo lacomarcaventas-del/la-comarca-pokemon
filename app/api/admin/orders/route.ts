@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 function config(){
-  // Keep server routes aligned with the browser Supabase configuration.
   const url=process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://wwqkeeducvxxvdpdxxnu.supabase.co';
   const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_kPyc-lUnT2-pL9yUF-ITlg_Kr6Ylnwh';
   return {url,key};
@@ -50,11 +49,20 @@ export async function PATCH(req:NextRequest){
     const body=await req.json();
     const {orderId,status,tracking_carrier,tracking_number}=body;
     if(!orderId)return NextResponse.json({error:'Pedido inválido.'},{status:400});
+
+    // Paid is the only transition that moves inventory.
+    if(status==='paid'){
+      const {data,error}=await admin.rpc('confirm_order_payment',{p_order_id:orderId});
+      if(error)throw error;
+      return NextResponse.json({ok:true,order:data});
+    }
+
     const patch:any={updated_at:new Date().toISOString()};
     if(status)patch.status=status;
     if(tracking_carrier!==undefined)patch.tracking_carrier=tracking_carrier;
     if(tracking_number!==undefined)patch.tracking_number=tracking_number;
     if(status==='shipped')patch.shipped_at=new Date().toISOString();
+    if(status==='cancelled')patch.cancelled_at=new Date().toISOString();
     const {data,error}=await admin.from('orders').update(patch).eq('id',orderId).select().single();
     if(error)throw error;
     return NextResponse.json({ok:true,order:data});
