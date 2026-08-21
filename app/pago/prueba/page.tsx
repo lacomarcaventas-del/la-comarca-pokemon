@@ -32,10 +32,19 @@ function PagoPruebaContenido(){
   useEffect(()=>{(async()=>{
     if(!orderId){setMessage("No encontramos el pedido.");return;}
     const sb=supabaseBrowser();
-    const {data:{user}}=await sb.auth.getUser();
-    if(!user){router.replace("/cuenta");return;}
-    const {data,error}=await sb.from("orders").select("total,status").eq("id",orderId).eq("customer_id",user.id).single();
-    if(error||!data){setMessage("No fue posible cargar el pedido.");return;}
+    const {data:{user},error:userError}=await sb.auth.getUser();
+    if(userError||!user){router.replace("/cuenta");return;}
+
+    // La política RLS ya limita el acceso a los pedidos del cliente autenticado.
+    // Evitamos duplicar el filtro customer_id para que un cambio de sesión o
+    // serialización no convierta un pedido válido en un falso "no encontrado".
+    const {data,error}=await sb.from("orders").select("id,total,status").eq("id",orderId).maybeSingle();
+    if(error){
+      console.error("No fue posible cargar pedido para Clip",error);
+      setMessage(extractMessage(error)||"No fue posible cargar el pedido.");
+      return;
+    }
+    if(!data){setMessage("No encontramos este pedido o ya no tienes acceso a él.");return;}
     if(data.status!=="pending"&&data.status!=="contacted"){router.replace(`/pago/resultado?order=${orderId}`);return;}
     setTotal(Number(data.total));
     const key=process.env.NEXT_PUBLIC_CLIP_TEST_API_KEY;
