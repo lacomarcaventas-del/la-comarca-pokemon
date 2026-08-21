@@ -73,7 +73,7 @@ function PagoPruebaContenido(){
       const cardToken=await cardRef.current.cardToken();
       const cardTokenId=cardToken?.id;
       if(!cardTokenId||typeof cardTokenId!=="string"){
-        throw new Error(extractMessage(cardToken,"Respuesta de Clip sin Card Token ID."));
+        throw new Error(extractMessage(cardToken)||"Respuesta de Clip sin Card Token ID.");
       }
       const sb=supabaseBrowser();
       const {data,error}=await sb.functions.invoke("process-clip-test-payment",{body:{orderId,cardToken:cardTokenId}});
