@@ -7,23 +7,28 @@ function PagoResultadoContenido(){
   const q=useSearchParams();
   const orderId=q.get("order");
   const [status,setStatus]=useState("Verificando pago...");
-  const [detail,setDetail]=useState("Estamos confirmando el estado de tu pedido.");
+  const [detail,setDetail]=useState("Estamos confirmando el estado de tu pedido con Clip.");
 
   useEffect(()=>{
     let timer:any;
+    let stopped=false;
     async function check(){
       if(!orderId){
         setStatus("Pago sin referencia");
         setDetail("No encontramos el pedido asociado al pago.");
         return;
       }
+
       const sb=supabaseBrowser();
-      const {data,error}=await sb.from("orders").select("status,payment_provider,payment_completed_at").eq("id",orderId).single();
-      if(error){
-        setStatus("No fue posible consultar el pedido");
-        setDetail("Puedes revisar el estado desde Mi cuenta.");
+      const {data,error}=await sb.functions.invoke("check-clip-payment",{body:{orderId}});
+      if(stopped) return;
+
+      if(error||!data?.ok){
+        setStatus("Pago en verificación");
+        setDetail("Estamos esperando la confirmación final de Clip. Esta página se actualizará automáticamente.");
         return;
       }
+
       if(data.status==="paid"){
         setStatus("¡Pago confirmado!");
         setDetail("Tu pedido fue pagado correctamente y ya está siendo procesado.");
@@ -37,9 +42,10 @@ function PagoResultadoContenido(){
         setDetail("Clip todavía está confirmando el resultado. Esta página se actualizará automáticamente.");
       }
     }
+
     check();
     timer=setInterval(check,3000);
-    return()=>clearInterval(timer);
+    return()=>{stopped=true;clearInterval(timer);};
   },[orderId]);
 
   return <main className="wrap"><section className="panel center"><h1 className="brand">La Comarca</h1><h2>{status}</h2><p className="muted">{detail}</p>{orderId&&<p className="notice">Pedido: {orderId.slice(0,8).toUpperCase()}</p>}<div className="actions" style={{justifyContent:"center",marginTop:18}}><a className="btn" href="/cuenta">Ver mi pedido</a><a className="btn2" href="/catalogo">Volver al catálogo</a></div></section></main>;
