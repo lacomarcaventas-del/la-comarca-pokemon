@@ -7,7 +7,7 @@ declare global { interface Window { ClipSDK?: any } }
 
 function PagoPruebaContenido(){
   const q=useSearchParams(); const router=useRouter(); const orderId=q.get("order");
-  const [total,setTotal]=useState<number|null>(null); const [message,setMessage]=useState("Preparando pago de prueba..."); const [ready,setReady]=useState(false); const [busy,setBusy]=useState(false); const cardRef=useRef<any>(null);
+  const [total,setTotal]=useState<number|null>(null); const [message,setMessage]=useState("Preparando pago de prueba..."); const [ready,setReady]=useState(false); const [busy,setBusy]=useState(false); const [challenge,setChallenge]=useState<{url:string,paymentId:string}|null>(null); const cardRef=useRef<any>(null);
 
   const extractMessage=(value:any,depth=0):string=>{
     if(value==null)return "";
@@ -51,6 +51,30 @@ function PagoPruebaContenido(){
     else{const s=document.createElement("script");s.src="https://sdk.clip.mx/js/clip-sdk.js";s.async=true;s.dataset.clipSdk="true";s.onload=init;s.onerror=()=>setMessage("No fue posible cargar el SDK de Clip.");document.head.appendChild(s);}
   })()},[orderId,router]);
 
+  useEffect(()=>{
+    if(!challenge||!orderId)return;
+    const expectedOrigin=new URL(challenge.url).origin;
+    const verify=async(paymentId:string)=>{
+      const sb=supabaseBrowser();
+      for(let attempt=0;attempt<8;attempt++){
+        const {data,error}=await sb.functions.invoke("check-clip-test-payment",{body:{orderId,paymentId}});
+        if(!error&&data?.ok){
+          if(data.approved){setChallenge(null);setMessage("Pago de prueba aprobado. Actualizando pedido...");router.replace(`/pago/resultado?order=${orderId}`);return;}
+          if(String(data.status).toLowerCase()==="rejected"){setChallenge(null);setBusy(false);setMessage(extractMessage(data.detail)||"El pago fue rechazado.");return;}
+        }
+        await new Promise(resolve=>setTimeout(resolve,1000));
+      }
+      setChallenge(null);setBusy(false);setMessage("La autenticación terminó, pero el pago sigue en proceso. Puedes revisar el pedido en unos momentos.");
+    };
+    const onMessage=(event:MessageEvent)=>{
+      if(event.origin!==expectedOrigin)return;
+      const returnedPaymentId=event.data?.paymentId;
+      if(returnedPaymentId&&String(returnedPaymentId)===String(challenge.paymentId)) verify(String(returnedPaymentId));
+    };
+    window.addEventListener("message",onMessage);
+    return()=>window.removeEventListener("message",onMessage);
+  },[challenge,orderId,router]);
+
   async function pay(e:any){
     e.preventDefault(); if(!cardRef.current||!orderId)return;
     setBusy(true); setMessage("Tokenizando tarjeta con Clip...");
@@ -62,9 +86,10 @@ function PagoPruebaContenido(){
       if(!data?.ok)throw new Error(extractMessage(data?.error)||extractMessage(data?.detail)||"El pago fue rechazado.");
       if(data.approved){setMessage("Pago de prueba aprobado. Actualizando pedido...");setTimeout(()=>router.replace(`/pago/resultado?order=${orderId}`),800);return;}
       const actionUrl=data?.action_url||data?.pending_action?.url;
-      if(typeof actionUrl==="string"&&/^https:\/\//i.test(actionUrl)){
-        setMessage("Redirigiendo a la autenticación segura 3D Secure...");
-        window.location.assign(actionUrl);
+      const paymentId=data?.payment_id;
+      if(typeof actionUrl==="string"&&/^https:\/\//i.test(actionUrl)&&typeof paymentId==="string"){
+        setMessage("Completa la autenticación segura 3D Secure.");
+        setChallenge({url:actionUrl,paymentId});
         return;
       }
       const detail=extractMessage(data?.detail)||extractMessage(data?.status)||"sin estado";
@@ -72,6 +97,6 @@ function PagoPruebaContenido(){
     }catch(err:any){const detail=extractMessage(err);setMessage(detail&&detail!=="[object Object]"?detail:"No fue posible procesar el pago de prueba.");setBusy(false);}
   }
 
-  return <main className="wrap"><section className="panel center"><h1 className="brand">La Comarca</h1><h2>Pago con Clip · Pruebas</h2>{total!==null&&<p className="price">${total.toLocaleString("es-MX",{minimumFractionDigits:2})} MXN</p>}<p className="muted">{message}</p><form onSubmit={pay}><div id="clip-checkout" style={{margin:"20px auto",maxWidth:520}}></div><button className="btn" disabled={!ready||busy} style={{width:"100%"}}>{busy?"Procesando...":"Pagar en modo prueba"}</button></form><button className="btn2" style={{marginTop:12}} onClick={()=>router.push("/cuenta")}>Cancelar y ver mi cuenta</button></section></main>;
+  return <main className="wrap"><section className="panel center"><h1 className="brand">La Comarca</h1><h2>Pago con Clip · Pruebas</h2>{total!==null&&<p className="price">${total.toLocaleString("es-MX",{minimumFractionDigits:2})} MXN</p>}<p className="muted">{message}</p><form onSubmit={pay}><div id="clip-checkout" style={{margin:"20px auto",maxWidth:520}}></div><button className="btn" disabled={!ready||busy} style={{width:"100%"}}>{busy?"Procesando...":"Pagar en modo prueba"}</button></form><button className="btn2" style={{marginTop:12}} onClick={()=>router.push("/cuenta")}>Cancelar y ver mi cuenta</button></section>{challenge&&<div style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,.78)",display:"flex",alignItems:"center",justifyContent:"center",padding:16}}><div style={{width:"min(900px,100%)",height:"min(900px,100%)",background:"white",borderRadius:12,overflow:"hidden",boxShadow:"0 20px 60px rgba(0,0,0,.5)"}}><iframe title="Autenticación segura 3D" src={challenge.url} style={{width:"100%",height:"100%",border:0}} /></div></div>}</main>;
 }
 export default function PagoPrueba(){return <Suspense fallback={<main className="wrap"><section className="panel center"><p className="muted">Cargando pago...</p></section></main>}><PagoPruebaContenido/></Suspense>;}
