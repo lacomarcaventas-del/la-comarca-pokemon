@@ -34,85 +34,44 @@ function PagoPruebaContenido(){
     const sb=supabaseBrowser();
     const {data:{user},error:userError}=await sb.auth.getUser();
     if(userError||!user){router.replace("/cuenta");return;}
-
-    // La política RLS ya limita el acceso a los pedidos del cliente autenticado.
-    // Evitamos duplicar el filtro customer_id para que un cambio de sesión o
-    // serialización no convierta un pedido válido en un falso "no encontrado".
     const {data,error}=await sb.from("orders").select("id,total,status").eq("id",orderId).maybeSingle();
-    if(error){
-      console.error("No fue posible cargar pedido para Clip",error);
-      setMessage(extractMessage(error)||"No fue posible cargar el pedido.");
-      return;
-    }
+    if(error){console.error("No fue posible cargar pedido para Clip",error);setMessage(extractMessage(error)||"No fue posible cargar el pedido.");return;}
     if(!data){setMessage("No encontramos este pedido o ya no tienes acceso a él.");return;}
     if(data.status!=="pending"&&data.status!=="contacted"){router.replace(`/pago/resultado?order=${orderId}`);return;}
     setTotal(Number(data.total));
     const key=process.env.NEXT_PUBLIC_CLIP_TEST_API_KEY;
     if(!key){setMessage("Clip Pruebas aún no está configurado.");return;}
     const existing=document.querySelector('script[data-clip-sdk]') as HTMLScriptElement|null;
-    const init=()=>{
-      try{
-        if(!window.ClipSDK)throw new Error("El SDK de Clip no está disponible.");
-        const clip=new window.ClipSDK(key);
-        const card=clip.element.create("Card",{theme:"light",locale:"es"});
-        card.mount("clip-checkout");
-        cardRef.current=card;
-        setReady(true);
-        setMessage("Ingresa los datos de prueba en el formulario seguro de Clip.");
-      }catch(e:any){showError(e,"No fue posible iniciar el formulario de Clip.");}
-    };
+    const init=()=>{try{
+      if(!window.ClipSDK)throw new Error("El SDK de Clip no está disponible.");
+      const clip=new window.ClipSDK(key); const card=clip.element.create("Card",{theme:"light",locale:"es"});
+      card.mount("clip-checkout"); cardRef.current=card; setReady(true); setMessage("Ingresa los datos de prueba en el formulario seguro de Clip.");
+    }catch(e:any){showError(e,"No fue posible iniciar el formulario de Clip.");}};
     if(existing){if(window.ClipSDK)init();else existing.addEventListener("load",init,{once:true});}
-    else{
-      const s=document.createElement("script");
-      s.src="https://sdk.clip.mx/js/clip-sdk.js";
-      s.async=true;
-      s.dataset.clipSdk="true";
-      s.onload=init;
-      s.onerror=()=>setMessage("No fue posible cargar el SDK de Clip.");
-      document.head.appendChild(s);
-    }
+    else{const s=document.createElement("script");s.src="https://sdk.clip.mx/js/clip-sdk.js";s.async=true;s.dataset.clipSdk="true";s.onload=init;s.onerror=()=>setMessage("No fue posible cargar el SDK de Clip.");document.head.appendChild(s);}
   })()},[orderId,router]);
 
   async function pay(e:any){
-    e.preventDefault();
-    if(!cardRef.current||!orderId)return;
-    setBusy(true);
-    setMessage("Tokenizando tarjeta con Clip...");
+    e.preventDefault(); if(!cardRef.current||!orderId)return;
+    setBusy(true); setMessage("Tokenizando tarjeta con Clip...");
     try{
-      const cardToken=await cardRef.current.cardToken();
-      const cardTokenId=cardToken?.id;
-      if(!cardTokenId||typeof cardTokenId!=="string"){
-        throw new Error(extractMessage(cardToken)||"Respuesta de Clip sin Card Token ID.");
+      const cardToken=await cardRef.current.cardToken(); const cardTokenId=cardToken?.id;
+      if(!cardTokenId||typeof cardTokenId!=="string")throw new Error(extractMessage(cardToken)||"Respuesta de Clip sin Card Token ID.");
+      const sb=supabaseBrowser(); const {data,error}=await sb.functions.invoke("process-clip-test-payment",{body:{orderId,cardToken:cardTokenId}});
+      if(error){let body:any=null;try{body=await error.context?.clone?.().json();}catch{}throw new Error(extractMessage(body)||extractMessage(error)||"No fue posible procesar el pago de prueba.");}
+      if(!data?.ok)throw new Error(extractMessage(data?.error)||extractMessage(data?.detail)||"El pago fue rechazado.");
+      if(data.approved){setMessage("Pago de prueba aprobado. Actualizando pedido...");setTimeout(()=>router.replace(`/pago/resultado?order=${orderId}`),800);return;}
+      const actionUrl=data?.action_url||data?.pending_action?.url;
+      if(typeof actionUrl==="string"&&/^https:\/\//i.test(actionUrl)){
+        setMessage("Redirigiendo a la autenticación segura 3D Secure...");
+        window.location.assign(actionUrl);
+        return;
       }
-      const sb=supabaseBrowser();
-      const {data,error}=await sb.functions.invoke("process-clip-test-payment",{body:{orderId,cardToken:cardTokenId}});
-      if(error){
-        let body:any=null;
-        try{body=await error.context?.clone?.().json();}catch{}
-        const detail=extractMessage(body)||extractMessage(error);
-        throw new Error(detail||"No fue posible procesar el pago de prueba.");
-      }
-      if(!data?.ok){
-        const detail=extractMessage(data?.error)||extractMessage(data?.detail)||extractMessage(data);
-        throw new Error(detail||"El pago fue rechazado.");
-      }
-      if(data.approved){
-        setMessage("Pago de prueba aprobado. Actualizando pedido...");
-        setTimeout(()=>router.replace(`/pago/resultado?order=${orderId}`),800);
-      }else{
-        const detail=extractMessage(data?.detail)||extractMessage(data?.error)||extractMessage(data?.status)||"sin estado";
-        setMessage(`Pago no aprobado: ${detail}`);
-        setBusy(false);
-      }
-    }catch(err:any){
-      const code=typeof err?.code==="string"?` (${err.code})`:"";
-      const detail=extractMessage(err);
-      setMessage(`${detail&&detail!=="[object Object]"?detail:"No fue posible procesar el pago de prueba."}${code}`);
-      setBusy(false);
-    }
+      const detail=extractMessage(data?.detail)||extractMessage(data?.status)||"sin estado";
+      setMessage(`Pago no aprobado: ${detail}`); setBusy(false);
+    }catch(err:any){const detail=extractMessage(err);setMessage(detail&&detail!=="[object Object]"?detail:"No fue posible procesar el pago de prueba.");setBusy(false);}
   }
 
   return <main className="wrap"><section className="panel center"><h1 className="brand">La Comarca</h1><h2>Pago con Clip · Pruebas</h2>{total!==null&&<p className="price">${total.toLocaleString("es-MX",{minimumFractionDigits:2})} MXN</p>}<p className="muted">{message}</p><form onSubmit={pay}><div id="clip-checkout" style={{margin:"20px auto",maxWidth:520}}></div><button className="btn" disabled={!ready||busy} style={{width:"100%"}}>{busy?"Procesando...":"Pagar en modo prueba"}</button></form><button className="btn2" style={{marginTop:12}} onClick={()=>router.push("/cuenta")}>Cancelar y ver mi cuenta</button></section></main>;
 }
-
 export default function PagoPrueba(){return <Suspense fallback={<main className="wrap"><section className="panel center"><p className="muted">Cargando pago...</p></section></main>}><PagoPruebaContenido/></Suspense>;}
