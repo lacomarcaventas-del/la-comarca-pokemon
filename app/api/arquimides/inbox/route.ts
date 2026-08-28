@@ -3,11 +3,39 @@ import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
+const RECEPTION_IMAGE = "https://bdcmkqpfcmudjemsqjvb.supabase.co/storage/v1/object/public/email-assets/arquimides-recepcion-listas.png.png";
+
 function db() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) throw new Error("Supabase no está configurado en Arquimides");
   return createClient(url, key, { auth: { persistSession: false } });
+}
+
+async function sendReceptionEmail(to: string) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.ARQUIMIDES_EMAIL_FROM || process.env.EMAIL_FROM;
+
+  if (!apiKey || !from) return;
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      subject: "¡Gracias por tu mensaje! — ARQUÍMIDES",
+      html: `<!doctype html><html><body style="margin:0;padding:0;background:#0b0d0e;"><div style="width:100%;max-width:1400px;margin:0 auto;"><img src="${RECEPTION_IMAGE}" alt="Gracias por tu mensaje. ARQUÍMIDES solo acepta listas para revisar." style="display:block;width:100%;height:auto;border:0;outline:none;text-decoration:none;" /></div></body></html>`,
+    }),
+  });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(`No se pudo enviar el correo de recepción: ${detail}`);
+  }
 }
 
 export async function GET() {
@@ -69,6 +97,8 @@ export async function POST(request: NextRequest) {
         payload: { source: "inbound_email" },
       });
       if (queueError) throw queueError;
+
+      await sendReceptionEmail(from);
     }
 
     return NextResponse.json({ ok: true, email_id: email?.id || null });
