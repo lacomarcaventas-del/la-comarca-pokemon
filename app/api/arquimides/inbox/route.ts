@@ -3,8 +3,6 @@ import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
-const RECEPTION_IMAGE = "https://bdcmkqpfcmudjemsqjvb.supabase.co/storage/v1/object/public/email-assets/arquimides-recepcion-listas.png.png";
-
 function db() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -15,8 +13,10 @@ function db() {
 async function sendReceptionEmail(to: string) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.ARQUIMIDES_EMAIL_FROM || process.env.EMAIL_FROM;
+  const receptionImage = process.env.EMAIL_ASSETS_URL;
 
   if (!apiKey || !from) return;
+  if (!receptionImage) throw new Error("EMAIL_ASSETS_URL no está configurada en Arquimides");
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -28,7 +28,7 @@ async function sendReceptionEmail(to: string) {
       from,
       to: [to],
       subject: "¡Gracias por tu mensaje! — ARQUÍMIDES",
-      html: `<!doctype html><html><body style="margin:0;padding:0;background:#0b0d0e;"><div style="width:100%;max-width:1400px;margin:0 auto;"><img src="${RECEPTION_IMAGE}" alt="Gracias por tu mensaje. ARQUÍMIDES solo acepta listas para revisar." style="display:block;width:100%;height:auto;border:0;outline:none;text-decoration:none;" /></div></body></html>`,
+      html: `<!doctype html><html><body style="margin:0;padding:0;background:#0b0d0e;"><div style="width:100%;max-width:1400px;margin:0 auto;"><img src="${receptionImage}" alt="Gracias por tu mensaje. ARQUÍMIDES solo acepta listas para revisar." style="display:block;width:100%;height:auto;border:0;outline:none;text-decoration:none;" /></div></body></html>`,
     }),
   });
 
