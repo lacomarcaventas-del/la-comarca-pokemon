@@ -1,18 +1,54 @@
-import Link from "next/link";
-import FacebookFeed from "../components/FacebookFeed";
-import BrandLogo from "../components/BrandLogo";
+"use client";
+import { useState } from "react";
 
-const lines=[
-  ["Pokémon","pokemon","Pokémon"],["Magic: The Gathering","magic","Magic: The Gathering"],["Yu-Gi-Oh!","yugioh","Yu-Gi-Oh!"],["One Piece Card Game","onepiece","One Piece Card Game"],
-  ["Disney Lorcana","lorcana","Disney Lorcana"],["Weiss Schwarz","weiss","Weiss Schwarz"],["Gundam Card Game","gundam","Gundam Card Game"],["Dungeons & Dragons","dnd","Dungeons & Dragons"]
+const modules = [
+  ["◈", "Operaciones", "Consultas, seguimiento y acciones del sistema"],
+  ["▦", "Inventario", "Entradas, movimientos y análisis"],
+  ["◎", "Clientes", "Solicitudes y comunicación centralizada"],
+  ["↗", "Reportes", "Compilación y seguimiento periódico"],
 ];
 
-export default function Home(){return <div className="siteShell">
-  <header className="top siteTop"><Link href="/" className="logoLink"><BrandLogo/></Link><nav className="mainNav navPills"><Link href="/catalogo">Catálogo</Link><a href="#lineas">Categorías</a><a href="#comunidad">Comunidad</a></nav><div className="topActions"><Link href="/cuenta">♙ Clientes</Link><Link href="/catalogo" className="cartMini">🛒 Carrito</Link></div></header>
-  <main>
-    <section id="lineas" className="wrap sectionBlock"><div className="sectionTitle"><h2>Explora nuestras líneas</h2><span>La Comarca · TCG & Hobby</span></div><div className="lineGrid">{lines.map(([name,key,category])=><Link href={`/catalogo?categoria=${encodeURIComponent(category)}`} className={`lineCard ${key}`} key={key}><div className="lineMark">{name}</div><strong>Ver productos →</strong></Link>)}</div></section>
-    <section id="comunidad" className="wrap benefits"><div><b>◈</b><span><strong>Envíos a todo México</strong><small>Envíos seguros y rápidos</small></span></div><div><b>◇</b><span><strong>Tienda 100% segura</strong><small>Protección en tus compras</small></span></div><div><b>♧</b><span><strong>Atención personalizada</strong><small>Estamos para ayudarte</small></span></div><div><b>♙</b><span><strong>Comunidad La Comarca</strong><small>Eventos, torneos y más</small></span></div></section>
-    <section className="wrap feedSection"><div className="sectionTitle"><h2>Últimas publicaciones</h2><a href="https://www.facebook.com/ComarcaTCG" target="_blank" rel="noreferrer">Ver Facebook →</a></div><FacebookFeed/></section>
-  </main>
-  <footer className="siteFooter"><BrandLogo/><span>La Comarca · Campeche, México · TCG · Juegos · Coleccionismo · Hobby</span></footer>
-</div>}
+export default function Home() {
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState("LISTO");
+  const run = () => {
+    setStatus("PROCESANDO");
+    setTimeout(() => setStatus("LISTO"), 900);
+  };
+
+  return <main className="arquimidesShell">
+    <section className="gridBg" />
+    <nav className="archNav">
+      <div className="archBrand"><span className="archMark">A</span><span>ARQUÍMIDES</span></div>
+      <div className="systemState"><i /> SISTEMA {status}</div>
+    </nav>
+
+    <section className="heroArch">
+      <div className="eyebrow">NÚCLEO OPERATIVO · LA COMARCA</div>
+      <h1>ARQUÍMIDES</h1>
+      <p>Centro operativo para organizar información, ejecutar consultas y convertir datos dispersos en acciones claras.</p>
+      <div className="commandBox">
+        <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === "Enter" && run()} placeholder="Escribe una consulta o instrucción…" />
+        <button onClick={run}>EJECUTAR ↗</button>
+      </div>
+    </section>
+
+    <section className="moduleGrid">
+      {modules.map(([icon, title, text]) => <button className="archCard" key={title} onClick={run}>
+        <span className="cardIcon">{icon}</span><span><strong>{title}</strong><small>{text}</small></span><b>→</b>
+      </button>)}
+    </section>
+
+    <section className="activity">
+      <div className="sectionHead"><span>ACTIVIDAD DEL SISTEMA</span><small>CANAL PRINCIPAL</small></div>
+      <div className="terminal">
+        <p><em>01</em> Núcleo Arquimides inicializado</p>
+        <p><em>02</em> Canal de correo preparado</p>
+        <p><em>03</em> Resend configurado en entorno de producción</p>
+        <p className="cursor"><em>04</em> Esperando instrucciones</p>
+      </div>
+    </section>
+
+    <footer>ARQUÍMIDES · SISTEMA OPERATIVO · <span>LA COMARCA</span></footer>
+  </main>;
+}
