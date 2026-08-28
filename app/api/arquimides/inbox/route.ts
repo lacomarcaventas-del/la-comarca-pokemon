@@ -17,14 +17,6 @@ async function sendReceptionEmail(to: string) {
 
   if (!apiKey || !from) return;
 
-  const imageResponse = await fetch(receptionImage);
-  if (!imageResponse.ok) {
-    throw new Error(`No se pudo descargar la imagen de recepción: ${imageResponse.status}`);
-  }
-
-  const imageBuffer = await imageResponse.arrayBuffer();
-  const imageBase64 = Buffer.from(imageBuffer).toString("base64");
-
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -37,9 +29,8 @@ async function sendReceptionEmail(to: string) {
       subject: "¡Gracias por tu mensaje! — ARQUÍMIDES",
       html: `<!doctype html><html><body style="margin:0;padding:0;background:#0b0d0e;"></body></html>`,
       attachments: [{
+        path: receptionImage,
         filename: "arquimides-recepcion-listas.png",
-        content: imageBase64,
-        content_type: "image/png",
       }],
     }),
   });
