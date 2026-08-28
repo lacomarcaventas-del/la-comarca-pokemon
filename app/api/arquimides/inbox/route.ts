@@ -18,17 +18,6 @@ async function sendReceptionEmail(to: string) {
   if (!apiKey || !from) return;
   if (!receptionImage) throw new Error("EMAIL_ASSETS_URL no está configurada en Arquimides");
 
-  // Embed the image as an inline CID attachment so email clients do not need
-  // to load it from an external URL.
-  const imageResponse = await fetch(receptionImage);
-  if (!imageResponse.ok) {
-    throw new Error(`No se pudo descargar la imagen del correo: ${imageResponse.status}`);
-  }
-  const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
-  const contentType = imageResponse.headers.get("content-type") || "image/png";
-  const extension = contentType.includes("jpeg") || contentType.includes("jpg") ? "jpg" : "png";
-  const filename = `arquimides-recepcion.${extension}`;
-
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -39,11 +28,12 @@ async function sendReceptionEmail(to: string) {
       from,
       to: [to],
       subject: "¡Gracias por tu mensaje! — ARQUÍMIDES",
-      html: `<!doctype html><html><body style="margin:0;padding:0;background:#0b0d0e;"><div style="width:100%;max-width:1400px;margin:0 auto;"><img src="cid:arquimides-recepcion" alt="Gracias por tu mensaje. ARQUÍMIDES solo acepta listas para revisar." style="display:block;width:100%;height:auto;border:0;outline:none;text-decoration:none;" /></div></body></html>`,
+      html: `<!doctype html><html><body style="margin:0;padding:0;background:#0b0d0e;"><div style="width:100%;max-width:1400px;margin:0 auto;"><img src="cid:arquimides-recepcion" alt="Gracias por tu mensaje. ARQUÍMIDES solo acepta listas para revisar." width="1400" style="display:block;width:100%;height:auto;border:0;outline:none;text-decoration:none;" /></div></body></html>`,
       attachments: [{
-        filename,
-        content: imageBuffer.toString("base64"),
+        path: receptionImage,
+        filename: "arquimides-recepcion.png",
         content_id: "arquimides-recepcion",
+        content_type: "image/png",
       }],
     }),
   });
