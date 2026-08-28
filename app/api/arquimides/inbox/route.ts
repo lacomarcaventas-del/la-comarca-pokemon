@@ -13,10 +13,9 @@ function db() {
 async function sendReceptionEmail(to: string) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.ARQUIMIDES_EMAIL_FROM || process.env.EMAIL_FROM;
-  const receptionImage = process.env.EMAIL_ASSETS_URL;
+  const receptionImage = "https://bdcmkqpfcmudjemsqjvb.supabase.co/storage/v1/object/public/email-assets/arquimides-recepcion-listas.png.png";
 
   if (!apiKey || !from) return;
-  if (!receptionImage) throw new Error("EMAIL_ASSETS_URL no está configurada en Arquimides");
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
