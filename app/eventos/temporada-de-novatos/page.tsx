@@ -1,0 +1,9 @@
+"use client";
+import {useState} from "react";
+import Link from "next/link";
+import {supabase} from "../../../lib/supabase";
+
+export default function Registro(){
+ const [full_name,setName]=useState(""),[phone,setPhone]=useState(""),[email,setEmail]=useState(""),[busy,setBusy]=useState(false),[done,setDone]=useState(false),[error,setError]=useState("");
+ async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);setError("");const {error}=await supabase.from("event_registrations").insert({event_slug:"temporada-de-novatos-2026-septiembre",event_name:"Temporada de Novatos",full_name,phone,email});setBusy(false);if(error){setError("No se pudo completar el registro. Intenta nuevamente.");return}setDone(true)}
+ return <main className="siteShell"><header className="top siteTop"><Link href="/eventos" className="logoLink">← Eventos</Link></header><section className="wrap sectionBlock" style={{maxWidth:700}}>{done?<div className="sectionTitle"><h2>¡Registro recibido!</h2><p>Tu preinscripción ha sido registrada correctamente.</p><p>Pasa a la tienda de <strong>5:00 p.m. a 10:00 p.m.</strong> y acércate a caja para más información o recibir el material promocional.</p><Link href="/eventos">Volver a Eventos</Link></div>:<><div className="sectionTitle"><h2>Temporada de Novatos</h2><span>Registro de participación</span></div><form onSubmit={submit} style={{display:"grid",gap:16,maxWidth:500}}><label>Nombre completo<input required value={full_name} onChange={e=>setName(e.target.value)} /></label><label>Teléfono<input required value={phone} onChange={e=>setPhone(e.target.value)} /></label><label>Correo electrónico<input required type="email" value={email} onChange={e=>setEmail(e.target.value)} /></label>{error&&<p>{error}</p>}<button className="primaryBtn" disabled={busy}>{busy?"Registrando...":"Registrarme"}</button></form></>}</section></main>}
