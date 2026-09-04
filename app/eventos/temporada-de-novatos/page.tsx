@@ -44,17 +44,36 @@ export default function Registro(){
   <header className="top siteTop"><Link href="/eventos" className="logoLink">← Eventos</Link></header>
   <section className="wrap sectionBlock" style={{maxWidth:700}}>
    {done?
-    <div className="sectionTitle">
-     <h2>¡Registro recibido!</h2>
-     <p>Tu preinscripción ha sido registrada correctamente.</p>
-     <p><strong>Juego elegido: {game}</strong></p>
-     <div style={{margin:"24px 0",padding:20,border:"1px solid rgba(214,166,83,.55)",borderRadius:12}}>
-      <span style={{display:"block",marginBottom:8}}>Código para canjear tu demo en tienda:</span>
-      <strong style={{fontSize:"1.4rem",letterSpacing:1}}>{redemptionCode}</strong>
+    <div style={{maxWidth:1040,margin:"0 auto",padding:"24px 0"}}>
+     <div style={{textAlign:"center",marginBottom:32}}>
+      <div style={{color:"#d6a653",letterSpacing:3,fontSize:13,textTransform:"uppercase",marginBottom:10}}>Temporada de Novatos</div>
+      <h2 style={{margin:0,fontSize:"clamp(2rem,5vw,3.2rem)",color:"#f2d08b"}}>✦ ¡REGISTRO RECIBIDO!</h2>
+      <p style={{margin:"14px auto 0",maxWidth:580,fontSize:"1.1rem",opacity:.88}}>Tu preinscripción ha sido registrada correctamente.</p>
      </div>
-     <p>Guarda este código y preséntalo en caja para validar tu registro y recibir o canjear el material correspondiente a <strong>{game}</strong>.</p>
-     <p>Pasa a la tienda de <strong>5:00 p.m. a 10:00 p.m.</strong> y acércate a caja para más información.</p>
-     <Link href="/eventos">Volver a Eventos</Link>
+
+     <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(210px,1fr))",gap:18,alignItems:"stretch"}}>
+      <div style={{padding:24,border:"1px solid rgba(214,166,83,.28)",borderRadius:16,background:"rgba(10,18,29,.55)"}}>
+       <div style={{color:"#d6a653",fontSize:12,letterSpacing:2,marginBottom:12}}>JUEGO ELEGIDO</div>
+       <strong style={{fontSize:"1.25rem",lineHeight:1.35}}>{game}</strong>
+       <p style={{margin:"16px 0 0",lineHeight:1.55,opacity:.82}}>Guarda tu código y preséntalo en caja para validar tu registro.</p>
+      </div>
+
+      <div style={{padding:24,border:"1px solid rgba(214,166,83,.7)",borderRadius:16,background:"linear-gradient(145deg,rgba(214,166,83,.13),rgba(10,18,29,.7))",boxShadow:"0 10px 35px rgba(0,0,0,.2)"}}>
+       <div style={{color:"#d6a653",fontSize:12,letterSpacing:2,marginBottom:12}}>CÓDIGO PARA CANJEAR TU DEMO</div>
+       <div style={{padding:"16px 14px",borderRadius:10,border:"1px dashed rgba(214,166,83,.55)",fontSize:"1.55rem",fontWeight:800,letterSpacing:1.5,wordBreak:"break-word",background:"rgba(0,0,0,.18)"}}>{redemptionCode}</div>
+      </div>
+
+      <div style={{padding:24,border:"1px solid rgba(214,166,83,.28)",borderRadius:16,background:"rgba(10,18,29,.55)"}}>
+       <div style={{color:"#d6a653",fontSize:12,letterSpacing:2,marginBottom:12}}>VISÍTANOS EN TIENDA</div>
+       <div style={{display:"inline-block",padding:"9px 14px",borderRadius:9,background:"#d6a653",color:"#121820",fontWeight:800,fontSize:"1.05rem",marginBottom:14}}>5:00 p.m. a 10:00 p.m.</div>
+       <p style={{margin:0,lineHeight:1.6,fontWeight:600}}>Durante septiembre, acércate a caja para más información y para recibir o canjear el material correspondiente a <span style={{color:"#f2d08b"}}>{game}</span>.</p>
+      </div>
+     </div>
+
+     <div style={{marginTop:28,textAlign:"center"}}>
+      <p style={{marginBottom:18,opacity:.72}}>Gracias por formar parte de la Temporada de Novatos en La Comarca.</p>
+      <Link href="/eventos" style={{display:"inline-block",padding:"11px 22px",border:"1px solid rgba(214,166,83,.65)",borderRadius:9,color:"#f2d08b",textDecoration:"none"}}>← Volver a Eventos</Link>
+     </div>
     </div>
    :
     <>
