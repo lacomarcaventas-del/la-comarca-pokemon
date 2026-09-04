@@ -30,7 +30,7 @@ export default function Registro(){
   setBusy(false);
   if(error){
    if(error.message?.includes("DEMO_LIMIT_REACHED")){
-    setError("Las Demos se han agotado. ¡Gracias por tu interés! En aproximadamente 3 meses tendremos una nueva oportunidad.");
+    setError(`Las Demos de ${game} se han agotado. ¡Gracias por tu interés! En aproximadamente 3 meses tendremos una nueva oportunidad.`);
    } else {
     setError("No se pudo completar el registro. Intenta nuevamente.");
    }
