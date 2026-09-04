@@ -8,11 +8,11 @@ const lines=[
 
 export default function Home(){return <div className="siteShell">
   <section className="shippingHero" aria-label="Envíos a todo México"><div className="shippingInner">
-    <div className="shippingLead"><strong>ENVIAMOS A<br/>TODO EL PAÍS</strong><span>TUS HOBBIES, SIN FRONTERAS</span></div>
+    <div className="shippingLead"><strong>ENVIAMOS A<br/>TODO EL PAÍS</strong></div>
     <div className="shippingRoute"><span className="routeLine"></span><i>◆</i><i>◆</i><i>◆</i></div>
     <div className="carrier mexpost"><b>▰ MEXPOST</b><span>3–5 días hábiles<br/>Cobertura nacional</span></div>
     <div className="carrier fedex"><b><em>Fed</em>Ex</b><span>3 días hábiles<br/>Rápido y seguro</span></div>
-    <div className="shippingMotto">Tu pasión<br/><small>llega más lejos</small></div>
+    
   </div></section>
   <header className="top siteTop"><Link href="/" className="logoLink"><BrandLogo/></Link><nav className="mainNav navPills"><Link href="/catalogo">Catálogo</Link><a href="#comunidad">Comunidad</a><Link href="/eventos">Eventos</Link></nav><div className="topActions"><Link href="/cuenta">♙ Clientes</Link><Link href="/catalogo" className="cartMini">🛒 Carrito</Link></div></header>
   <main>
