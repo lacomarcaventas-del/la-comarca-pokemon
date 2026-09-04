@@ -50,9 +50,9 @@ export async function PATCH(req:NextRequest){
     const {orderId,status,tracking_carrier,tracking_number}=body;
     if(!orderId)return NextResponse.json({error:'Pedido inválido.'},{status:400});
 
-    // Paid is the only transition that moves inventory.
-    if(status==='paid'){
-      const {data,error}=await admin.rpc('confirm_order_payment',{p_order_id:orderId});
+    // Inventory is moved only when the order enters preparation.
+    if(status==='preparing'){
+      const {data,error}=await admin.rpc('move_order_to_preparing',{p_order_id:orderId});
       if(error)throw error;
       return NextResponse.json({ok:true,order:data});
     }
