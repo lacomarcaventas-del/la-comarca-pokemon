@@ -26,6 +26,7 @@ export default function Login(){
     const {data:profile,error}=await sb.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
     if(error){setErr("No se pudo verificar el perfil administrativo.");setChecking(false);return true}
     if(profile?.role==="admin"){router.replace("/admin");return true}
+    if(profile?.role==="agent"){router.replace("/admin/inventario");return true}
     setErr("La sesión actual no tiene permisos de administración.");
     setChecking(false);
     return true;
@@ -41,8 +42,8 @@ export default function Login(){
     if(!data.user){setErr("No se pudo identificar la sesión.");setBusy(false);return}
     const {data:profile,error:profileError}=await sb.from("profiles").select("role").eq("id",data.user.id).maybeSingle();
     if(profileError){setErr("No se pudo verificar el perfil administrativo.");setBusy(false);return}
-    if(profile?.role!=="admin"){setErr("Esta cuenta no tiene permisos de administración.");setBusy(false);return}
-    router.replace("/admin");
+    if(!["admin","agent"].includes(profile?.role||"")){setErr("Esta cuenta no tiene permisos de administración.");setBusy(false);return}
+    router.replace(profile?.role==="agent"?"/admin/inventario":"/admin");
   }
 
   async function forgot(){
