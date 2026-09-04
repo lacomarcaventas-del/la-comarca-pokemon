@@ -30,7 +30,7 @@ function errorResponse(e:any,fallback:string){
 export async function GET(req:NextRequest){
   try{
     const admin=await adminClient(req);
-    const {data,error}=await admin.from('orders').select('*,order_items(quantity,unit_price,cards(name,card_number))').order('created_at',{ascending:false});
+    const {data,error}=await admin.from('orders').select('*,order_items(quantity,unit_price,cards(name,card_number,category))').order('created_at',{ascending:false});
     if(error)throw error;
     const ids=(data||[]).map((o:any)=>o.id);
     let history:any[]=[];
