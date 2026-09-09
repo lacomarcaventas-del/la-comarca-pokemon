@@ -1,0 +1,39 @@
+name: Fix inventory preview
+on:
+  workflow_dispatch:
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch importer
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('app/admin/inventario/page.tsx')
+          s=p.read_text()
+          old='setRows(data);setTotal(data.length);setPreview(data.slice(0,10));setPhotos(names.length);'
+          new='const productRows=data.filter(r=>!REQUIRED.every(k=>String(r[k]??"").trim()===""));setRows(data);setTotal(productRows.length);setPreview(productRows.slice(0,10));setPhotos(names.length);'
+          if old not in s: raise SystemExit('preview target not found')
+          s=s.replace(old,new,1)
+          old='for(let i=0;i<rows.length;i++){const r=rows[i];try{const category_id='
+          new='for(let i=0;i<rows.length;i++){const r=rows[i];if(REQUIRED.every(k=>String(r[k]??"").trim()===""))continue;try{const category_id='
+          if old not in s: raise SystemExit('import target not found')
+          s=s.replace(old,new,1)
+          p.write_text(s)
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app/admin/inventario/page.tsx
+          git commit -m 'Fix inventory preview and skip empty rows'
+          git push
+      - name: Remove helper workflow
+        if: always()
+        run: |
+          git rm .github/workflows/fix-inventory-preview.yml || true
+          git commit -m 'Remove temporary patch workflow' || true
+          git push || true
