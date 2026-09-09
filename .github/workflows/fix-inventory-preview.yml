@@ -1,6 +1,8 @@
 name: Fix inventory preview
 on:
-  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-inventory-preview.yml'
 jobs:
   patch:
     runs-on: ubuntu-latest
