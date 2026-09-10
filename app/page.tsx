@@ -3,7 +3,7 @@ import FacebookFeed from "../components/FacebookFeed";
 import BrandLogo from "../components/BrandLogo";
 
 const lines=[
-  ["Accesorios","accesorios","Accesorios","◆"],["Coleccionables","coleccionables","Coleccionables","●"],["Disney Lorcana","lorcana","Disney Lorcana","✦"],["Dungeons & Dragons","dnd","Dungeons & Dragons","⚔"],["Gundam Card Game","gundam","Gundam Card Game","◈"],["Heroclix","heroclix","Heroclix","♙"],["Juegos de Mesa","juegos-mesa","Juegos de Mesa","♟"],["Magic: The Gathering","magic","Magic: The Gathering","✦"],["Miniaturas","miniaturas","Miniaturas","♙"],["Modelismo","modelismo","Modelismo","▰"],["One Piece Card Game","onepiece","One Piece Card Game","☠"],["Pokémon TCG","pokemon","Pokémon TCG","◉"],["Rol","rol","Rol","♙"],["Weiss Schwarz","weiss","Weiss Schwarz","✥"],["Yu-Gi-Oh!","yugioh","Yu-Gi-Oh!","◉"]
+  ["Accesorios","accesorios","Accesorios","◆"],["Coleccionables","coleccionables","Coleccionables","●"],["Disney Lorcana","lorcana","Disney Lorcana","✦"],["Dungeons & Dragons","dnd","Dungeons & Dragons","⚔"],["Gundam Card Game","gundam","Gundam Card Game","◈"],["Heroclix","heroclix","Heroclix","♙"],["Juegos de Mesa","juegos-mesa","Juegos de Mesa","♟"],["Magic: The Gathering","magic","Magic: The Gathering","✦"],["Miniaturas","miniaturas","Miniaturas","♙"],["Modelismo","modelismo","Modelismo","▰"],["One Piece Card Game","onepiece","One Piece Card Game","☠"],["Pokémon TCG","pokemon","Pokémon TCG","◉"],["Riftbound","riftbound","Riftbound","◈"],["Rol","rol","Rol","♙"],["Weiss Schwarz","weiss","Weiss Schwarz","✥"],["Yu-Gi-Oh!","yugioh","Yu-Gi-Oh!","◉"]
 ];
 
 export default function Home(){return <div className="siteShell">
