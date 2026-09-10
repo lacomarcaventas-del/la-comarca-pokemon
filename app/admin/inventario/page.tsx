@@ -281,9 +281,11 @@ export default function Inventario() {
             if (!entry) throw new Error(`Foto no encontrada para ${row["ID FOTO"] || row.Imagen}.`);
             const blob = await entry.async("blob");
             const ext = entry.name.split(".").pop()?.toLowerCase() || "jpg";
-            const path = `inventory/${user.id}/${id}.${ext}`;
+            if (!auditId) throw new Error("No fue posible determinar la importación para la foto.");
+            const safeId = id || photoId(index + 1);
+            const path = `inventory/${user.id}/${auditId}/${safeId}.${ext}`;
             const photoUpload = await sb.storage.from("card-images").upload(path, blob, {
-              upsert: true,
+              upsert: false,
               contentType: blob.type || "image/jpeg",
             });
             if (photoUpload.error) throw photoUpload.error;
