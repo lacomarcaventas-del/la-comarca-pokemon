@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useState} from "react";
 import {useRouter} from "next/navigation";
+import {supabaseBrowser} from "../lib/supabase";
 type Card={id:string,name:string,card_number:string|null,rarity:string|null,language:string,condition:string,image_url:string|null,price:number,stock:number,set_id:string|null,category_id:string|null,sets?:{name:string}|null};
 type CartItem={card:Card,qty:number}; type Category={id:string,name:string}; type ShippingKey="mexpost"|"fedex"|"pickup";
 const normalize=(s:string)=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase();
