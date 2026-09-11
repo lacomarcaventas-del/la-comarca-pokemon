@@ -1,0 +1,33 @@
+name: Fix Ronin label as single existing white box
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Ronin label
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('components/Catalog.tsx')
+          s=p.read_text()
+          start=s.index('function CatalogImage(')
+          end=s.index('export default function Catalog()', start)
+          new='''function CatalogImage({src,alt}:{src:string,alt:string}){\n  const color=roninColorName(alt);\n  const isRonin=!!color && /Ronin Acrylics/i.test(alt) && /lc-\\d+\\.jpg/i.test(src);\n  const label=isRonin?`Ronin Acrylics - ${color}`:null;\n  return <div className=\"cardImage\" style={{position:\"relative\",overflow:\"hidden\"}}>\n    <img src={catalogImageSrc(src)} alt={alt}/>\n    {label&&<span aria-hidden=\"true\" style={{\n      position:\"absolute\",left:\"34%\",top:\"39.5%\",width:\"61%\",height:\"10.5%\",\n      display:\"flex\",alignItems:\"center\",justifyContent:\"center\",\n      padding:\"0 5px\",boxSizing:\"border-box\",\n      background:\"#fff\",color:\"#202124\",fontSize:\"8px\",fontWeight:600,lineHeight:1,\n      whiteSpace:\"nowrap\",overflow:\"hidden\",textOverflow:\"ellipsis\",\n      borderRadius:0,pointerEvents:\"none\"\n    }}>{label}</span>}\n  </div>\n}\n'''
+          p.write_text(s[:start]+new+s[end:])
+          PY
+      - name: Commit and remove workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add components/Catalog.tsx .github/workflows/fix-ronin-label-final.yml
+          git commit -m 'Fix Ronin label as single existing white box'
+          git rm .github/workflows/fix-ronin-label-final.yml
+          git commit -m 'Remove temporary Ronin label workflow'
+          git push
