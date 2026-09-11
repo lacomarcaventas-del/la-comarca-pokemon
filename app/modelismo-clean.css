@@ -1,0 +1,20 @@
+/* Imágenes marca blanca para los artículos de Modelismo que no tienen una fotografía utilizable. */
+.cardImage img[alt^="Plastic Cement"],
+.cardImage img[alt^="Plastic Welder"]{
+  content:url("/api/modelismo-clean-image?name=Plastic%20Cement");
+}
+.cardImage img[alt^="FX Line"]{
+  content:url("/api/modelismo-clean-image?name=Modelismo%20Panel%20Line");
+}
+.cardImage img[alt^="Demei"]{
+  content:url("/api/modelismo-clean-image?name=Paint%20Marker");
+}
+.cardImage img[alt^="Metallic Brush Pen"]{
+  content:url("/api/modelismo-clean-image?name=Metallic%20Brush%20Pen");
+}
+.cardImage img[alt^="Moshi"]{
+  content:url("/api/modelismo-clean-image?name=Model%20Marker");
+}
+.cardImage img[alt^="Producto al azar"]{
+  content:url("/api/modelismo-clean-image?name=Producto%20de%20modelismo");
+}
