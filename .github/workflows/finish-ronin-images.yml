@@ -1,0 +1,46 @@
+name: Finish Ronin catalog images
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Ronin Acrylics fallback
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('components/Catalog.tsx')
+          s=p.read_text()
+          marker='function catalogImageSrc(src:string)'
+          start=s.index(marker)
+          end=s.index('function CatalogImage', start)
+          new=r'''function roninNameFallback(src:string,name:string){
+            if(!/^ronin acrylics\b/i.test(name)||!src.match(/lc-000\d+\.jpg(?:\?.*)?$/i))return null;
+            const parts=name.split(" - ").map(x=>x.trim()).filter(Boolean);
+            const series=parts.length>=3?parts[1]:"Ronin Acrylics";
+            let color=parts.length>=3?parts[parts.length-1]:name.replace(/^Ronin Acrylics\s*-\s*/i,"");
+            color=color.replace(/\s*\([^)]*\)\s*$/,'').trim();
+            const lc=color.toLowerCase();
+            const hex=lc.includes("white")||lc.includes("blanco")?"#f0f0ec":lc.includes("black")||lc.includes("negro")?"#202124":lc.includes("dark blue")?"#285aa8":lc.includes("blue")||lc.includes("azul")?"#477fc4":lc.includes("green")||lc.includes("verde")?"#39804d":lc.includes("yellow")||lc.includes("amarillo")?"#d7b22e":lc.includes("orange")||lc.includes("naranja")?"#d2762d":lc.includes("red")||lc.includes("rojo")?"#a83c35":lc.includes("pink")||lc.includes("rosa")?"#d58aa4":lc.includes("purple")||lc.includes("morado")?"#76528e":lc.includes("brown")||lc.includes("cafe")?"#72503a":lc.includes("grey")||lc.includes("gray")||lc.includes("gris")?"#777c82":lc.includes("silver")||lc.includes("plateado")?"#b9c0c7":lc.includes("gold")||lc.includes("dorado")?"#d3a52f":lc.includes("skin")||lc.includes("flesh")?"#c88f76":"#b7b7b1";
+            const esc=(v:string)=>v.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+            const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="560" height="420" viewBox="0 0 560 420"><defs><filter id="sh"><feDropShadow dx="0" dy="9" stdDeviation="9" flood-color="#777" flood-opacity=".22"/></filter></defs><rect width="560" height="420" fill="#fafaf8"/><text x="280" y="40" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" letter-spacing="3" fill="#858581">MODELISMO · RONIN ACRYLICS</text><ellipse cx="280" cy="366" rx="165" ry="18" fill="#d3d3ce" opacity=".5"/><g filter="url(#sh)"><rect x="176" y="82" width="88" height="40" rx="10" fill="#25272a"/><rect x="160" y="112" width="120" height="220" rx="25" fill="#fafaf7" stroke="#c4c4bf" stroke-width="3"/><rect x="143" y="156" width="154" height="112" rx="10" fill="${hex}"/><rect x="151" y="166" width="138" height="92" rx="7" fill="#fff" opacity=".93"/><text x="220" y="195" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="800" fill="#202124">RONIN</text><text x="220" y="216" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#4b4b4b">${esc(series)}</text><text x="220" y="241" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="800" fill="#202124">${esc(color)}</text><path d="M177 126 Q220 117 263 126" stroke="#fff" stroke-width="7" opacity=".7" fill="none"/></g><g transform="translate(360 115)" filter="url(#sh)"><circle cx="60" cy="38" r="27" fill="#d8c2aa"/><path d="M33 36 Q60 3 87 36 L84 50 Q60 31 36 50Z" fill="#202124"/><path d="M34 68 Q60 55 86 68 L102 175 L18 175Z" fill="#f4f4f0" stroke="#aaa" stroke-width="3"/><path d="M34 74 L8 132 L25 141 L48 101 M86 74 L112 132 L95 141 L72 101" fill="#f4f4f0" stroke="#aaa" stroke-width="3"/><path d="M38 112 L82 112 L82 165 L38 165Z" fill="${hex}" opacity=".96"/><path d="M38 165 L28 208 L48 208 L60 170 L72 208 L92 208 L82 165Z" fill="#25272a"/><circle cx="49" cy="38" r="4" fill="#222"/><circle cx="71" cy="38" r="4" fill="#222"/></g><text x="360" y="346" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="800" fill="#202124">${esc(color)}</text><text x="360" y="369" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#777">${esc(series)}</text></svg>`;
+            return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+          }
+          function catalogImageSrc(src:string,name=""){const fallback=modelismoFallback(src);if(fallback)return fallback;const ronin=roninNameFallback(src,name);if(ronin)return ronin;const m=src.match(/^https:\/\/images\.pokemontcg\.io\/([^/]+)\/([^/]+)\.png$/);if(!m)return src;const [,setId,number]=m;if(["me2pt5","me3","me5"].includes(setId))return `https://images.scrydex.com/pokemon/${setId}-${number}/small`;return src;}
+          '''
+          s=s[:start]+new+s[end:]
+          s=s.replace('src={catalogImageSrc(src)} alt={alt}', 'src={catalogImageSrc(src,alt)} alt={alt}')
+          p.write_text(s)
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add components/Catalog.tsx
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Finish clean Ronin Acrylics catalog images'
+          git push
