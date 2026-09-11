@@ -1,0 +1,33 @@
+name: Fix Ronin text only
+on:
+  push:
+    branches: [main]
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Catalog.tsx
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('components/Catalog.tsx')
+          s=p.read_text()
+          s=re.sub(r'function roninNameFallback\(src:string,name:string\)\{.*?\n\}\nfunction catalogImageSrc', 'function catalogImageSrc', s, flags=re.S)
+          old=re.search(r'function catalogImageSrc.*?function CatalogImage\(\{src,alt\}:\{src:string,alt:string\}\)\{.*?\}', s, flags=re.S)
+          new='''function catalogImageSrc(src:string){const fallback=modelismoFallback(src);if(fallback)return fallback;const m=src.match(/^https:\\/\\/images\\.pokemontcg\\.io\\/([^/]+)\\/([^/]+)\\.png$/);if(!m)return src;const [,setId,number]=m;if(["me2pt5","me3","me5"].includes(setId))return `https://images.scrydex.com/pokemon/${setId}-${number}/small`;return src;}\nfunction roninColorName(name:string){const m=name.match(/^Ronin Acrylics\\s*-\\s*[^-]+\\s*-\\s*(.+)$/i);return m?m[1].replace(/\\s*\\([^)]*\\)\\s*$/,'').trim():null;}\nfunction CatalogImage({src,alt}:{src:string,alt:string}){const color=src.startsWith("http")?roninColorName(alt):null;return <div className="cardImage" style={{position:"relative"}}><img src={catalogImageSrc(src)} alt={alt}/>{color&&<span aria-hidden="true" style={{position:"absolute",left:"40%",top:"33%",width:"52%",height:"9%",display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,.96)",color:"#202124",fontSize:"10px",fontWeight:700,lineHeight:1.1,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderRadius:3,pointerEvents:"none"}}>{color}</span>}</div>}'''
+          if not old: raise SystemExit('CatalogImage block not found')
+          s=s[:old.start()]+new+s[old.end():]
+          p.write_text(s)
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add components/Catalog.tsx
+          git diff --cached --quiet || git commit -m 'Keep original Ronin images; replace code with color name'
+          git push
