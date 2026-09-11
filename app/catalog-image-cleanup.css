@@ -1,0 +1,4 @@
+/* Oculta el texto de color superpuesto que se añadía a las imágenes de Ronin. */
+.cardImage > span[aria-hidden="true"] {
+  display: none !important;
+}
