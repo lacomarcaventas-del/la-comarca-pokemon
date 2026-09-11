@@ -1,0 +1,37 @@
+name: Fix Ronin labels without redrawing images
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch CatalogImage
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('components/Catalog.tsx')
+          s=p.read_text()
+          new='''function CatalogImage({src,alt}:{src:string,alt:string}){\n  const color=roninColorName(alt);\n  const isRonin=!!color && /Ronin Acrylics/i.test(alt) && /lc-\\d+\\.jpg/i.test(src);\n  const label=isRonin?`Ronin Acrylics - ${color}`:null;\n  return <div className="cardImage" style={{position:"relative",overflow:"hidden"}}>\n    <img src={catalogImageSrc(src)} alt={alt}/>\n    {label&&<span aria-hidden="true" style={{position:"absolute",left:"10%",right:"10%",bottom:"7%",minHeight:"13%",display:"flex",alignItems:"center",justifyContent:"center",padding:"3px 8px",boxSizing:"border-box",background:"rgba(255,255,255,.96)",color:"#202124",fontSize:"10px",fontWeight:700,lineHeight:1.1,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",borderRadius:3,boxShadow:"0 1px 4px rgba(0,0,0,.18)",pointerEvents:"none"}}>{label}</span>}\n  </div>\n}\n'''
+          s2=re.sub(r'function CatalogImage\\(\\{src:string,alt:string\\}\\)\\{.*?\\n\\}\\nexport default function Catalog', new+'export default function Catalog', s, count=1, flags=re.S)
+          if s2==s:
+              raise SystemExit('CatalogImage pattern not found')
+          p.write_text(s2)
+          PY
+      - name: Commit and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/Catalog.tsx .github/workflows/fix-ronin-label.yml
+          git commit -m "Fix Ronin image labels" 
+          git rm .github/workflows/fix-ronin-label.yml
+          git commit -m "Remove temporary Ronin label workflow"
+          git push
