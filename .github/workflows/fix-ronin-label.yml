@@ -21,7 +21,7 @@ jobs:
           p=Path('components/Catalog.tsx')
           s=p.read_text()
           new='''function CatalogImage({src,alt}:{src:string,alt:string}){\n  const color=roninColorName(alt);\n  const isRonin=!!color && /Ronin Acrylics/i.test(alt) && /lc-\\d+\\.jpg/i.test(src);\n  return <div className="cardImage" style={{position:"relative",overflow:"hidden"}}>\n    <img src={catalogImageSrc(src)} alt={alt}/>\n    {isRonin&&<span aria-hidden="true" style={{position:"absolute",left:"58%",top:"51%",width:"38%",height:"7%",display:"block",background:"#fff",pointerEvents:"none"}} />}\n  </div>\n}\n'''
-          pattern=r'function CatalogImage\\(\\{src:string,alt:string\\}\\)\\{.*?\\n\\}\\nexport default function Catalog'
+          pattern=r'function CatalogImage.*?export default function Catalog'
           s2=re.sub(pattern,lambda m:new+'export default function Catalog',s,count=1,flags=re.S)
           if s2==s:
               raise SystemExit('CatalogImage pattern not found')
