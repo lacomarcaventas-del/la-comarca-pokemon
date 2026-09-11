@@ -70,7 +70,7 @@ function CatalogImage({src,alt}:{src:string,alt:string}){
   const isRonin=!!color && /Ronin Acrylics/i.test(alt) && /lc-\d+\.jpg/i.test(src);
   return <div className="cardImage" style={{position:"relative",overflow:"hidden"}}>
     <img src={catalogImageSrc(src)} alt={alt}/>
-    {isRonin&&<span aria-hidden="true" style={{position:"absolute",left:"58%",top:"51%",width:"38%",height:"7%",display:"block",background:"#fff",pointerEvents:"none"}} />}
+    {isRonin&&<span aria-hidden="true" style={{position:"absolute",left:"53%",top:"59%",width:"44%",height:"8%",display:"flex",alignItems:"center",justifyContent:"flex-start",paddingLeft:"3px",boxSizing:"border-box",background:"#fff",color:"#202124",fontSize:"9px",fontWeight:600,lineHeight:1,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",pointerEvents:"none"}}>{color}</span>}
   </div>
 }
 export default function Catalog(){const [cards,setCards]=useState<Card[]>([]),[q,setQ]=useState(""),[set,setSet]=useState(""),[category,setCategory]=useState(""),[sets,setSets]=useState<any[]>([]),[categories,setCategories]=useState<Category[]>([]),[cart,setCart]=useState<CartItem[]>([]),[open,setOpen]=useState(false),[loading,setLoading]=useState(true),[error,setError]=useState(""),[user,setUser]=useState<any>(null);const sb=supabaseBrowser();const router=useRouter();useEffect(()=>{load();(async()=>{const {data}=await sb.auth.getUser();setUser(data.user||null)})()},[]);
