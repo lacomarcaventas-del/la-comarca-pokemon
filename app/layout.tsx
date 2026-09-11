@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./account-hero-quality.css";
-import "./modelismo-clean.css";
 
 export const metadata: Metadata = {
   title: "La Comarca",
