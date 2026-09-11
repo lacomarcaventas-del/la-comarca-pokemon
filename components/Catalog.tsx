@@ -8,6 +8,9 @@ const normalize=(s:string)=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").tr
 function modelismoFallback(src:string){
   const id=src.match(/lc-000(\d+)\.jpg(?:\?.*)?$/i)?.[1];
   const specs:Record<string,{title:string,subtitle:string,color:string,kind:"bottle"|"marker"}>={
+    "300":{title:"PLASTIC WELDER",subtitle:"PLASTIC CEMENT EXTRA THIN · 15 ml",color:"#d9d9d3",kind:"bottle"},
+    "301":{title:"PLASTIC CEMENT",subtitle:"15 ml · GP506",color:"#e7e7e1",kind:"bottle"},
+    "302":{title:"PLASTIC CEMENT",subtitle:"EXTRA THIN · 15 ml · GP509",color:"#d9d9e0",kind:"bottle"},
     "303":{title:"RONIN",subtitle:"BLUE GLUE · 15 ml",color:"#3c78b5",kind:"bottle"},
     "304":{title:"FX LINE",subtitle:"PANEL LINE · DARK BROWN",color:"#5b3b2d",kind:"bottle"},
     "305":{title:"FX LINE",subtitle:"PANEL LINE · BLACK",color:"#22252a",kind:"bottle"},
