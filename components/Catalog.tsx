@@ -8,17 +8,17 @@ const normalize=(s:string)=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").tr
 function modelismoFallback(src:string){
   const id=src.match(/lc-000(\d+)\.jpg(?:\?.*)?$/i)?.[1];
   const specs:Record<string,{title:string,subtitle:string,color:string,kind:"bottle"|"marker"}>={
-    "300":{title:"PLASTIC WELDER",subtitle:"PLASTIC CEMENT EXTRA THIN · 15 ml",color:"#d9d9d3",kind:"bottle"},
-    "301":{title:"PLASTIC CEMENT",subtitle:"15 ml · GP506",color:"#e7e7e1",kind:"bottle"},
-    "302":{title:"PLASTIC CEMENT",subtitle:"EXTRA THIN · 15 ml · GP509",color:"#d9d9e0",kind:"bottle"},
-    "303":{title:"RONIN",subtitle:"BLUE GLUE · 15 ml",color:"#3c78b5",kind:"bottle"},
-    "304":{title:"FX LINE",subtitle:"PANEL LINE · DARK BROWN",color:"#5b3b2d",kind:"bottle"},
-    "305":{title:"FX LINE",subtitle:"PANEL LINE · BLACK",color:"#22252a",kind:"bottle"},
-    "306":{title:"FX LINE",subtitle:"PANEL LINE · WHITE",color:"#e9e9e4",kind:"bottle"},
-    "307":{title:"FX LINE",subtitle:"WEATHER FX · EARTH FX",color:"#806342",kind:"bottle"},
-    "308":{title:"FX LINE",subtitle:"WEATHER FX · DUST FX",color:"#b59a70",kind:"bottle"},
-    "309":{title:"FX LINE",subtitle:"PANEL LINE · DARK GREY",color:"#555b61",kind:"bottle"},
-    "310":{title:"FX LINE",subtitle:"PANEL LINE · MEDIUM GREY",color:"#858a90",kind:"bottle"},
+    "300":{title:"RONIN",subtitle:"PLASTIC WELDER · GP1121 · 15 ml",color:"#d9d9d3",kind:"bottle"},
+    "301":{title:"RONIN",subtitle:"PLASTIC CEMENT · GP506 · 15 ml",color:"#d6b33b",kind:"bottle"},
+    "302":{title:"RONIN",subtitle:"PLASTIC CEMENT EXTRA THIN · GP509 · 15 ml",color:"#63a43d",kind:"bottle"},
+    "303":{title:"RONIN",subtitle:"BLUE GLUE · GP509B · 15 ml",color:"#3c78b5",kind:"bottle"},
+    "304":{title:"FX LINE",subtitle:"PANEL LINE · DARK BROWN · 20 ml",color:"#5b3b2d",kind:"bottle"},
+    "305":{title:"FX LINE",subtitle:"PANEL LINE · BLACK · 20 ml",color:"#22252a",kind:"bottle"},
+    "306":{title:"FX LINE",subtitle:"PANEL LINE · WHITE · 20 ml",color:"#e9e9e4",kind:"bottle"},
+    "307":{title:"FX LINE",subtitle:"WEATHER FX · EARTH FX · 20 ml",color:"#806342",kind:"bottle"},
+    "308":{title:"FX LINE",subtitle:"WEATHER FX · DUST FX · 20 ml",color:"#b59a70",kind:"bottle"},
+    "309":{title:"FX LINE",subtitle:"PANEL LINE · DARK GREY · 20 ml",color:"#555b61",kind:"bottle"},
+    "310":{title:"FX LINE",subtitle:"PANEL LINE · MEDIUM GREY · 20 ml",color:"#858a90",kind:"bottle"},
     "311":{title:"RONIN SHADES",subtitle:"BLACK",color:"#202124",kind:"bottle"},
     "312":{title:"RONIN SHADES",subtitle:"BLUE",color:"#3e6ea8",kind:"bottle"},
     "313":{title:"RONIN SHADES",subtitle:"ORANGE",color:"#c76d2d",kind:"bottle"},
@@ -58,9 +58,9 @@ function modelismoFallback(src:string){
   const s=id?specs[id]:undefined;if(!s)return null;
   const esc=(v:string)=>v.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   const art=s.kind==="marker"
-    ? `<rect x="92" y="106" width="356" height="78" rx="28" fill="${s.color}" stroke="#444" stroke-width="3"/><rect x="390" y="106" width="58" height="78" rx="22" fill="#d7d7d2"/><rect x="115" y="112" width="190" height="66" rx="10" fill="#202226"/><text x="210" y="139" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">${esc(s.title)}</text><text x="210" y="161" text-anchor="middle" font-size="13" fill="#ddd">${esc(s.subtitle)}</text><path d="M92 130 L52 145 L92 160Z" fill="#d9d9d5"/>`
-    : `<rect x="165" y="70" width="230" height="54" rx="18" fill="#181a1d"/><rect x="150" y="112" width="260" height="250" rx="34" fill="#f3f3ef" stroke="#c8c8c4" stroke-width="4"/><rect x="175" y="170" width="210" height="125" rx="12" fill="${s.color}"/><text x="280" y="210" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">${esc(s.title)}</text><text x="280" y="242" text-anchor="middle" font-size="14" fill="#fff">${esc(s.subtitle)}</text><text x="280" y="330" text-anchor="middle" font-size="13" fill="#555">20 ml · Modelismo</text>`;
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="560" height="420" viewBox="0 0 560 420"><rect width="560" height="420" fill="#f7f7f4"/><ellipse cx="280" cy="370" rx="165" ry="20" fill="#d7d7d2" opacity=".55"/>${art}<text x="280" y="40" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" letter-spacing="3" fill="#777">MODELISMO · PRODUCTO</text></svg>`;
+    ? `<g filter="url(#shadow)"><rect x="104" y="166" width="352" height="62" rx="27" fill="#f1f1ed" stroke="#b8b8b3" stroke-width="2"/><rect x="104" y="166" width="258" height="62" rx="27" fill="${s.color}"/><rect x="362" y="166" width="94" height="62" rx="27" fill="#d8d8d4"/><rect x="126" y="175" width="190" height="44" rx="8" fill="#202226"/><text x="221" y="194" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#fff">${esc(s.title)}</text><text x="221" y="211" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#ddd">${esc(s.subtitle)}</text><path d="M104 181 L66 197 L104 213Z" fill="#d5d5d1"/><path d="M122 171 L340 171" stroke="#fff" opacity=".65" stroke-width="3"/></g>`
+    : `<g filter="url(#shadow)"><rect x="196" y="82" width="168" height="56" rx="14" fill="#25272a"/><rect x="184" y="126" width="192" height="224" rx="36" fill="#fafaf7" stroke="#c4c4bf" stroke-width="3"/><path d="M198 142 Q280 128 362 142 L362 330 Q280 345 198 330Z" fill="#fff" opacity=".55"/><rect x="154" y="164" width="252" height="122" rx="10" fill="${s.color}" opacity=".96"/><rect x="168" y="178" width="224" height="94" rx="7" fill="#fff" opacity=".93"/><text x="280" y="210" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="800" fill="#202124">${esc(s.title)}</text><text x="280" y="235" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="600" fill="#4b4b4b">${esc(s.subtitle)}</text><line x1="190" y1="250" x2="370" y2="250" stroke="#d0d0cc"/><text x="280" y="265" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#777">LA COMARCA · MODELISMO</text><path d="M204 143 Q280 131 356 143" stroke="#fff" stroke-width="8" opacity=".7" fill="none"/></g>`;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="560" height="420" viewBox="0 0 560 420"><defs><filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="9" stdDeviation="9" flood-color="#777" flood-opacity=".22"/></filter></defs><rect width="560" height="420" fill="#fafaf8"/><text x="280" y="40" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" letter-spacing="3" fill="#858581">MODELISMO · PRODUCTO</text><ellipse cx="280" cy="365" rx="150" ry="18" fill="#d3d3ce" opacity=".5"/>${art}</svg>`;
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 function catalogImageSrc(src:string){const fallback=modelismoFallback(src);if(fallback)return fallback;const m=src.match(/^https:\/\/images\.pokemontcg\.io\/([^/]+)\/([^/]+)\.png$/);if(!m)return src;const [,setId,number]=m;if(["me2pt5","me3","me5"].includes(setId))return `https://images.scrydex.com/pokemon/${setId}-${number}/small`;return src;}
