@@ -68,17 +68,9 @@ function roninColorName(name:string){const m=name.match(/^Ronin Acrylics\s*-\s*[
 function CatalogImage({src,alt}:{src:string,alt:string}){
   const color=roninColorName(alt);
   const isRonin=!!color && /Ronin Acrylics/i.test(alt) && /lc-\d+\.jpg/i.test(src);
-  const label=isRonin?`Ronin Acrylics - ${color}`:null;
   return <div className="cardImage" style={{position:"relative",overflow:"hidden"}}>
     <img src={catalogImageSrc(src)} alt={alt}/>
-    {label&&<span aria-hidden="true" style={{
-      position:"absolute",left:"34%",top:"39.5%",width:"61%",height:"10.5%",
-      display:"flex",alignItems:"center",justifyContent:"center",
-      padding:"0 5px",boxSizing:"border-box",
-      background:"#fff",color:"#202124",fontSize:"8px",fontWeight:600,lineHeight:1,
-      whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
-      borderRadius:0,pointerEvents:"none"
-    }}>{label}</span>}
+    {isRonin&&<span aria-hidden="true" style={{position:"absolute",left:"58%",top:"51%",width:"38%",height:"7%",display:"block",background:"#fff",pointerEvents:"none"}} />}
   </div>
 }
 export default function Catalog(){const [cards,setCards]=useState<Card[]>([]),[q,setQ]=useState(""),[set,setSet]=useState(""),[category,setCategory]=useState(""),[sets,setSets]=useState<any[]>([]),[categories,setCategories]=useState<Category[]>([]),[cart,setCart]=useState<CartItem[]>([]),[open,setOpen]=useState(false),[loading,setLoading]=useState(true),[error,setError]=useState(""),[user,setUser]=useState<any>(null);const sb=supabaseBrowser();const router=useRouter();useEffect(()=>{load();(async()=>{const {data}=await sb.auth.getUser();setUser(data.user||null)})()},[]);
