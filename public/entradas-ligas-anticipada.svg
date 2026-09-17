@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1311 1536">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#020711"/><stop offset=".5" stop-color="#071526"/><stop offset="1" stop-color="#02050b"/></linearGradient>
+ <linearGradient id="gold"><stop stop-color="#ffe89a"/><stop offset=".5" stop-color="#e5a62d"/><stop offset="1" stop-color="#fff1a9"/></linearGradient>
+ <linearGradient id="red"><stop stop-color="#ff596b"/><stop offset=".5" stop-color="#7c132d"/><stop offset="1" stop-color="#ff4b61"/></linearGradient>
+ <linearGradient id="blue"><stop stop-color="#63d7ff"/><stop offset=".5" stop-color="#07529a"/><stop offset="1" stop-color="#28aaff"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1311" height="1536" fill="url(#bg)"/>
+<g opacity=".35" stroke="#4d6b8f" stroke-width="2"><path d="M0 150 280 0M0 430 620 0M1311 170 1000 0M1311 520 780 0M0 1280 390 1536M1311 1190 920 1536"/></g>
+<g text-anchor="middle" fill="#fff"><text x="655" y="82" font-family="Georgia,serif" font-size="24" letter-spacing="15">—　 E L I G E  T U  L I G A　 —</text><text x="655" y="178" font-family="Georgia,serif" font-weight="700" font-size="68">COMPRA TU ENTRADA</text><text x="655" y="265" font-family="Georgia,serif" font-weight="700" font-size="76" fill="url(#gold)">ANTICIPADA</text><text x="655" y="318" font-family="Arial,sans-serif" font-size="19" letter-spacing="7">ASEGURA TU LUGAR Y RECIBE UNA PROMO</text></g>
+<g transform="translate(92 410) rotate(-4 190 350)" filter="url(#glow)">
+ <path d="M35 0h310l32 32v625l-32 32H35L0 625V32z" fill="#5a3a08" stroke="#f4c54f" stroke-width="7"/>
+ <path d="M45 25h290v570H45z" fill="#b7770c" opacity=".55"/>
+ <circle cx="190" cy="180" r="88" fill="#17120a" stroke="#f7d46b" stroke-width="7"/><circle cx="190" cy="180" r="32" fill="#f7d46b"/><path d="M102 180h176" stroke="#f7d46b" stroke-width="14"/>
+ <text x="190" y="300" text-anchor="middle" fill="#fff" font-family="Arial" font-size="30" letter-spacing="7">LIGA</text><text x="190" y="352" text-anchor="middle" fill="#fff" font-family="Arial" font-size="35" font-weight="700" letter-spacing="2">POKÉMON</text>
+ <path d="M45 475h290" stroke="#f7d46b" opacity=".45"/><text x="190" y="535" text-anchor="middle" fill="#fff" font-family="Arial" font-size="17" letter-spacing="3">ENTRENA · COLECCIONA</text><text x="190" y="563" text-anchor="middle" fill="#fff" font-family="Arial" font-size="17" letter-spacing="3">COMPITE</text>
+</g>
+<g transform="translate(460 385)" filter="url(#glow)">
+ <path d="M35 0h365l35 35v675l-35 35H35L0 710V35z" fill="#280b18" stroke="#ff4b61" stroke-width="7"/>
+ <path d="M45 25h345v620H45z" fill="#8a1730" opacity=".38"/>
+ <path d="M218 105 242 185 320 158 274 230 342 271 257 267 250 355 215 282 145 330 176 260 92 237 176 219 163 135 213 201z" fill="#ff5b42" filter="url(#glow)"/>
+ <text x="218" y="395" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-size="32" letter-spacing="7">LIGA</text><text x="218" y="445" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-size="48" font-weight="700">MAGIC</text><text x="218" y="478" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-size="18" letter-spacing="4">THE GATHERING</text>
+ <path d="M45 535h345" stroke="#ff7b88" opacity=".5"/><text x="218" y="585" text-anchor="middle" fill="#fff" font-family="Arial" font-size="16" letter-spacing="3">ESTRATEGIA · COMUNIDAD</text><text x="218" y="612" text-anchor="middle" fill="#fff" font-family="Arial" font-size="16" letter-spacing="3">EVOLUCIÓN</text>
+</g>
+<g transform="translate(870 410) rotate(4 170 350)" filter="url(#glow)">
+ <path d="M35 0h280l35 35v625l-35 32H35L0 660V35z" fill="#06396a" stroke="#39baff" stroke-width="7"/>
+ <path d="M45 25h260v570H45z" fill="#0b68ae" opacity=".42"/>
+ <circle cx="175" cy="185" r="76" fill="#08121d" opacity=".75"/><path d="M175 112v140M125 175h100M140 250l-42 75M210 250l43 75" stroke="#9fe7ff" stroke-width="16" stroke-linecap="round"/>
+ <text x="175" y="355" text-anchor="middle" fill="#fff" font-family="Arial" font-size="28" letter-spacing="6">LIGA</text><text x="175" y="405" text-anchor="middle" fill="#fff" font-family="Arial" font-size="37" font-weight="700">HEROCLIX</text>
+ <path d="M45 485h260" stroke="#7ed7ff" opacity=".5"/><text x="175" y="535" text-anchor="middle" fill="#fff" font-family="Arial" font-size="16" letter-spacing="2">GRANDES HISTORIAS</text><text x="175" y="562" text-anchor="middle" fill="#fff" font-family="Arial" font-size="16" letter-spacing="2">EN PEQUEÑAS FIGURAS</text>
+</g>
+<g transform="translate(240 1015)"><rect width="831" height="115" rx="28" fill="url(#gold)" stroke="#fff0a2" stroke-width="5" filter="url(#glow)"/><text x="415" y="73" text-anchor="middle" font-family="Arial" font-size="31" font-weight="800" fill="#17130a">🛒　 ENTRADAS A LAS LIGAS　›</text></g>
+<g text-anchor="middle" fill="#fff" font-family="Arial"><text x="220" y="1215" font-size="18" letter-spacing="4">✦</text><text x="220" y="1255" font-size="18" letter-spacing="3">PROMO</text><text x="220" y="1282" font-size="18" letter-spacing="3">ANTICIPADA</text><text x="655" y="1215" font-size="18">♙</text><text x="655" y="1255" font-size="18" letter-spacing="3">ASEGURA</text><text x="655" y="1282" font-size="18" letter-spacing="3">TU LUGAR</text><text x="1090" y="1215" font-size="18">♜</text><text x="1090" y="1255" font-size="18" letter-spacing="3">MÁS TIEMPO</text><text x="1090" y="1282" font-size="18" letter-spacing="3">PARA JUGAR</text><text x="655" y="1405" font-family="Georgia,serif" font-size="16" letter-spacing="9">—　 M Á S  Q U E  U N  J U E G O ,  U N A  C O M U N I D A D　 —</text></g>
+</svg>
