@@ -54,7 +54,7 @@ export default function LeagueTickets(){
     <header className="top"><a href="/">← La Comarca</a><b>La Comarca · Tickets</b><a href="/cuenta">👤 Clientes</a></header>
     <main className="wrap">
       <section style={{marginBottom:30,paddingTop:18}}>
-        <img src="/circuito-mensual-ligas.svg" alt="Circuito mensual de ligas por cada línea" style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}/>
+        <img src="/circuito-mensual-ligas.png.png" alt="Circuito mensual de ligas por cada línea" style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}/>
       </section>
       <section className="center" style={{marginBottom:30}}>
         <div style={{maxWidth:720,margin:"0 auto",lineHeight:1.65}}>
