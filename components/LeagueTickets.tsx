@@ -60,10 +60,30 @@ export default function LeagueTickets(){
       </article>)}</div>}
       {!loading&&!cards.length&&<div className="empty">Los tickets no están disponibles en este momento.</div>}
       <section className="center" style={{marginBottom:30}}>
-        <div style={{maxWidth:720,margin:"0 auto",lineHeight:1.65}}>
-          <p style={{margin:"0 0 10px",fontSize:16}}>Favor de registrar sus tickets en caja.</p>
-          <div style={{width:48,height:1,background:"currentColor",opacity:.25,margin:"0 auto 14px"}}/>
-          <p className="muted" style={{margin:0,fontSize:14}}>Muchas gracias por jugar con nosotros.<br/>Le deseamos suerte en las mesas.</p>
+        <div style={{
+          maxWidth:900,
+          margin:"0 auto",
+          padding:"28px 44px",
+          position:"relative",
+          border:"1px solid rgba(214,163,64,.65)",
+          borderRadius:4,
+          background:"radial-gradient(circle at 20% 50%, rgba(214,163,64,.07) 0 1px, transparent 2px), radial-gradient(circle at 80% 30%, rgba(214,163,64,.05) 0 1px, transparent 2px), linear-gradient(135deg, rgba(214,163,64,.025), transparent 35%, rgba(214,163,64,.035))",
+          backgroundSize:"34px 34px, 42px 42px, 100% 100%",
+          boxShadow:"inset 0 0 35px rgba(0,0,0,.28), 0 0 18px rgba(214,163,64,.05)"
+        }}>
+          <div style={{position:"absolute",left:14,top:14,width:12,height:12,borderLeft:"1px solid rgba(214,163,64,.8)",borderTop:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
+          <div style={{position:"absolute",right:14,top:14,width:12,height:12,borderRight:"1px solid rgba(214,163,64,.8)",borderTop:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
+          <div style={{position:"absolute",left:14,bottom:14,width:12,height:12,borderLeft:"1px solid rgba(214,163,64,.8)",borderBottom:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
+          <div style={{position:"absolute",right:14,bottom:14,width:12,height:12,borderRight:"1px solid rgba(214,163,64,.8)",borderBottom:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
+          <div style={{maxWidth:720,margin:"0 auto",lineHeight:1.65}}>
+            <p style={{margin:"0 0 10px",fontSize:16,letterSpacing:".04em"}}>Favor de registrar sus tickets en caja.</p>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,margin:"0 auto 14px"}}>
+              <span style={{width:38,height:1,background:"rgba(214,163,64,.55)"}}/>
+              <span style={{width:6,height:6,border:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
+              <span style={{width:38,height:1,background:"rgba(214,163,64,.55)"}}/>
+            </div>
+            <p className="muted" style={{margin:0,fontSize:14}}>Muchas gracias por jugar con nosotros.<br/>Le deseamos suerte en las mesas.</p>
+          </div>
         </div>
       </section>
       <section style={{marginBottom:30,paddingTop:18}}>
