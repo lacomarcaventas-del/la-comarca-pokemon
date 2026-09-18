@@ -53,9 +53,12 @@ export default function LeagueTickets(){
   return <>
     <header className="top"><a href="/">← La Comarca</a><b>La Comarca · Tickets</b><a href="/cuenta">👤 Clientes</a></header>
     <main className="wrap">
-      <section style={{marginBottom:30,paddingTop:18}}>
-        <img src="/circuito-mensual-ligas.png.png" alt="Circuito mensual de ligas por cada línea" style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}/>
-      </section>
+      {error&&<div className="panel">{error}</div>}
+      {loading?<div className="empty">Cargando tickets...</div>:<div className="grid">{cards.map(card=><article className="card" key={card.id}>
+        <div className="cardImage"><img src={card.image_url||"/placeholder.svg"} alt={displayName(card)}/></div>
+        <div className="info"><b>{displayName(card)}</b><div className="muted">Entrada a la liga · ${Number(card.price).toLocaleString("es-MX")} MXN</div><div className="stock">{card.stock} disponible(s)</div><button className="btn" style={{width:"100%",marginTop:10}} onClick={()=>add(card)}>Agregar al carrito</button></div>
+      </article>)}</div>}
+      {!loading&&!cards.length&&<div className="empty">Los tickets no están disponibles en este momento.</div>}
       <section className="center" style={{marginBottom:30}}>
         <div style={{maxWidth:720,margin:"0 auto",lineHeight:1.65}}>
           <p style={{margin:"0 0 10px",fontSize:16}}>Favor de registrar sus tickets en caja.</p>
@@ -63,12 +66,9 @@ export default function LeagueTickets(){
           <p className="muted" style={{margin:0,fontSize:14}}>Muchas gracias por jugar con nosotros.<br/>Le deseamos suerte en las mesas.</p>
         </div>
       </section>
-      {error&&<div className="panel">{error}</div>}
-      {loading?<div className="empty">Cargando tickets...</div>:<div className="grid">{cards.map(card=><article className="card" key={card.id}>
-        <div className="cardImage"><img src={card.image_url||"/placeholder.svg"} alt={displayName(card)}/></div>
-        <div className="info"><b>{displayName(card)}</b><div className="muted">Entrada a la liga · ${Number(card.price).toLocaleString("es-MX")} MXN</div><div className="stock">{card.stock} disponible(s)</div><button className="btn" style={{width:"100%",marginTop:10}} onClick={()=>add(card)}>Agregar al carrito</button></div>
-      </article>)}</div>}
-      {!loading&&!cards.length&&<div className="empty">Los tickets no están disponibles en este momento.</div>}
+      <section style={{marginBottom:30,paddingTop:18}}>
+        <img src="/circuito-mensual-ligas.png.png" alt="Circuito mensual de ligas por cada línea" style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}/>
+      </section>
       <button className="cart" onClick={()=>{if(!user){window.alert("Necesitas una cuenta de cliente para comprar. Regístrate o inicia sesión para continuar.");router.push("/cuenta");return}setOpen(true)}}>🛒 Carrito ({cart.reduce((sum,x)=>sum+x.qty,0)})</button>
     </main>
     {open&&<div className="modal"><div className="modalbox"><h2>Tu carrito</h2>
