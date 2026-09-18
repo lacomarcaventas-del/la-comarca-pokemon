@@ -54,11 +54,9 @@ export default function LeagueTickets(){
     <header className="top"><a href="/">← La Comarca</a><b>La Comarca · Tickets</b><a href="/cuenta">👤 Clientes</a></header>
     <main className="wrap">
       <section className="center" style={{marginBottom:30,paddingTop:18}}>
-        <div className="muted" style={{letterSpacing:".16em",textTransform:"uppercase",fontSize:11,marginBottom:8}}>Preinscripción</div>
         <h1 style={{margin:"0 0 18px"}}>Entradas a las Ligas</h1>
         <div style={{maxWidth:720,margin:"0 auto",lineHeight:1.65}}>
           <p style={{margin:"0 0 10px",fontSize:16}}>Favor de registrar sus tickets en caja.</p>
-          <p style={{margin:"0 0 16px",fontSize:15}}><b>Preinscríbete a tus ligas</b> y recibe una promocional al llevar tu lista.</p>
           <div style={{width:48,height:1,background:"currentColor",opacity:.25,margin:"0 auto 14px"}}/>
           <p className="muted" style={{margin:0,fontSize:14}}>Muchas gracias por jugar con nosotros.<br/>Le deseamos suerte en las mesas.</p>
         </div>
