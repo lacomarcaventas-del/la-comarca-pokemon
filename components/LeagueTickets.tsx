@@ -59,30 +59,39 @@ export default function LeagueTickets(){
         <div className="info"><b>{displayName(card)}</b><div className="muted">Entrada a la liga · ${Number(card.price).toLocaleString("es-MX")} MXN</div><div className="stock">{card.stock} disponible(s)</div><button className="btn" style={{width:"100%",marginTop:10}} onClick={()=>add(card)}>Agregar al carrito</button></div>
       </article>)}</div>}
       {!loading&&!cards.length&&<div className="empty">Los tickets no están disponibles en este momento.</div>}
-      <section className="center" style={{marginBottom:30}}>
+      <section className="center" style={{marginBottom:36}}>
         <div style={{
-          maxWidth:900,
+          maxWidth:920,
           margin:"0 auto",
-          padding:"28px 44px",
           position:"relative",
-          border:"1px solid rgba(214,163,64,.65)",
-          borderRadius:4,
-          background:"radial-gradient(circle at 20% 50%, rgba(214,163,64,.07) 0 1px, transparent 2px), radial-gradient(circle at 80% 30%, rgba(214,163,64,.05) 0 1px, transparent 2px), linear-gradient(135deg, rgba(214,163,64,.025), transparent 35%, rgba(214,163,64,.035))",
-          backgroundSize:"34px 34px, 42px 42px, 100% 100%",
-          boxShadow:"inset 0 0 35px rgba(0,0,0,.28), 0 0 18px rgba(214,163,64,.05)"
+          padding:"30px 70px",
+          overflow:"hidden",
+          border:"1px solid rgba(214,163,64,.72)",
+          borderRadius:8,
+          background:"linear-gradient(180deg,rgba(12,14,17,.94),rgba(7,9,12,.9))",
+          boxShadow:"0 12px 35px rgba(0,0,0,.32), inset 0 0 35px rgba(214,163,64,.045)"
         }}>
-          <div style={{position:"absolute",left:14,top:14,width:12,height:12,borderLeft:"1px solid rgba(214,163,64,.8)",borderTop:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
-          <div style={{position:"absolute",right:14,top:14,width:12,height:12,borderRight:"1px solid rgba(214,163,64,.8)",borderTop:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
-          <div style={{position:"absolute",left:14,bottom:14,width:12,height:12,borderLeft:"1px solid rgba(214,163,64,.8)",borderBottom:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
-          <div style={{position:"absolute",right:14,bottom:14,width:12,height:12,borderRight:"1px solid rgba(214,163,64,.8)",borderBottom:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
-          <div style={{maxWidth:720,margin:"0 auto",lineHeight:1.65}}>
-            <p style={{margin:"0 0 10px",fontSize:16,letterSpacing:".04em"}}>Favor de registrar sus tickets en caja.</p>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,margin:"0 auto 14px"}}>
-              <span style={{width:38,height:1,background:"rgba(214,163,64,.55)"}}/>
-              <span style={{width:6,height:6,border:"1px solid rgba(214,163,64,.8)",transform:"rotate(45deg)"}}/>
-              <span style={{width:38,height:1,background:"rgba(214,163,64,.55)"}}/>
+          <div style={{position:"absolute",inset:7,border:"1px solid rgba(214,163,64,.22)",borderRadius:5,pointerEvents:"none"}}/>
+          <div style={{position:"absolute",inset:0,opacity:.18,pointerEvents:"none",backgroundImage:"linear-gradient(30deg,transparent 48%,rgba(214,163,64,.18) 49%,transparent 50%),linear-gradient(-30deg,transparent 48%,rgba(214,163,64,.12) 49%,transparent 50%)",backgroundSize:"46px 46px"}}/>
+          <div style={{position:"absolute",left:"50%",top:-17,transform:"translateX(-50%) rotate(45deg)",width:34,height:34,background:"#0b0d10",border:"1px solid rgba(214,163,64,.8)"}}/>
+          <div style={{position:"absolute",left:"50%",top:-5,transform:"translateX(-50%)",fontSize:15,color:"rgba(214,163,64,.95)",zIndex:2}}>◆</div>
+          <div style={{position:"absolute",left:18,top:18,width:15,height:15,borderLeft:"1px solid rgba(214,163,64,.8)",borderTop:"1px solid rgba(214,163,64,.8)"}}/>
+          <div style={{position:"absolute",right:18,top:18,width:15,height:15,borderRight:"1px solid rgba(214,163,64,.8)",borderTop:"1px solid rgba(214,163,64,.8)"}}/>
+          <div style={{position:"absolute",left:18,bottom:18,width:15,height:15,borderLeft:"1px solid rgba(214,163,64,.8)",borderBottom:"1px solid rgba(214,163,64,.8)"}}/>
+          <div style={{position:"absolute",right:18,bottom:18,width:15,height:15,borderRight:"1px solid rgba(214,163,64,.8)",borderBottom:"1px solid rgba(214,163,64,.8)"}}/>
+          <div style={{position:"relative",zIndex:1,maxWidth:760,margin:"0 auto"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:12}}>
+              <span style={{width:90,height:1,background:"linear-gradient(90deg,transparent,rgba(214,163,64,.75))"}}/>
+              <span style={{fontSize:10,color:"rgba(214,163,64,.95)"}}>✦</span>
+              <span style={{width:90,height:1,background:"linear-gradient(90deg,rgba(214,163,64,.75),transparent)"}}/>
             </div>
-            <p className="muted" style={{margin:0,fontSize:14}}>Muchas gracias por jugar con nosotros.<br/>Le deseamos suerte en las mesas.</p>
+            <p style={{margin:"0 0 12px",fontSize:18,fontWeight:600,letterSpacing:".045em"}}>Favor de registrar sus tickets en caja.</p>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:13}}>
+              <span style={{width:34,height:1,background:"rgba(214,163,64,.5)"}}/>
+              <span style={{width:5,height:5,border:"1px solid rgba(214,163,64,.85)",transform:"rotate(45deg)"}}/>
+              <span style={{width:34,height:1,background:"rgba(214,163,64,.5)"}}/>
+            </div>
+            <p className="muted" style={{margin:0,fontSize:14,lineHeight:1.8}}>Muchas gracias por jugar con nosotros.<br/>Le deseamos suerte en las mesas.</p>
           </div>
         </div>
       </section>
