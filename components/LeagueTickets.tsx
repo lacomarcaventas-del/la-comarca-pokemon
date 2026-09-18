@@ -53,8 +53,10 @@ export default function LeagueTickets(){
   return <>
     <header className="top"><a href="/">← La Comarca</a><b>La Comarca · Tickets</b><a href="/cuenta">👤 Clientes</a></header>
     <main className="wrap">
-      <section className="center" style={{marginBottom:30,paddingTop:18}}>
-        <h1 style={{margin:"0 0 18px"}}>Entradas a las Ligas</h1>
+      <section style={{marginBottom:30,paddingTop:18}}>
+        <img src="/circuito-mensual-ligas.svg" alt="Circuito mensual de ligas por cada línea" style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}/>
+      </section>
+      <section className="center" style={{marginBottom:30}}>
         <div style={{maxWidth:720,margin:"0 auto",lineHeight:1.65}}>
           <p style={{margin:"0 0 10px",fontSize:16}}>Favor de registrar sus tickets en caja.</p>
           <div style={{width:48,height:1,background:"currentColor",opacity:.25,margin:"0 auto 14px"}}/>
