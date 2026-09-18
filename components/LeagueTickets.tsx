@@ -54,9 +54,12 @@ export default function LeagueTickets(){
     <header className="top"><a href="/">← La Comarca</a><b>La Comarca · Tickets</b><a href="/cuenta">👤 Clientes</a></header>
     <main className="wrap">
       <section className="center" style={{marginBottom:28,paddingTop:18}}>
-        <div className="muted" style={{letterSpacing:".18em",textTransform:"uppercase",fontSize:11}}>Compra anticipada</div>
-        <h1 style={{margin:"8px 0 6px"}}>Entradas a las Ligas</h1>
-        <p className="muted" style={{margin:0}}>Elige tu liga y asegura tu lugar · $150 MXN por entrada</p>
+        <h1 style={{margin:"0 0 16px"}}>Entradas a las Ligas</h1>
+        <div className="muted" style={{lineHeight:1.7}}>
+          <p style={{margin:"0 0 8px"}}>Favor de registrar sus tickets en caja.</p>
+          <p style={{margin:"0 0 8px"}}>Preinscríbete a tus ligas y recibe una promocional al llevar tu lista.</p>
+          <p style={{margin:0}}>Muchas gracias por jugar con nosotros.<br/>Le deseamos suerte en las mesas.</p>
+        </div>
       </section>
       {error&&<div className="panel">{error}</div>}
       {loading?<div className="empty">Cargando tickets...</div>:<div className="grid">{cards.map(card=><article className="card" key={card.id}>
