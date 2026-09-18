@@ -1,6 +1,5 @@
 /* La Comarca auth skin — visual only. Supabase/auth logic remains untouched. */
 
-/* Base: applies to every /cuenta state (logged in and logged out). */
 .wrap:has(> .accountHead){
   max-width:1180px;
   min-height:100vh;
@@ -49,12 +48,6 @@
   text-shadow:0 0 28px #299dff66;
   margin:0;
 }
-.wrap:has(> .accountHead)>.accountHead .brand:before{
-  content:"LA ";
-  font-size:.48em;
-  vertical-align:top;
-  letter-spacing:.12em;
-}
 .wrap:has(> .accountHead)>.accountHead .muted{
   color:#aebbd0;
   letter-spacing:.18em;
@@ -76,7 +69,6 @@
   border-radius:999px;
 }
 
-/* Logged-in panels. */
 .wrap:has(> .accountHead)> .panel:not(.accountHead){
   border:1px solid #1f71b8aa;
   border-radius:20px;
@@ -123,7 +115,6 @@
   border-radius:12px;
 }
 
-/* Logged-out layout: two cards side by side on desktop, stacked on mobile. */
 .wrap:has(> .accountHead + .panel.center + .panel.center){
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
