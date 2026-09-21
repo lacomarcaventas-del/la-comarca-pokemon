@@ -79,7 +79,7 @@ export default function MarketPage(){
           <h2>COMPRAMOS CARTAS <span>WE BUY CARDS</span></h2>
           <p>Compramos cartas individuales, lotes y colecciones de TCG. Envíanos tu lista y fotografías claras para evaluar tu material.<br/>We buy individual cards, lots, and TCG collections. Send us your list and clear photos so we can evaluate your cards.</p>
         </a>
-        <a className="marketAction" href="/market/formato-cartas-para-evaluacion.xls" download>
+        <a className="marketAction" href="/market/formato-cartas-para-evaluacion.xlsx" download>
           <div className="marketActionIcon">▤</div>
           <h2>DESCARGA EL FORMATO <span>DOWNLOAD THE TEMPLATE</span></h2>
           <p>Descarga nuestro formato de Excel y completa la información de tus cartas para agilizar la evaluación.<br/>Download our Excel template and provide your card information to speed up the evaluation.</p>
