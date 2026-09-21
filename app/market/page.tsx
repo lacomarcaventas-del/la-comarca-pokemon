@@ -88,7 +88,7 @@ export default function MarketPage(){
         <div className="marketFinalBox">
           <div className="marketFinalBlock"><h3>Te ayudamos con la logística de envío.</h3><p>We help you with shipping logistics.</p></div>
           <div className="marketFinalBlock"><h4>Vende a todo México y el mundo hoy.</h4><h4><span>SELL ACROSS MEXICO AND WORLDWIDE TODAY.</span></h4><p>Mexpost · 3–5 días hábiles · FedEx · 3 días hábiles</p></div>
-          <div className="marketFinalBlock"><h4>Solicita una cuenta para gestión de colección hoy.</h4><p>Request an account for collection management today.</p><a className="marketAccount" href="/cuenta"><b>Solicitar cuenta</b><small>Request an account</small></a></div>
+          <div className="marketFinalBlock"><h4>Solicita una cuenta para gestión de colección hoy.</h4><p>Request an account for collection management today.</p></div>
         </div>
       </section>
     </main>
