@@ -41,7 +41,12 @@ const marketCss = `
 
 export default function MarketPage(){
   return <div className="siteShell marketPage">
-    <style>{marketCss}</style>
+    <style>{marketCss+`.marketFinalCta{max-width:1200px;margin:22px auto 0;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:18px;align-items:center;border:1px solid rgba(0,234,255,.38);border-radius:16px;background:linear-gradient(100deg,rgba(0,234,255,.06),rgba(255,32,231,.05));box-shadow:0 10px 35px rgba(0,0,0,.22)}
+.marketFinalCta>div{padding-right:18px;border-right:1px solid rgba(0,234,255,.18)}
+.marketFinalCta strong{display:block;color:#fff;font-size:15px}.marketFinalCta span{display:block;color:#8ea2b7;font-size:11px;margin-top:5px}
+.marketFinalCta a{display:flex;flex-direction:column;gap:4px;justify-content:center;padding:14px 18px;border-radius:11px;background:linear-gradient(100deg,#681cff,#e91bd7);color:#fff;text-decoration:none;box-shadow:0 0 18px rgba(164,36,255,.25)}
+.marketFinalCta a b{font-size:14px}.marketFinalCta a small{font-size:10px;color:#f1ddff}
+`}@media(max-width:800px){.marketFinalCta{grid-template-columns:1fr;gap:12px}.marketFinalCta>div{padding-right:0;border-right:0;padding-bottom:12px;border-bottom:1px solid rgba(0,234,255,.18)}}</style>
     <section className="shippingHero" aria-label="Envíos a todo México">
       <div className="shippingInner">
         <div className="shippingLead"><strong>ENVIAMOS A<br/>TODO EL PAÍS</strong></div>
@@ -97,7 +102,12 @@ export default function MarketPage(){
         </div>
       </section>
 
-      <div className="marketFooterLine">JUEGA · COLECCIONA · PERTENECE &nbsp; · &nbsp; PLAY · COLLECT · BELONG</div>
+      <section className="marketFinalCta">
+  <div><strong>Te ayudamos con la logística de envío.</strong><span>We help you with shipping logistics.</span></div>
+  <div><strong>Vende a todo México y el mundo hoy.</strong><span>Sell across Mexico and worldwide today.</span></div>
+  <a href="/cuenta"><b>Solicita una cuenta para gestión de colección hoy.</b><small>Request an account for collection management today.</small></a>
+</section>
+<div className="marketFooterLine">JUEGA · COLECCIONA · PERTENECE &nbsp; · &nbsp; PLAY · COLLECT · BELONG</div>
     </main>
 
     <footer className="siteFooter"><BrandLogo/><span>La Comarca · Campeche, México · TCG · Juegos · Coleccionismo · Hobby</span></footer>
