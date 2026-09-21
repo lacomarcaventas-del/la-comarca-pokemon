@@ -61,9 +61,9 @@ export default function MarketPage(){
           <div className="marketTitleAccent"></div>
           <div className="marketHeroMain">COMPRAMOS CARTAS</div>
           <div className="marketHeroEn">WE BUY CARDS</div>
-          <div className="marketHeroSub">Tu colección puede llegar más lejos con nosotros.</div>
-          <div className="marketHeroSubEn">Your collection can go further with us.</div>
-          <div className="marketPatience"><strong>La paciencia es requerida…</strong><span>Grandes colecciones toman tiempo, y las buenas historias también.<br/><br/>Patience is required… Great collections take time, and so do great stories.</span></div>
+          <div className="marketHeroSub">Evaluamos cartas individuales, lotes y colecciones de TCG.</div>
+          <div className="marketHeroSubEn">We evaluate individual cards, lots and TCG collections.</div>
+          <div className="marketPatience"><strong>La paciencia es requerida…</strong><span>Las colecciones grandes requieren tiempo para una revisión adecuada.<br/><br/>Large collections require time for a proper review.</span></div>
           <div className="marketCards"><span className="marketCardArt"></span><span className="marketCardArt"></span><span className="marketCardArt"></span></div>
         </div>
       </section>
@@ -71,7 +71,7 @@ export default function MarketPage(){
         <div className="marketInfoItem"><b className="marketInfoIcon">◎</b><div><strong>Compramos cartas en todo México y el mundo.</strong><span>We buy cards across Mexico and worldwide.</span></div></div>
         <div className="marketInfoItem"><b className="marketInfoIcon">▣</b><div><strong>Te ayudamos con la logística de envío para recibir tus cartas.</strong><span>We help with shipping logistics for your cards.</span></div></div>
         <div className="marketInfoItem"><b className="marketInfoIcon">◇</b><div><strong>Transacciones seguras.</strong><span>Secure transactions.</span></div></div>
-        <div className="marketInfoItem"><b className="marketInfoIcon">♧</b><div><strong>Compramos cartas de coleccionistas.</strong><span>We buy cards from collectors.</span></div></div>
+        
       </section>
       <section className="marketActions">
         <a className="marketAction" href="mailto:market@lacomarca.com.mx?subject=Quiero%20vender%20mis%20cartas%20-%20La%20Comarca%20Market">
