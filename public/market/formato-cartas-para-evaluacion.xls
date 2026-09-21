@@ -1,15 +1,65 @@
 <!DOCTYPE html>
 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="UTF-8"><style>
+body{font-family:Arial,sans-serif;color:#17212b}
+h1{font-size:20px;color:#0b2434}
+.section{background:#0b2434;color:#00eaff;font-weight:bold;font-size:14px}
+.label{background:#e8eef2;font-weight:bold}
 th{background:#0b2434;color:#00eaff;font-weight:bold;border:1px solid #9aa7b2;padding:8px}
 td{border:1px solid #c5cbd1;padding:7px}
+.policy{background:#f5f7f9}
 </style></head>
 <body>
+<h1>LA COMARCA MARKET — FORMATO PARA EVALUACIÓN DE CARTAS</h1>
+
 <table>
+<tr><td class="section" colspan="4">DATOS DEL CLIENTE / CUSTOMER INFORMATION</td></tr>
+<tr><td class="label">Nombre completo / Full name</td><td></td><td class="label">Teléfono / Phone</td><td></td></tr>
+<tr><td class="label">Correo electrónico / Email</td><td></td><td class="label">RFC (opcional)</td><td></td></tr>
+<tr><td class="label">Dirección / Address</td><td colspan="3"></td></tr>
+<tr><td class="label">Colonia / Neighborhood</td><td></td><td class="label">Código postal / ZIP</td><td></td></tr>
+<tr><td class="label">Ciudad / City</td><td></td><td class="label">Estado / State</td><td></td></tr>
+<tr><td class="label">País / Country</td><td></td><td class="label">Identificación oficial / ID</td><td></td></tr>
+<tr><td class="label">Nombre para remisión / Recipient name</td><td colspan="3"></td></tr>
+</table>
+
+<br>
+
+<table>
+<tr><td class="section" colspan="10">DETALLE DE CARTAS / CARD DETAILS</td></tr>
 <tr><th>Nombre de la carta</th><th>Juego</th><th>Set / Expansión</th><th>Número</th><th>Idioma</th><th>Condición</th><th>Rareza</th><th>Cantidad</th><th>Valor deseado</th><th>Observaciones</th></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td>Español / Inglés / Otro</td><td>NM / LP / MP / HP / Damaged</td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td>Español / Inglés / Otro</td><td>NM / LP / MP / HP / Damaged</td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></table>
+
+<br>
+
+<table>
+<tr><td class="section" colspan="4">DATOS DEL ENVÍO / SHIPPING INFORMATION</td></tr>
+<tr><td class="label">Empresa de mensajería / Carrier</td><td></td><td class="label">Número de guía / Tracking</td><td></td></tr>
+<tr><td class="label">Fecha de envío / Shipping date</td><td></td><td class="label">Cantidad de piezas / Number of items</td><td></td></tr>
+<tr><td class="label">Valor declarado / Declared value</td><td></td><td class="label">Seguro / Insurance</td><td></td></tr>
+</table>
+
+<br>
+
+<table>
+<tr><td class="section">POLÍTICAS DE REVISIÓN Y COMPRA DE COLECCIONABLES / REVIEW &amp; PURCHASE POLICIES</td></tr>
+<tr><td class="policy">
+1. El envío de cartas, lotes o colecciones para revisión no constituye por sí mismo una oferta de compra ni garantiza una compra por parte de La Comarca.<br>
+2. La evaluación está sujeta a revisión física y/o visual de autenticidad, idioma, edición, condición, cantidad, integridad y estado del material recibido.<br>
+3. La condición indicada por el cliente es informativa y podrá ser modificada después de la revisión. La evaluación final se realizará con base en el estado real del material.<br>
+4. El valor deseado indicado por el cliente es una referencia y no constituye una obligación de compra. La oferta final dependerá de la evaluación del material, mercado, demanda y demás criterios comerciales aplicables.<br>
+5. Las cartas o productos que presenten indicios de falsificación, alteración, procedencia irregular o cualquier situación que impida acreditar su legitimidad podrán ser rechazados y no serán considerados para compra.<br>
+6. Para colecciones grandes, la revisión puede requerir tiempo adicional. El cliente acepta que los tiempos pueden variar según volumen, temporada y carga de trabajo.<br>
+7. El cliente declara que es propietario del material enviado o que cuenta con autorización suficiente para disponer de él y venderlo.<br>
+8. El cliente deberá proporcionar información de contacto correcta y una dirección válida para efectos de identificación, remisión y documentación de la operación cuando corresponda.<br>
+9. El cliente deberá conservar el comprobante y número de guía del envío. La recepción del paquete no implica aceptación de compra hasta concluir la revisión.<br>
+10. Cualquier oferta de compra se comunicará al cliente una vez concluida la revisión correspondiente. La operación quedará sujeta a la aceptación de ambas partes y a las condiciones comunicadas en dicha oferta.<br>
+11. El tratamiento de datos personales proporcionados en este formato se realizará únicamente para gestionar la revisión, comunicación y, en su caso, documentación de la operación, conforme a las políticas de privacidad aplicables.
+</td></tr>
+<tr><td class="label">ACEPTACIÓN / ACCEPTANCE</td></tr>
+<tr><td>Al enviar material para revisión, el cliente manifiesta haber leído y aceptado estas políticas. / By sending material for review, the customer confirms having read and accepted these policies.</td></tr>
 </table>
 </body></html>
