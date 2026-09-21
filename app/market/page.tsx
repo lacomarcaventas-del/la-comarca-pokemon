@@ -59,26 +59,27 @@ export default function MarketPage(){
           <div className="marketKicker">LA COMARCA</div>
           <div className="marketTitle">MARKET</div>
           <div className="marketTitleAccent"></div>
-          <div className="marketHeroMain">COMPRA · VENDE · INTERCAMBIA</div>
-          <div className="marketHeroEn">BUY · SELL · TRADE</div>
-          <div className="marketHeroSub">Tu colección puede llegar más lejos.</div>
-          <div className="marketHeroSubEn">Your collection can go further.</div>
+          <div className="marketHeroMain">COMPRAMOS CARTAS</div>
+          <div className="marketHeroEn">WE BUY CARDS</div>
+          <div className="marketHeroSub">Tu colección puede llegar más lejos con nosotros.</div>
+          <div className="marketHeroSubEn">Your collection can go further with us.</div>
           <div className="marketPatience"><strong>La paciencia es requerida…</strong><span>Grandes colecciones toman tiempo, y las buenas historias también.<br/><br/>Patience is required… Great collections take time, and so do great stories.</span></div>
           <div className="marketCards"><span className="marketCardArt"></span><span className="marketCardArt"></span><span className="marketCardArt"></span></div>
         </div>
       </section>
       <section className="marketInfo">
-        <div className="marketInfoItem"><b className="marketInfoIcon">◎</b><div><strong>Vende a todo México y el mundo hoy.</strong><span>Sell across Mexico and worldwide today.</span></div></div>
-        <div className="marketInfoItem"><b className="marketInfoIcon">▣</b><div><strong>Te ayudamos con la logística de envío.</strong><span>We help you with shipping logistics.</span></div></div>
+        <div className="marketInfoItem"><b className="marketInfoIcon">◎</b><div><strong>Compramos cartas en todo México y el mundo.</strong><span>We buy cards across Mexico and worldwide.</span></div></div>
+        <div className="marketInfoItem"><b className="marketInfoIcon">▣</b><div><strong>Te ayudamos con la logística de envío para recibir tus cartas.</strong><span>We help with shipping logistics for your cards.</span></div></div>
         <div className="marketInfoItem"><b className="marketInfoIcon">◇</b><div><strong>Transacciones seguras.</strong><span>Secure transactions.</span></div></div>
-        <div className="marketInfoItem"><b className="marketInfoIcon">♧</b><div><strong>Coleccionistas conectando colecciones.</strong><span>Collectors connecting collections.</span></div></div>
+        <div className="marketInfoItem"><b className="marketInfoIcon">♧</b><div><strong>Compramos cartas de coleccionistas.</strong><span>We buy cards from collectors.</span></div></div>
       </section>
       <section className="marketActions">
-        <a className="marketAction" href="mailto:market@lacomarca.com.mx?subject=Vender%20mi%20colecci%C3%B3n%20-%20La%20Comarca%20Market"><div className="marketActionIcon">▱</div><h2>VENDE TU COLECCIÓN <span>SELL YOUR COLLECTION</span></h2><p>¿Tienes cartas, productos o una colección completa? Te hacemos una oferta justa.<br/>Have cards, products, or a full collection? We’ll make you a fair offer.</p></a>
-        <a className="marketAction" href="mailto:market@lacomarca.com.mx?subject=Consulta%20de%20colecciones%20-%20La%20Comarca%20Market"><div className="marketActionIcon">⌑</div><h2>COMPRA COLECCIONES <span>BUY COLLECTIONS</span></h2><p>Tenemos colecciones y lotes disponibles para jugadores y coleccionistas de todo el mundo.<br/>We have collections and lots available worldwide.</p></a>
-        <a className="marketAction" href="mailto:market@lacomarca.com.mx?subject=Intercambio%20-%20La%20Comarca%20Market"><div className="marketActionIcon">⇄</div><h2>INTERCAMBIA <span>TRADE</span></h2><p>¿Buscas algo específico? También evaluamos intercambios.<br/>Looking for something specific? We also consider trades.</p></a>
-      </section>
-      <section className="marketEmailBox">
+        <a className="marketAction" href="mailto:market@lacomarca.com.mx?subject=Quiero%20vender%20mis%20cartas%20-%20La%20Comarca%20Market">
+          <div className="marketActionIcon">▱</div>
+          <h2>COMPRAMOS CARTAS <span>WE BUY CARDS</span></h2>
+          <p>Compramos cartas individuales, lotes y colecciones de TCG. Envíanos tu lista y fotografías claras para evaluar tu material.<br/>We buy individual cards, lots, and TCG collections. Send us your list and clear photos so we can evaluate your cards.</p>
+        </a>
+      </section> <section className="marketEmailBox">
         <div className="marketEmailInner">
           <div><div className="marketEmailLabel">ENVÍA TU LISTA / SEND YOUR LIST</div><a className="marketEmail" href="mailto:market@lacomarca.com.mx?subject=Mi%20lista%20-%20La%20Comarca%20Market">market@lacomarca.com.mx</a></div>
           <div className="marketEmailNote"><strong>Acompaña tu lista con imágenes claras de las cartas.</strong>Las imágenes nos ayudan a evaluar más rápido.<br/><strong>Please include clear photos of your cards.</strong>Images help us evaluate your items faster.</div>
