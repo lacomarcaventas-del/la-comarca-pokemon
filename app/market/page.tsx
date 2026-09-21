@@ -35,7 +35,7 @@ const marketCss = `
 @media(max-width:520px){.marketTrust{grid-template-columns:1fr}.marketTrustItem{border-right:0;border-bottom:1px solid rgba(0,234,255,.15)}.marketTrustItem:last-child{border-bottom:0}.marketHeroMain{font-size:22px}.marketHeroEn{font-size:13px}}
 `;
 
-export default function MarketPage(){
+// Market visual refresh\nexport default function MarketPage(){
   return <div className="siteShell marketPage">
     <style>{marketCss}</style>
     <section className="shippingHero" aria-label="Envíos a todo México">
