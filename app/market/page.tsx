@@ -85,7 +85,7 @@ export default function MarketPage(){
           <div className="marketEmailNote"><strong>Acompaña tu lista con imágenes claras de las cartas.</strong>Las imágenes nos ayudan a evaluar más rápido.<br/><strong>Please include clear photos of your cards.</strong>Images help us evaluate your items faster.</div>
         </div>
       </section>
-/main>
+    </main>
     <footer className="siteFooter"><BrandLogo/><span>La Comarca · Campeche, México · TCG · Juegos · Coleccionismo · Hobby</span></footer>
   </div>
 }
