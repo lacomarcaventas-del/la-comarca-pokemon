@@ -12,16 +12,16 @@ const marketCss = `
 .marketTrustItem{min-height:78px;display:flex;align-items:center;gap:12px;padding:12px 20px;border-right:1px solid rgba(0,234,255,.18)}
 .marketTrustItem:last-child{border-right:0}
 .marketTrustIcon{font-size:28px;color:#00eaff;text-shadow:0 0 12px rgba(0,234,255,.5)}
-.marketTrust strong{display:block;color:#fff;font-size:13px}
-.marketTrust span{display:block;color:#8ea2b7;font-size:11px;margin-top:4px}
+.marketTrust strong{display:block;color:#fff;font-size:14px}
+.marketTrust span{display:block;color:#8ea2b7;font-size:12px;margin-top:4px}
 .marketActions{max-width:1200px;margin:22px auto 0;padding:0 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .marketCard{min-height:190px;padding:22px;border:1px solid rgba(0,234,255,.22);border-radius:15px;background:linear-gradient(145deg,#0d1725,#07101a);box-shadow:0 12px 30px rgba(0,0,0,.2);color:#fff;text-decoration:none;transition:.18s ease;position:relative;overflow:hidden}
 .marketCard:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 20%,rgba(0,234,255,.08),transparent 30%),radial-gradient(circle at 90% 85%,rgba(255,32,231,.08),transparent 28%);pointer-events:none}
 .marketCard:hover{transform:translateY(-2px);border-color:rgba(0,234,255,.55);box-shadow:0 15px 35px rgba(0,0,0,.3)}
 .marketCardIcon{font-size:34px;color:#00eaff;text-shadow:0 0 12px rgba(0,234,255,.55);position:relative}
-.marketCard h2{font-size:17px;margin:10px 0 2px;position:relative}
+.marketCard h2{font-size:19px;margin:10px 0 2px;position:relative}
 .marketCard h2 span{display:block;color:#00eaff;font-size:11px;letter-spacing:.1em;margin-top:4px}
-.marketCard p{position:relative;color:#c4ced9;font-size:12px;line-height:1.55;margin:12px 0 0;max-width:430px}
+.marketCard p{position:relative;color:#c4ced9;font-size:13px;line-height:1.55;margin:12px 0 0;max-width:430px}
 .marketArrow{position:absolute;right:20px;top:50%;width:38px;height:38px;border:1px solid rgba(0,234,255,.65);border-radius:50%;display:grid;place-items:center;color:#00eaff;font-size:20px}
 .marketContact{max-width:1200px;margin:16px auto 0;padding:0 18px}
 .marketContactInner{display:grid;grid-template-columns:1fr 1fr;align-items:center;border:1px solid #00eaff;border-radius:15px;background:linear-gradient(100deg,rgba(0,234,255,.07),rgba(255,32,231,.04));padding:22px 28px;box-shadow:0 0 25px rgba(0,234,255,.08)}
@@ -73,7 +73,6 @@ export default function MarketPage(){
         <div className="marketTrustItem"><b className="marketTrustIcon">◎</b><div><strong>En todo el mundo</strong><span>Worldwide</span></div></div>
         <div className="marketTrustItem"><b className="marketTrustIcon">◌</b><div><strong>Atención en español e inglés</strong><span>Support in Spanish and English</span></div></div>
         <div className="marketTrustItem"><b className="marketTrustIcon">◇</b><div><strong>Transacciones seguras</strong><span>Secure transactions</span></div></div>
-        <div className="marketTrustItem"><b className="marketTrustIcon">♧</b><div><strong>17 años en el mercado</strong><span>17 years in the market</span></div></div>
       </section>
 
       <section className="marketActions">
@@ -96,11 +95,6 @@ export default function MarketPage(){
           <div className="marketMail"><b className="marketMailIcon">✉</b><div><div className="marketKicker">ENVÍA TU LISTA / SEND YOUR LIST</div><a className="marketEmail" href="mailto:market@lacomarca.com.mx?subject=Mi%20lista%20-%20La%20Comarca%20Market">market@lacomarca.com.mx</a></div></div>
           <div className="marketPhoto"><strong>Acompaña tu lista con imágenes claras de las cartas.</strong>Las imágenes nos ayudan a evaluar más rápido.<br/><strong>Please include clear photos of your cards.</strong>Images help us evaluate your items faster.</div>
         </div>
-      </section>
-
-      <section className="marketBrands">
-        <div className="marketBrandsTitle">Trabajamos con las principales líneas · We work with the main brands</div>
-        <div className="marketBrandRow"><span>Pokémon</span><span>Magic</span><span>Yu-Gi-Oh!</span><span>One Piece</span><span>Lorcana</span><span>Weiß Schwarz</span><span>Gundam</span><span>D&amp;D</span><span>HeroClix</span><span>Y MÁS · AND MORE</span></div>
       </section>
 
       <div className="marketFooterLine">JUEGA · COLECCIONA · PERTENECE &nbsp; · &nbsp; PLAY · COLLECT · BELONG</div>
