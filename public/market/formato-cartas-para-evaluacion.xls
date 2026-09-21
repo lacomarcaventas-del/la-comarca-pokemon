@@ -15,12 +15,12 @@ td{border:1px solid #c5cbd1;padding:7px}
 <table>
 <tr><td class="section" colspan="4">DATOS DEL CLIENTE / CUSTOMER INFORMATION</td></tr>
 <tr><td class="label">Nombre completo / Full name</td><td></td><td class="label">Teléfono / Phone</td><td></td></tr>
-<tr><td class="label">Correo electrónico / Email</td><td></td><td class="label">RFC (opcional)</td><td></td></tr>
+<tr><td class="label">Correo electrónico / Email</td><td></td><td class="label">RFC / Tax ID (optional)</td><td></td></tr>
 <tr><td class="label">Dirección / Address</td><td colspan="3"></td></tr>
 <tr><td class="label">Colonia / Neighborhood</td><td></td><td class="label">Código postal / ZIP</td><td></td></tr>
 <tr><td class="label">Ciudad / City</td><td></td><td class="label">Estado / State</td><td></td></tr>
 <tr><td class="label">País / Country</td><td></td><td class="label">Identificación oficial / ID</td><td></td></tr>
-<tr><td class="label">Nombre para remisión / Recipient name</td><td colspan="3"></td></tr>
+<tr><td class="label">Nombre para remisión / Shipping recipient</td><td colspan="3"></td></tr>
 </table>
 
 <br>
