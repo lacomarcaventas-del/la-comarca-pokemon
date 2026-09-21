@@ -6,8 +6,8 @@ td{border:1px solid #c5cbd1;padding:7px}
 </style></head>
 <body>
 <table>
-<tr><th>Nombre de la carta</th><th>Juego</th><th>Set / Expansión</th><th>Número</th><th>Idioma</th><th>Condición</th><th>Rareza</th><th>Cantidad</th><th>Observaciones</th></tr>
-<tr><td></td><td></td><td></td><td></td><td>Español / Inglés / Otro</td><td>NM / LP / MP / HP / Damaged</td><td></td><td></td><td></td></tr>
+<tr><th>Nombre de la carta</th><th>Juego</th><th>Set / Expansión</th><th>Número</th><th>Idioma</th><th>Condición</th><th>Rareza</th><th>Cantidad</th><th>Valor deseado</th><th>Observaciones</th></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td>Español / Inglés / Otro</td><td>NM / LP / MP / HP / Damaged</td><td></td><td></td><td></td></tr>
 <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
