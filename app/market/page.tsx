@@ -19,7 +19,7 @@ const marketCss = `
 .marketInfo{max-width:1200px;margin:18px auto 0;padding:0 18px;display:grid;grid-template-columns:repeat(3,1fr)}
 .marketInfoItem{min-height:84px;padding:14px 20px;display:flex;align-items:center;gap:13px;border-right:1px solid rgba(0,234,255,.2)}.marketInfoItem:last-child{border-right:0}
 .marketInfoIcon{font-size:30px;color:#00eaff;text-shadow:0 0 14px rgba(0,234,255,.45)}.marketInfo strong{display:block;color:#fff;font-size:13px;line-height:1.35}.marketInfo span{display:block;margin-top:4px;color:#91a6b9;font-size:11px;line-height:1.35}
-.marketActions{max-width:1200px;margin:14px auto 0;padding:0 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.marketActions{max-width:1200px;margin:14px auto 0;padding:0 18px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .marketAction{min-height:205px;display:block;padding:24px;border:1px solid rgba(0,234,255,.34);border-radius:16px;background:linear-gradient(145deg,#0d1b2b,#07101a);box-shadow:0 13px 32px rgba(0,0,0,.25);text-decoration:none;transition:transform .18s ease,border-color .18s ease;position:relative;overflow:hidden}
 .marketAction:nth-child(2){border-color:rgba(255,32,231,.38)}.marketAction:hover{transform:translateY(-3px);border-color:#00eaff}
 .marketAction:before{content:"";position:absolute;inset:auto -20% -65% -20%;height:180px;background:radial-gradient(circle,rgba(0,234,255,.12),transparent 65%);pointer-events:none}
@@ -95,11 +95,18 @@ export default function MarketPage(){
           <h2>DESCARGA EL FORMATO <span>DOWNLOAD THE TEMPLATE</span></h2>
           <p>Descarga nuestro formato de Excel y completa la información de tus cartas para agilizar la evaluación.<br/>Download our Excel template and provide your card information to speed up the evaluation.</p>
         </a>
-      </section> <section className="marketEmailBox">
-        <div className="marketEmailInner">
-          <div><div className="marketEmailLabel">ENVÍA TU LISTA / SEND YOUR LIST</div><a className="marketEmail" href="mailto:market@lacomarca.com.mx?subject=Mi%20lista%20-%20La%20Comarca%20Market">market@lacomarca.com.mx</a></div>
-          <div className="marketEmailNote"><strong>Acompaña tu lista con imágenes claras de las cartas.</strong>Las imágenes nos ayudan a evaluar más rápido.<br/><strong>Please include clear photos of your cards.</strong>Images help us evaluate your items faster.</div>
-        </div>
+      </section>
+      <section className="marketBottom">
+        <section className="marketEmailBox">
+          <div className="marketEmailInner">
+            <div><div className="marketEmailLabel">ENVÍA TU LISTA / SEND YOUR LIST</div><a className="marketEmail" href="mailto:market@lacomarca.com.mx?subject=Mi%20lista%20-%20La%20Comarca%20Market">market@lacomarca.com.mx</a></div>
+            <div className="marketEmailNote"><strong>Acompaña tu lista con imágenes claras de las cartas.</strong>Las imágenes nos ayudan a evaluar más rápido.<br/><strong>Please include clear photos of your cards.</strong>Images help us evaluate your items faster.</div>
+          </div>
+        </section>
+        <section className="marketReception">
+          <div className="marketReceptionHead"><b className="marketReceptionIcon">⌖</b><div><h3>PUNTOS DE RECEPCIÓN <span>RECEPTION POINTS</span></h3><p>También puedes entregar tu material en nuestros puntos de recepción.<br/>You can also drop off your cards at our reception points.</p></div></div>
+          <div className="marketCities"><div className="marketCity"><span className="marketCityIcon">♜</span><small>CDMX</small></div><div className="marketCity"><span className="marketCityIcon">♜</span><small>PUEBLA</small></div><div className="marketCity"><span className="marketCityIcon">♜</span><small>MÉRIDA</small></div><div className="marketCity"><span className="marketCityIcon">♜</span><small>CAMPECHE</small></div></div>
+        </section>
       </section>
     </main>
     <footer className="siteFooter"><BrandLogo/><span>La Comarca · Campeche, México · TCG · Juegos · Coleccionismo · Hobby</span></footer>
