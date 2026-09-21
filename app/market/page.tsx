@@ -46,7 +46,7 @@ export default function MarketPage(){
 .marketFinalCta strong{display:block;color:#fff;font-size:15px}.marketFinalCta span{display:block;color:#8ea2b7;font-size:11px;margin-top:5px}
 .marketFinalCta a{display:flex;flex-direction:column;gap:4px;justify-content:center;padding:14px 18px;border-radius:11px;background:linear-gradient(100deg,#681cff,#e91bd7);color:#fff;text-decoration:none;box-shadow:0 0 18px rgba(164,36,255,.25)}
 .marketFinalCta a b{font-size:14px}.marketFinalCta a small{font-size:10px;color:#f1ddff}
-`}@media(max-width:800px){.marketFinalCta{grid-template-columns:1fr;gap:12px}.marketFinalCta>div{padding-right:0;border-right:0;padding-bottom:12px;border-bottom:1px solid rgba(0,234,255,.18)}}</style>
+`}@media(max-width:800px){.marketFinalCta{grid-template-columns:1fr;gap:12px}.marketFinalCta>div{padding-right:0;border-right:0;padding-bottom:12px;border-bottom:1px solid rgba(0,234,255,.18)}}.marketCard{cursor:pointer}.marketArrow{display:none}.marketTrustItem strong{font-size:13px;line-height:1.3}.marketTrustItem span{font-size:11px;line-height:1.35}.marketFinalCta{margin-top:18px}</style>
     <section className="shippingHero" aria-label="Envíos a todo México">
       <div className="shippingInner">
         <div className="shippingLead"><strong>ENVIAMOS A<br/>TODO EL PAÍS</strong></div>
@@ -75,23 +75,23 @@ export default function MarketPage(){
       </section>
 
       <section className="marketTrust" aria-label="Market information">
-        <div className="marketTrustItem"><b className="marketTrustIcon">◎</b><div><strong>En todo el mundo</strong><span>Worldwide</span></div></div>
-        <div className="marketTrustItem"><b className="marketTrustIcon">◌</b><div><strong>Atención en español e inglés</strong><span>Support in Spanish and English</span></div></div>
-        <div className="marketTrustItem"><b className="marketTrustIcon">◇</b><div><strong>Transacciones seguras</strong><span>Secure transactions</span></div></div>
+        <div className="marketTrustItem"><b className="marketTrustIcon">◎</b><div><strong>Vende a todo México y el mundo hoy.</strong><span>Sell across Mexico and worldwide today.</span></div></div>
+        <div className="marketTrustItem"><b className="marketTrustIcon">▣</b><div><strong>Te ayudamos con la logística de envío.</strong><span>We help you with shipping logistics.</span></div></div>
+        <div className="marketTrustItem"><b className="marketTrustIcon">◇</b><div><strong>Transacciones seguras.</strong><span>Secure transactions.</span></div></div>
       </section>
 
       <section className="marketActions">
         <a className="marketCard" href="mailto:market@lacomarca.com.mx?subject=Vender%20mi%20colecci%C3%B3n%20-%20La%20Comarca%20Market">
           <div className="marketCardIcon">▱</div><h2>VENDE TU COLECCIÓN <span>SELL YOUR COLLECTION</span></h2>
-          <p>¿Tienes cartas, productos o una colección completa? Te hacemos una oferta justa.<br/>Have cards, products, or a full collection? We’ll make you a fair offer.</p><span className="marketArrow">›</span>
+          <p>¿Tienes cartas, productos o una colección completa? Te hacemos una oferta justa.<br/>Have cards, products, or a full collection? We’ll make you a fair offer.</p>
         </a>
         <a className="marketCard" href="mailto:market@lacomarca.com.mx?subject=Consulta%20de%20colecciones%20-%20La%20Comarca%20Market">
           <div className="marketCardIcon">⌑</div><h2>COMPRA COLECCIONES <span>BUY COLLECTIONS</span></h2>
-          <p>Tenemos colecciones y lotes disponibles para jugadores y coleccionistas de todo el mundo.<br/>We have collections and lots available worldwide.</p><span className="marketArrow">›</span>
+          <p>Tenemos colecciones y lotes disponibles para jugadores y coleccionistas de todo el mundo.<br/>We have collections and lots available worldwide.</p>
         </a>
         <a className="marketCard" href="mailto:market@lacomarca.com.mx?subject=Intercambio%20-%20La%20Comarca%20Market">
           <div className="marketCardIcon">⇄</div><h2>INTERCAMBIA <span>TRADE</span></h2>
-          <p>¿Buscas algo específico? También evaluamos intercambios.<br/>Looking for something specific? We also consider trades.</p><span className="marketArrow">›</span>
+          <p>¿Buscas algo específico? También evaluamos intercambios.<br/>Looking for something specific? We also consider trades.</p>
         </a>
       </section>
 
