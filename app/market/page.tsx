@@ -1,8 +1,20 @@
-import Image from "next/image";
 import Link from "next/link";
 import BrandLogo from "../../components/BrandLogo";
 
 const marketCss = `
+.marketHeroVisual{min-height:390px;position:relative;overflow:hidden;border:1px solid rgba(0,238,255,.5);border-radius:18px;background:radial-gradient(circle at 68% 48%,rgba(0,234,255,.13),transparent 25%),radial-gradient(circle at 85% 70%,rgba(255,32,231,.11),transparent 28%),linear-gradient(115deg,#07101c 0%,#0a1424 48%,#12091c 100%);box-shadow:0 18px 55px rgba(0,0,0,.35);padding:58px 58px}
+.marketHeroVisual:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 47%,rgba(0,234,255,.06) 48%,transparent 49%),linear-gradient(155deg,transparent 0 62%,rgba(255,32,231,.05) 63%,transparent 64%);pointer-events:none}
+.marketHeroTitle{position:relative;z-index:2;font-size:76px;line-height:.9;font-weight:900;letter-spacing:-.04em;color:#fff;margin:8px 0 18px;text-shadow:0 0 22px rgba(0,234,255,.18)}
+.marketHeroKicker{position:relative;z-index:2;color:#8defff;font-size:18px;letter-spacing:.34em;font-weight:700}
+.marketHeroRule{position:relative;z-index:2;width:360px;height:4px;background:linear-gradient(90deg,#00eaff,#ff20e7);border-radius:4px}
+.marketHeroMain{position:relative;z-index:2;font-size:26px;font-weight:800;color:#fff;margin-top:22px}.marketHeroEn{font-size:17px;color:#b9d8ee;margin-top:7px}
+.marketHeroPatience{position:absolute;z-index:3;right:58px;top:54px;width:290px;padding:22px 22px 20px;transform:rotate(-4deg);border:1px solid rgba(0,234,255,.3);border-radius:12px;background:rgba(6,13,24,.88);box-shadow:0 12px 35px rgba(0,0,0,.3)}
+.marketHeroPatience strong{display:block;color:#fff;font-size:25px;line-height:1.05}.marketHeroPatience em{display:block;color:#00eaff;font-size:12px;margin-top:12px;font-style:normal;line-height:1.45}
+.marketCardsArt{position:absolute;right:245px;bottom:-45px;width:340px;height:260px;transform:rotate(10deg);opacity:.9}
+.marketCardsArt span{position:absolute;width:155px;height:220px;border:1px solid rgba(0,234,255,.55);border-radius:16px;background:linear-gradient(145deg,#142337,#07101a);box-shadow:0 0 22px rgba(0,234,255,.08)}.marketCardsArt span:nth-child(1){left:25px;transform:rotate(-15deg)}.marketCardsArt span:nth-child(2){left:95px;top:-25px;transform:rotate(7deg);border-color:rgba(255,32,231,.5)}.marketCardsArt span:nth-child(3){left:165px;top:15px;transform:rotate(19deg)}
+.marketFooterLine{display:none}
+@media(max-width:800px){.marketHeroVisual{min-height:430px;padding:40px 28px}.marketHeroTitle{font-size:58px}.marketHeroPatience{right:28px;top:auto;bottom:25px;width:245px}.marketCardsArt{display:none}.marketHeroRule{width:240px}}
+
 .marketPage{padding-bottom:34px}
 .marketCrumb{max-width:1200px;margin:0 auto;padding:18px 18px 8px;color:#8997a8;font-size:12px}
 .marketCrumb a{color:#b9c6d5;text-decoration:none}
@@ -66,7 +78,17 @@ export default function MarketPage(){
       <div className="marketCrumb"><Link href="/">Inicio</Link> &nbsp;›&nbsp; Market</div>
 
       <section className="marketHero">
-        <Image src="/market-banner.svg" alt="La Comarca Market — Compra, vende e intercambia / Buy, sell and trade" width={1600} height={520} priority/>
+        <div className="marketHeroVisual">
+          <div className="marketHeroKicker">LA COMARCA</div>
+          <div className="marketHeroTitle">MARKET</div>
+          <div className="marketHeroRule"></div>
+          <div className="marketHeroMain">COMPRA · VENDE · INTERCAMBIA</div>
+          <div className="marketHeroEn">BUY · SELL · TRADE</div>
+          <div className="marketHeroMain" style={{fontSize:"22px",marginTop:"28px"}}>Tu colección puede llegar más lejos.</div>
+          <div className="marketHeroEn">Your collection can go further.</div>
+          <div className="marketHeroPatience"><strong>La paciencia es requerida…</strong><em>Grandes colecciones toman tiempo, y las buenas historias también.<br/><br/>Patience is required… Great collections take time, and so do great stories.</em></div>
+          <div className="marketCardsArt"><span></span><span></span><span></span></div>
+        </div>
       </section>
 
       <section className="marketTrust" aria-label="Market information">
@@ -102,7 +124,7 @@ export default function MarketPage(){
   <div><strong>Vende a todo México y el mundo hoy.</strong><span>Sell across Mexico and worldwide today.</span></div>
   <a href="/cuenta"><b>Solicita una cuenta para gestión de colección hoy.</b><small>Request an account for collection management today.</small></a>
 </section>
-<div className="marketFooterLine">JUEGA · COLECCIONA · PERTENECE &nbsp; · &nbsp; PLAY · COLLECT · BELONG</div>
+
     </main>
 
     <footer className="siteFooter"><BrandLogo/><span>La Comarca · Campeche, México · TCG · Juegos · Coleccionismo · Hobby</span></footer>
