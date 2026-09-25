@@ -106,7 +106,14 @@ export default function LeagueTickets(){
       {cart.length>0&&<OrderForm cart={cart} onDone={()=>{setCart([]);setOpen(false);load()}}/>}
       <button className="btn2" onClick={()=>setOpen(false)}>Cerrar</button>
     </div></div>}
-  </>;
+      <section style={{marginTop:28,marginBottom:36}}>
+        <img
+          src="/liga-ranking-agosto.webp"
+          alt="Ranking de Ligas · Agosto"
+          style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}
+        />
+      </section>
+    </>;
 }
 
 function OrderForm({cart,onDone}:{cart:CartItem[];onDone:()=>void}){
