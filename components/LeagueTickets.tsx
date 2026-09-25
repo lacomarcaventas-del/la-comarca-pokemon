@@ -1,16 +1,7 @@
 {loading ? (
   <div className="empty">Cargando tickets...</div>
 ) : (
-  <section
-    style={{
-      display: "grid",
-      gridTemplateColumns: "minmax(0,1fr)",
-      gap: 28,
-      alignItems: "start",
-      marginBottom: 18,
-    }}
-    className="ticketsLayout"
-  >
+  <section className="grid gap-7 lg:grid-cols-[1fr_460px] items-start mb-5">
     <div className="grid">
       {cards.map(card => (
         <article className="card" key={card.id}>
@@ -52,13 +43,5 @@
         }}
       />
     </aside>
-
-    <style jsx>{`
-      @media (min-width: 1024px) {
-        .ticketsLayout {
-          grid-template-columns: minmax(0, 1fr) 460px !important;
-        }
-      }
-    `}</style>
   </section>
 )}
