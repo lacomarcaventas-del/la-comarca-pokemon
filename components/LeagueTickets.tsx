@@ -49,7 +49,7 @@ export default function LeagueTickets() {
         <div className="empty">Cargando tickets...</div>
       ) : (
         <section className="grid gap-7 lg:grid-cols-[1fr_460px] items-start mb-5">
-          <div className="grid gap-4">
+          <div className="grid gap-5">
             {cards.map((card) => (
               <article className="card" key={card.id}>
                 <div className="cardImage">
