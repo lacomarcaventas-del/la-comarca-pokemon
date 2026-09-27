@@ -511,13 +511,6 @@ export default function VendePage() {
           </section>
         )}
 
-        {!mode && (
-          <section style={{ ...styles.card, marginTop: 20, padding: 28, textAlign: "center" }}>
-            <div style={{ fontSize: 38 }}>🧭</div>
-            <h2 style={{ margin: "10px 0 6px", fontSize: 26, fontWeight: 900 }}>Primero dinos qué vas a vender</h2>
-            <p style={{ margin: 0, color: "#625e56" }}>El sistema te mostrará el formato adecuado según el tamaño de tu operación.</p>
-          </section>
-        )}
       </div>
 
       {submitted && (
