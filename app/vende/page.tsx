@@ -224,10 +224,6 @@ export default function VendePage() {
     setStep((n) => n - 1);
   }
 
-  function scrollToStart() {
-    document.getElementById("solicitud")?.scrollIntoView({ behavior: "smooth" });
-  }
-
   return (
     <main style={styles.page}>
       <div style={styles.shell}>
@@ -237,7 +233,6 @@ export default function VendePage() {
           <p style={styles.heroText}>
             Cuéntanos qué tienes, cuánto esperas recibir y cómo podemos contactarte. Revisamos cada solicitud y, si es de nuestro interés, un agente se pondrá en contacto contigo para coordinar la operación.
           </p>
-          <button style={styles.heroButton} onClick={scrollToStart}>Comenzar solicitud</button>
         </section>
 
         <div style={styles.notice}>
@@ -510,6 +505,29 @@ export default function VendePage() {
             </aside>
           </section>
         )}
+
+        <section style={{ ...styles.card, marginTop: 20, padding: 24 }}>
+          <h2 style={{ ...styles.sectionTitle, fontSize: 26 }}>¿Dónde entregarnos tus productos?</h2>
+          <p style={styles.sectionSub}>
+            Puedes dejarnos tus productos mediante una entrega coordinada o enviarlos desde cualquier parte de México.
+          </p>
+          <div style={styles.grid2}>
+            <div style={styles.summaryBox}>
+              <div style={styles.pill}>📍 Entrega coordinada</div>
+              <div style={{ marginTop: 11, fontWeight: 900 }}>CDMX · Puebla · Mérida · Campeche</div>
+              <div style={{ ...styles.muted, marginTop: 6 }}>
+                Coordinamos contigo el lugar y horario para recibir tus cartas o coleccionables.
+              </div>
+            </div>
+            <div style={styles.summaryBox}>
+              <div style={styles.pill}>📦 Envío nacional</div>
+              <div style={{ marginTop: 11, fontWeight: 900 }}>Resto de México</div>
+              <div style={{ ...styles.muted, marginTop: 6 }}>
+                Coordinamos el envío contigo. Contamos con opciones desde $200 MXN hasta 3 kg y el costo se considera al cerrar la operación.
+              </div>
+            </div>
+          </div>
+        </section>
 
       </div>
 
