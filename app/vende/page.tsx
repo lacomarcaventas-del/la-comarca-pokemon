@@ -202,7 +202,11 @@ export default function VendePage() {
 
   function canContinue() {
     if (!mode) return false;
-    if (step === 2 && mode === "items") return items.length > 0 || Boolean(name.trim());
+    if (step === 1) {
+      return contactName.trim().length >= 2 && whatsapp.trim().length >= 7 && city.trim().length >= 2;
+    }
+    if (step === 2 && mode === "items") return items.length > 0;
+    if (step === 2 && mode === "collection") return Boolean(excel);
     return true;
   }
 
