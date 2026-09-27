@@ -56,18 +56,6 @@ const styles = {
     fontFamily: "'Cinzel', Georgia, serif",
   } as CSSProperties,
   heroText: { maxWidth: 740, fontSize: 18, lineHeight: 1.55, color: "rgba(255,255,255,.86)", marginTop: 18 } as CSSProperties,
-  heroButton: {
-    marginTop: 24,
-    background: "linear-gradient(135deg,#e87928,#a91d25)",
-    color: "#fff",
-    border: "1px solid #ffb14e",
-    borderRadius: 12,
-    padding: "13px 20px",
-    fontWeight: 900,
-    fontSize: 15,
-    cursor: "pointer",
-    boxShadow: "0 8px 25px rgba(232,121,40,.20)",
-  } as CSSProperties,
   notice: {
     marginTop: 18,
     padding: "15px 18px",
@@ -136,7 +124,6 @@ const styles = {
   amount: { fontSize: 25, fontWeight: 900, marginTop: 7, color: "#f0a04a" } as CSSProperties,
   infoRow: { padding: "12px 0", borderBottom: "1px solid #2a2520", color: "#f1e7d7" } as CSSProperties,
   pill: { display: "inline-flex", alignItems: "center", gap: 7, padding: "7px 11px", borderRadius: 999, background: "#171f2a", border: "1px solid #5b4024", color: "#f0b45b", fontSize: 12, fontWeight: 900 } as CSSProperties,
-  collectionBox: { marginTop: 18, padding: 18, borderRadius: 16, background: "linear-gradient(145deg,#121a24,#0a0f16)", border: "1px solid #55391f", boxShadow: "inset 0 1px 0 rgba(255,255,255,.04)" } as CSSProperties,
 };
 
 export default function VendePage() {
@@ -151,7 +138,6 @@ export default function VendePage() {
   const [condition, setCondition] = useState("Near Mint");
   const [defects, setDefects] = useState("");
   const [itemAmount, setItemAmount] = useState("");
-  const [collectionMode, setCollectionMode] = useState(false);
   const [photos, setPhotos] = useState<File[]>([]);
   const [collectionPhotos, setCollectionPhotos] = useState<File[]>([]);
   const [excel, setExcel] = useState<File | null>(null);
@@ -205,7 +191,6 @@ export default function VendePage() {
   function canContinue() {
     if (!mode) return false;
     if (step === 2 && mode === "items") return items.length > 0 || Boolean(name.trim());
-    if (step === 2 && mode === "collection") return collectionMode;
     return true;
   }
 
@@ -387,34 +372,23 @@ export default function VendePage() {
                     Para una colección completa, envíanos el listado y unas fotografías generales para poder revisarla.
                   </p>
 
-                  <div style={styles.collectionBox}>
-                    <label style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 900, cursor: "pointer" }}>
-                      <input type="checkbox" checked={collectionMode} onChange={(e) => setCollectionMode(e.target.checked)} />
-                      Enviaré una colección completa
-                    </label>
+                  <div style={{ marginTop: 18 }}>
+                    <Field label="Nombre de la colección (opcional)" placeholder="Binder Pokémon 2023–2026" />
                   </div>
 
-                  {collectionMode && (
-                    <>
-                      <div style={{ marginTop: 18 }}>
-                        <Field label="Nombre de la colección (opcional)" placeholder="Binder Pokémon 2023–2026" />
-                      </div>
+                  <label style={{ ...styles.upload, display: "block", marginTop: 15 }}>
+                    <input type="file" hidden accept=".xlsx,.xls,.csv" onChange={(e) => setExcel(e.target.files?.[0] || null)} />
+                    <div style={{ fontSize: 28 }}>📄</div>
+                    <strong>{excel ? excel.name : "Sube tu Excel (.xlsx, .xls o .csv)"}</strong>
+                    <div style={styles.muted}>De preferencia incluye nombre, cantidad, idioma, rareza y condición en el listado.</div>
+                  </label>
 
-                      <label style={{ ...styles.upload, display: "block", marginTop: 15 }}>
-                        <input type="file" hidden accept=".xlsx,.xls,.csv" onChange={(e) => setExcel(e.target.files?.[0] || null)} />
-                        <div style={{ fontSize: 28 }}>📄</div>
-                        <strong>{excel ? excel.name : "Sube tu Excel (.xlsx, .xls o .csv)"}</strong>
-                        <div style={styles.muted}>De preferencia incluye nombre, cantidad, idioma, rareza y condición en el listado.</div>
-                      </label>
-
-                      <label style={{ ...styles.upload, display: "block", marginTop: 15 }} onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, "collection")}>
-                        <input type="file" accept="image/*" multiple hidden onChange={(e) => handlePhotos(e, "collection")} />
-                        <div style={{ fontSize: 28 }}>🖼️</div>
-                        <strong>{collectionPhotosLabel}</strong>
-                        <div style={styles.muted}>Agrega hasta 10 fotografías generales de la colección.</div>
-                      </label>
-                    </>
-                  )}
+                  <label style={{ ...styles.upload, display: "block", marginTop: 15 }} onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, "collection")}>
+                    <input type="file" accept="image/*" multiple hidden onChange={(e) => handlePhotos(e, "collection")} />
+                    <div style={{ fontSize: 28 }}>🖼️</div>
+                    <strong>{collectionPhotosLabel}</strong>
+                    <div style={styles.muted}>Agrega hasta 10 fotografías generales de la colección.</div>
+                  </label>
                 </div>
               )}
 
