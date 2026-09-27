@@ -85,7 +85,7 @@ const styles = {
     background: "linear-gradient(145deg,#ffffff,#f8f5ee)",
     cursor: "pointer",
     textAlign: "left",
-    boxShadow: "0 10px 24px rgba(0,0,0,.08)",,
+    boxShadow: "0 10px 24px rgba(0,0,0,.08)",
   } as CSSProperties,
   icon: { fontSize: 30, marginBottom: 10 } as CSSProperties,
   modeTitle: { fontSize: 18, fontWeight: 900, marginBottom: 6, color: "#1d1a16" } as CSSProperties,
