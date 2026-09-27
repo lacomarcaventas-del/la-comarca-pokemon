@@ -343,7 +343,7 @@ export default function VendePage() {
       <div style={styles.shell}>
         <section style={styles.hero}>
           <div style={styles.eyebrow}>Compra directa · La Comarca</div>
-          <h1 style={styles.heroTitle}>Véndenos tus coleccionables</h1>
+          <h1 style={styles.heroTitle}>Compra directa de tus coleccionables</h1>
           <p style={styles.heroText}>
             Cuéntanos qué tienes, cuánto esperas recibir y cómo podemos contactarte. Revisamos cada solicitud y, si es de nuestro interés, un agente se pondrá en contacto contigo para coordinar la operación.
           </p>
