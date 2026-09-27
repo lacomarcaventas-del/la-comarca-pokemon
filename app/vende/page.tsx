@@ -235,17 +235,23 @@ export default function VendePage() {
           <div style={styles.eyebrow}>Compra directa · La Comarca</div>
           <h1 style={styles.heroTitle}>Véndele tus coleccionables</h1>
           <p style={styles.heroText}>
-            Cartas, figuras, binders y colecciones completas. Tú indicas qué tienes y cuánto esperas recibir; nosotros revisamos la información y te contactamos para coordinar la operación.
+            Cuéntanos qué tienes, cuánto esperas recibir y cómo podemos contactarte. Revisamos cada solicitud y, si es de nuestro interés, un agente se pondrá en contacto contigo para coordinar la operación.
           </p>
           <button style={styles.heroButton} onClick={scrollToStart}>Comenzar solicitud</button>
         </section>
 
         <div style={styles.notice}>
-          <strong>Importante:</strong> todas las solicitudes se revisan manualmente antes de ser aprobadas para evaluación. Escribe la rareza específica cuando aplique, indica cualquier defecto y ten paciencia durante el proceso.
+          <strong>Revisamos cada solicitud manualmente.</strong> Indica la rareza específica cuando aplique y cualquier defecto o detalle que pueda afectar el estado. La evaluación puede tomar tiempo; agradecemos tu paciencia.
         </div>
 
         <section id="solicitud" style={{ ...styles.card, marginTop: 20, padding: 22 }}>
-          <div style={styles.modeGrid}>
+          {!mode && (
+            <>
+              <div style={{ padding: "4px 4px 8px" }}>
+                <h2 style={{ ...styles.sectionTitle, fontSize: 25 }}>¿Qué quieres vender?</h2>
+                <p style={styles.sectionSub}>Elige el formato que corresponde a lo que quieres ofrecer.</p>
+              </div>
+              <div style={styles.modeGrid}>
             <button
               type="button"
               onClick={() => selectMode("items")}
@@ -254,7 +260,7 @@ export default function VendePage() {
               <div style={styles.icon}>🃏</div>
               <div style={styles.modeTitle}>Tengo hasta 10 cartas o artículos</div>
               <div style={styles.modeText}>
-                Agrega cada artículo individualmente, indica rareza, idioma, condición, defectos y monto esperado.
+                Registra hasta 10 piezas e indica su rareza específica, idioma, condición, defectos y monto esperado.
               </div>
             </button>
 
@@ -266,10 +272,12 @@ export default function VendePage() {
               <div style={styles.icon}>📚</div>
               <div style={styles.modeTitle}>Tengo una colección completa</div>
               <div style={styles.modeText}>
-                Usa el formato para colección: adjunta un Excel con tu listado y hasta 10 fotografías generales.
+                Envía el listado en Excel y hasta 10 fotografías generales de la colección.
               </div>
             </button>
           </div>
+            </>
+          )}
         </section>
 
         {mode && (
@@ -292,7 +300,7 @@ export default function VendePage() {
               {step === 1 && (
                 <div>
                   <h2 style={styles.sectionTitle}>Datos de contacto</h2>
-                  <p style={styles.sectionSub}>Elige el mejor horario para que un agente pueda llamarte.</p>
+                  <p style={styles.sectionSub}>Déjanos tus datos y el mejor horario para que un agente pueda comunicarse contigo.</p>
                   <div style={styles.grid2}>
                     <Field label="Nombre" placeholder="Tu nombre" />
                     <Field label="WhatsApp" placeholder="10 dígitos" />
@@ -315,8 +323,8 @@ export default function VendePage() {
 
               {step === 2 && mode === "items" && (
                 <div>
-                  <h2 style={styles.sectionTitle}>Tus artículos</h2>
-                  <p style={styles.sectionSub}>Máximo 10 artículos en esta modalidad.</p>
+                  <h2 style={styles.sectionTitle}>Datos de tus piezas</h2>
+                  <p style={styles.sectionSub}>Agrega hasta 10 piezas a esta solicitud.</p>
 
                   <div style={styles.games}>
                     {games.map((g) => (
@@ -325,7 +333,7 @@ export default function VendePage() {
                   </div>
 
                   <div style={styles.grid2}>
-                    <Field label="Nombre del artículo" placeholder="Umbreon ex" value={name} onChange={(e) => setName(e.target.value)} />
+                    <Field label="Nombre de la pieza" placeholder="Umbreon ex" value={name} onChange={(e) => setName(e.target.value)} />
                     <div style={styles.field}>
                       <label style={styles.label}>Cantidad</label>
                       <input style={styles.input} type="number" min={1} max={10} value={qty} onChange={(e) => setQty(Math.min(10, Number(e.target.value) || 1))} />
@@ -336,18 +344,18 @@ export default function VendePage() {
                         <option>Español</option><option>Inglés</option><option>Japonés</option><option>Otro</option>
                       </select>
                     </div>
-                    <Field label="Rareza específica (si aplica)" placeholder="SIR, Promo, Full Art..." value={rarity} onChange={(e) => setRarity(e.target.value)} />
+                    <Field label="Rareza específica" placeholder="SIR, Promo, Full Art..." value={rarity} onChange={(e) => setRarity(e.target.value)} />
                     <div style={styles.field}>
                       <label style={styles.label}>Condición</label>
                       <select style={styles.input} value={condition} onChange={(e) => setCondition(e.target.value)}>
                         <option>Near Mint</option><option>Lightly Played</option><option>Moderately Played</option><option>Heavily Played</option><option>Damaged</option>
                       </select>
                     </div>
-                    <Field label="Monto esperado por artículo (opcional)" placeholder="$0 MXN" value={itemAmount} onChange={(e) => setItemAmount(e.target.value)} />
+                    <Field label="¿Cuánto esperas recibir por esta pieza?" placeholder="$0 MXN" value={itemAmount} onChange={(e) => setItemAmount(e.target.value)} />
                   </div>
 
                   <div style={{ marginTop: 15 }}>
-                    <label style={styles.label}>Defectos o detalles</label>
+                    <label style={styles.label}>Defectos o detalles, si presenta alguno</label>
                     <textarea style={{ ...styles.textarea, marginTop: 7 }} value={defects} onChange={(e) => setDefects(e.target.value)} placeholder="Doblez, rayón, desgaste, mancha, piezas faltantes, etc." />
                   </div>
 
@@ -355,7 +363,7 @@ export default function VendePage() {
                     <input type="file" accept="image/*" multiple hidden onChange={(e) => handlePhotos(e, "item")} />
                     <div style={{ fontSize: 28 }}>📷</div>
                     <strong>{photosLabel}</strong>
-                    <div style={styles.muted}>Arrastra fotos o haz clic para seleccionarlas</div>
+                    <div style={styles.muted}>Agrega fotografías del artículo. Puedes seleccionar hasta 10.</div>
                   </label>
 
                   {items.length > 0 && (
@@ -379,36 +387,36 @@ export default function VendePage() {
 
               {step === 2 && mode === "collection" && (
                 <div>
-                  <h2 style={styles.sectionTitle}>Colección completa</h2>
+                  <h2 style={styles.sectionTitle}>Cuéntanos sobre tu colección</h2>
                   <p style={styles.sectionSub}>
-                    Para colecciones grandes usamos un flujo distinto para que puedas enviar el listado completo sin capturar pieza por pieza.
+                    Para una colección completa, envíanos el listado y unas fotografías generales para poder revisarla.
                   </p>
 
                   <div style={styles.collectionBox}>
                     <label style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 900, cursor: "pointer" }}>
                       <input type="checkbox" checked={collectionMode} onChange={(e) => setCollectionMode(e.target.checked)} />
-                      Quiero enviar una colección completa
+                      Enviaré una colección completa
                     </label>
                   </div>
 
                   {collectionMode && (
                     <>
                       <div style={{ marginTop: 18 }}>
-                        <Field label="Nombre de la colección" placeholder="Binder Pokémon 2023–2026" />
+                        <Field label="Nombre de la colección (opcional)" placeholder="Binder Pokémon 2023–2026" />
                       </div>
 
                       <label style={{ ...styles.upload, display: "block", marginTop: 15 }}>
                         <input type="file" hidden accept=".xlsx,.xls,.csv" onChange={(e) => setExcel(e.target.files?.[0] || null)} />
                         <div style={{ fontSize: 28 }}>📄</div>
                         <strong>{excel ? excel.name : "Sube tu Excel (.xlsx, .xls o .csv)"}</strong>
-                        <div style={styles.muted}>De preferencia incluye nombre, cantidad, idioma, rareza y condición.</div>
+                        <div style={styles.muted}>De preferencia incluye nombre, cantidad, idioma, rareza y condición en el listado.</div>
                       </label>
 
                       <label style={{ ...styles.upload, display: "block", marginTop: 15 }} onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, "collection")}>
                         <input type="file" accept="image/*" multiple hidden onChange={(e) => handlePhotos(e, "collection")} />
                         <div style={{ fontSize: 28 }}>🖼️</div>
                         <strong>{collectionPhotosLabel}</strong>
-                        <div style={styles.muted}>Hasta 10 fotografías generales de la colección.</div>
+                        <div style={styles.muted}>Agrega hasta 10 fotografías generales de la colección.</div>
                       </label>
                     </>
                   )}
@@ -421,13 +429,13 @@ export default function VendePage() {
 
               {step === 3 && (
                 <div>
-                  <h2 style={styles.sectionTitle}>Pago y logística</h2>
+                  <h2 style={styles.sectionTitle}>Monto y entrega</h2>
                   <div style={{ marginTop: 18 }}>
-                    <Field label="Monto esperado por toda la operación" placeholder="$12,500 MXN" value={expected} onChange={(e) => setExpected(e.target.value)} />
+                    <Field label="¿Cuánto esperas recibir por todo?" placeholder="$12,500 MXN" value={expected} onChange={(e) => setExpected(e.target.value)} />
                   </div>
 
                   <div style={styles.summaryBox}>
-                    <div style={{ fontWeight: 900 }}>¿Aceptarías crédito en tienda?</div>
+                    <div style={{ fontWeight: 900 }}>¿También considerarías crédito en tienda?</div>
                     <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
                       {["Sí", "No", "Podemos revisarlo"].map((x) => (
                         <button key={x} type="button" onClick={() => setCredit(x)} style={{ ...styles.secondary, ...(credit === x ? { background: "#fff6bf", borderColor: "#b89419" } : {}) }}>{x}</button>
@@ -438,26 +446,26 @@ export default function VendePage() {
                   <div style={{ ...styles.summaryBox, marginTop: 15 }}>
                     <div style={styles.pill}>✓ Entrega sin envío</div>
                     <div style={{ marginTop: 10, fontWeight: 900 }}>CDMX · Puebla · Mérida · Campeche</div>
-                    <div style={{ ...styles.muted, marginTop: 5 }}>Coordina la entrega con nuestro equipo.</div>
+                    <div style={{ ...styles.muted, marginTop: 5 }}>Podemos coordinar la entrega directamente contigo.</div>
                   </div>
 
                   <div style={{ ...styles.summaryBox, marginTop: 15 }}>
                     <div style={styles.pill}>📦 Resto de la República</div>
                     <div style={{ marginTop: 10, fontWeight: 900 }}>Coordinamos el envío contigo.</div>
-                    <div style={{ ...styles.muted, marginTop: 5 }}>Contamos con opciones desde $200 MXN hasta 3 kg. El monto se cubre al final de la operación cuando aplique.</div>
+                    <div style={{ ...styles.muted, marginTop: 5 }}>Para el resto del país coordinamos el envío contigo, con opciones desde $200 MXN hasta 3 kg. El costo se considera al cerrar la operación.</div>
                   </div>
                 </div>
               )}
 
               {step === 4 && (
                 <div>
-                  <h2 style={styles.sectionTitle}>Confirmar solicitud</h2>
+                  <h2 style={styles.sectionTitle}>Revisa tu solicitud</h2>
                   <div style={{ marginTop: 18, display: "grid", gap: 10 }}>
-                    <div style={styles.summaryBox}>✓ La rareza específica debe indicarse cuando aplique.</div>
-                    <div style={styles.summaryBox}>✓ Los defectos o detalles deben describirse.</div>
-                    <div style={styles.summaryBox}>✓ En una colección, el Excel y las fotografías ayudan a realizar la evaluación.</div>
-                    <div style={styles.summaryBox}>✓ Todas las solicitudes se revisan antes de ser aprobadas para evaluación.</div>
-                    <div style={styles.summaryBox}>✓ Un agente se comunicará contigo por los medios de contacto que proporcionaste.</div>
+                    <div style={styles.summaryBox}>✓ La rareza específica está indicada cuando corresponde.</div>
+                    <div style={styles.summaryBox}>✓ Los defectos o detalles están descritos cuando existen.</div>
+                    <div style={styles.summaryBox}>✓ En una colección, el Excel y las fotografías acompañan la solicitud.</div>
+                    <div style={styles.summaryBox}>✓ La solicitud será revisada manualmente antes de contactarte.</div>
+                    <div style={styles.summaryBox}>✓ Si lo que ofreces es de nuestro interés, un agente se comunicará contigo por los medios proporcionados.</div>
                   </div>
                 </div>
               )}
@@ -474,7 +482,7 @@ export default function VendePage() {
               <h3 style={styles.sideTitle}>Resumen de solicitud</h3>
               <div style={styles.summaryBox}>
                 <div style={styles.muted}>Modalidad</div>
-                <div style={{ fontWeight: 900, marginTop: 3 }}>{mode === "collection" ? "Colección completa" : "Hasta 10 artículos"}</div>
+                <div style={{ fontWeight: 900, marginTop: 3 }}>{mode === "collection" ? "Cuéntanos sobre tu colección" : "Hasta 10 artículos"}</div>
                 <div style={{ ...styles.muted, marginTop: 10 }}>Juego</div>
                 <div style={{ fontWeight: 900, marginTop: 3 }}>{game}</div>
                 <div style={{ ...styles.muted, marginTop: 10 }}>Artículos</div>
@@ -515,10 +523,10 @@ export default function VendePage() {
       {submitted && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", display: "grid", placeItems: "center", padding: 18, zIndex: 50 }}>
           <div style={{ ...styles.card, maxWidth: 520, padding: 28 }}>
-            <div style={styles.pill}>Solicitud recibida</div>
+            <div style={styles.pill}>Solicitud enviada</div>
             <h2 style={{ fontSize: 34, margin: "14px 0 8px", fontWeight: 900 }}>LC-2026-0001</h2>
             <p style={{ color: "#5f5b54", lineHeight: 1.6 }}>
-              Tu solicitud quedó registrada en modo demostración. En la versión conectada a Supabase se generará un folio real para que nuestro equipo la revise y pueda contactarte.
+              Hemos recibido tu información. Tu solicitud será revisada por nuestro equipo. Si es de nuestro interés, un agente se pondrá en contacto contigo.
             </p>
             <button style={{ ...styles.primary, marginTop: 8 }} onClick={() => setSubmitted(false)}>Cerrar</button>
           </div>
