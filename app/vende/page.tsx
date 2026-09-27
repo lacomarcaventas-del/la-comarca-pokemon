@@ -178,6 +178,7 @@ export default function VendePage() {
         rarity: rarity.trim(),
         condition,
         defects: defects.trim(),
+        expectedAmount: itemAmount.trim(),
       },
     ]);
     setName("");
