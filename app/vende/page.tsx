@@ -188,17 +188,31 @@ export default function VendePage() {
     setItemAmount("");
   }
 
+  function mergePhotos(current: File[], incoming: File[]) {
+    const merged = [...current];
+    for (const file of incoming) {
+      const duplicate = merged.some((existing) =>
+        existing.name === file.name &&
+        existing.size === file.size &&
+        existing.lastModified === file.lastModified
+      );
+      if (!duplicate && merged.length < 10) merged.push(file);
+    }
+    return merged;
+  }
+
   function handlePhotos(e: ChangeEvent<HTMLInputElement>, target: "item" | "collection") {
-    const files = Array.from(e.target.files || []).filter((f) => f.type.startsWith("image/")).slice(0, 10);
-    if (target === "item") setPhotos(files);
-    else setCollectionPhotos(files);
+    const files = Array.from(e.target.files || []).filter((f) => f.type.startsWith("image/"));
+    if (target === "item") setPhotos((current) => mergePhotos(current, files));
+    else setCollectionPhotos((current) => mergePhotos(current, files));
+    e.target.value = "";
   }
 
   function handleDrop(e: DragEvent<HTMLLabelElement>, target: "item" | "collection") {
     e.preventDefault();
-    const files = Array.from(e.dataTransfer.files || []).filter((f) => f.type.startsWith("image/")).slice(0, 10);
-    if (target === "item") setPhotos(files);
-    else setCollectionPhotos(files);
+    const files = Array.from(e.dataTransfer.files || []).filter((f) => f.type.startsWith("image/"));
+    if (target === "item") setPhotos((current) => mergePhotos(current, files));
+    else setCollectionPhotos((current) => mergePhotos(current, files));
   }
 
   function canContinue() {
