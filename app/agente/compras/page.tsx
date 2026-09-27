@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { supabaseBrowser } from "../../lib/supabase";
+import { supabaseBrowser } from "../../../lib/supabase";
 
 type Status = "Pendiente" | "En revisión" | "Contactado" | "Comprado" | "No interesa";
 
@@ -24,7 +24,7 @@ const seed: RequestRow[] = [
   { id: "3", folio: "LC-2026-0003", cliente: "Carlos Ramírez", ciudad: "Campeche", juego: "One Piece", monto: "$3,200", horario: "19:00–22:00", credit: "Sí", status: "Contactado" },
 ];
 
-const statusStyles: Record<Status, React.CSSProperties> = {
+const statusStyles: Record<Status, CSSProperties> = {
   Pendiente: { background: "#fff3cf", color: "#8a6500" },
   "En revisión": { background: "#dceaff", color: "#295aa8" },
   Contactado: { background: "#eee5ff", color: "#6641a3" },
@@ -183,9 +183,9 @@ export default function ComprasPage() {
   );
 }
 
-const muted: React.CSSProperties = { color: "#78736b", fontSize: 12, marginTop: 3 };
-const lineCard: React.CSSProperties = { display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", padding: 12, border: "1px solid #e8e3da", borderRadius: 12, background: "#fcfbf8" };
-const panelBox: React.CSSProperties = { background: "#f8f7f3", border: "1px solid #e6e1d8", borderRadius: 13, padding: 13 };
+const muted: CSSProperties = { color: "#78736b", fontSize: 12, marginTop: 3 };
+const lineCard: CSSProperties = { display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", padding: 12, border: "1px solid #e8e3da", borderRadius: 12, background: "#fcfbf8" };
+const panelBox: CSSProperties = { background: "#f8f7f3", border: "1px solid #e6e1d8", borderRadius: 13, padding: 13 };
 
 function Info({ label, value }: { label: string; value: string }) {
   return <div style={{ background: "#f8f7f3", border: "1px solid #e6e1d8", borderRadius: 13, padding: 12 }}><div style={{ color: "#7a766e", fontSize: 11 }}>{label}</div><div style={{ fontWeight: 800, marginTop: 4, fontSize: 13 }}>{value}</div></div>;
