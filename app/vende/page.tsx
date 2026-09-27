@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, DragEvent, useMemo, useState, type CSSProperties } from "react";
+import { supabaseBrowser } from "../../lib/supabase";
 
 type Mode = "items" | "collection" | null;
 
@@ -12,6 +13,7 @@ type Item = {
   rarity: string;
   condition: string;
   defects: string;
+  expectedAmount: string;
 };
 
 const games = ["Pokémon", "Magic: The Gathering", "Yu-Gi-Oh!", "One Piece", "Lorcana", "HeroClix", "Gundam", "Otro"];
@@ -143,7 +145,17 @@ export default function VendePage() {
   const [excel, setExcel] = useState<File | null>(null);
   const [expected, setExpected] = useState("");
   const [credit, setCredit] = useState("Sí");
+  const [contactName, setContactName] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [city, setCity] = useState("");
+  const [bestCallTime, setBestCallTime] = useState("16:00–19:00");
+  const [email, setEmail] = useState("");
+  const [collectionName, setCollectionName] = useState("");
+  const [deliveryMethod, setDeliveryMethod] = useState<"coordinated" | "national">("coordinated");
   const [submitted, setSubmitted] = useState(false);
+  const [submittedFolio, setSubmittedFolio] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const steps = mode === "collection" ? collectionSteps : itemSteps;
   const photosLabel = useMemo(() => `${photos.length}/10 fotos`, [photos.length]);
@@ -194,11 +206,109 @@ export default function VendePage() {
     return true;
   }
 
-  function next() {
-    if (step === 2 && mode === "items" && items.length === 0) addItem();
-    if (!canContinue()) return;
-    if (step < steps.length) setStep((n) => n + 1);
-    else setSubmitted(true);
+  function parseMoney(value: string) {
+    const cleaned = value.replace(/[^0-9.-]/g, "");
+    const parsed = Number(cleaned);
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+  }
+
+  async function submitRequest() {
+    if (!mode || submitting) return;
+    setSubmitting(true);
+    setSubmitError("");
+    const requestId = crypto.randomUUID();
+    const sb = supabaseBrowser();
+    const itemRows = mode === "items"
+      ? items.map((item) => ({
+          name: item.name,
+          quantity: item.quantity,
+          language: item.language,
+          rarity: item.rarity,
+          condition: item.condition,
+          defects: item.defects,
+          expected_amount: parseMoney(item.expectedAmount),
+        }))
+      : [];
+
+    const { data, error } = await sb.rpc("create_purchase_request", {
+      p_payload: {
+        id: requestId,
+        mode,
+        game,
+        contact_name: contactName.trim(),
+        whatsapp: whatsapp.trim(),
+        city: city.trim(),
+        best_call_time: bestCallTime,
+        email: email.trim(),
+        collection_name: collectionName.trim(),
+        expected_total: parseMoney(expected),
+        credit_choice: credit,
+        delivery_method: deliveryMethod,
+      },
+      p_items: itemRows,
+    });
+
+    if (error || !data?.[0]) {
+      setSubmitError(error?.message || "No pudimos registrar la solicitud.");
+      setSubmitting(false);
+      return;
+    }
+
+    const fileRows: { request_id: string; kind: string; storage_path: string; file_name: string; mime_type: string; size_bytes: number }[] = [];
+    const filesToUpload = [
+      ...photos.map((file) => ({ file, kind: "item_photo" })),
+      ...collectionPhotos.map((file) => ({ file, kind: "collection_photo" })),
+      ...(excel ? [{ file: excel, kind: "excel" }] : []),
+    ];
+
+    for (const entry of filesToUpload) {
+      const safeName = entry.file.name.replace(/[^a-zA-Z0-9._-]+/g, "_");
+      const path = 'intake/' + requestId + '/' + entry.kind + '/' + crypto.randomUUID() + '-' + safeName;
+      const { error: uploadError } = await sb.storage.from("purchase-requests").upload(path, entry.file, {
+        contentType: entry.file.type || undefined,
+        upsert: false,
+      });
+      if (uploadError) {
+        setSubmitError(`La solicitud ${data[0].folio} fue creada, pero no pudimos subir ${entry.file.name}.`);
+        setSubmittedFolio(data[0].folio);
+        setSubmitted(true);
+        setSubmitting(false);
+        return;
+      }
+      fileRows.push({
+        request_id: requestId,
+        kind: entry.kind,
+        storage_path: path,
+        file_name: entry.file.name,
+        mime_type: entry.file.type,
+        size_bytes: entry.file.size,
+      });
+    }
+
+    if (fileRows.length) {
+      const { error: fileRowError } = await sb.from("purchase_request_files").insert(fileRows);
+      if (fileRowError) {
+        setSubmitError(`La solicitud ${data[0].folio} fue creada, pero uno o más archivos no quedaron registrados.`);
+        setSubmittedFolio(data[0].folio);
+        setSubmitted(true);
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    setSubmittedFolio(data[0].folio);
+    setSubmitted(true);
+    setSubmitError("");
+    setSubmitting(false);
+  }
+
+  async function next() {
+    if (!canContinue() || submitting) return;
+    if (step < steps.length) {
+      setStep((n) => n + 1);
+      return;
+    }
+    await submitRequest();
   }
 
   function back() {
@@ -270,7 +380,7 @@ export default function VendePage() {
                   const done = step > n;
                   return (
                     <div key={label} style={styles.progressItem}>
-                      <div style={{ ...styles.progressDot, background: active ? "#f4c532" : done ? "#1c553e" : "#e7e3db", color: active ? "#111" : done ? "#fff" : "#69655d" }}>{n}</div>
+                      <div style={{ ...styles.progressDot, background: active ? "#f0b45b" : done ? "#24613f" : "#151d26", color: active ? "#111" : done ? "#fff" : "#8e96a1", border: active ? "1px solid #ffca73" : "1px solid #5a4225" }}>{n}</div>
                       <div style={styles.progressLabel}>{label}</div>
                     </div>
                   );
@@ -282,12 +392,12 @@ export default function VendePage() {
                   <h2 style={styles.sectionTitle}>Datos de contacto</h2>
                   <p style={styles.sectionSub}>Déjanos tus datos y el mejor horario para que un agente pueda comunicarse contigo.</p>
                   <div style={styles.grid2}>
-                    <Field label="Nombre" placeholder="Tu nombre" />
-                    <Field label="WhatsApp" placeholder="10 dígitos" />
-                    <Field label="Ciudad" placeholder="Ej. Mérida" />
+                    <Field label="Nombre" placeholder="Tu nombre" value={contactName} onChange={(e) => setContactName(e.target.value)} />
+                    <Field label="WhatsApp" placeholder="10 dígitos" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
+                    <Field label="Ciudad" placeholder="Ej. Mérida" value={city} onChange={(e) => setCity(e.target.value)} />
                     <div style={styles.field}>
                       <label style={styles.label}>Mejor horario para llamarte</label>
-                      <select style={styles.input} defaultValue="16:00–19:00">
+                      <select style={styles.input} value={bestCallTime} onChange={(e) => setBestCallTime(e.target.value)}>
                         <option>10:00–13:00</option>
                         <option>13:00–16:00</option>
                         <option>16:00–19:00</option>
@@ -296,7 +406,7 @@ export default function VendePage() {
                     </div>
                   </div>
                   <div style={{ marginTop: 15 }}>
-                    <Field label="Correo (opcional)" placeholder="correo@ejemplo.com" />
+                    <Field label="Correo (opcional)" placeholder="correo@ejemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} />
                   </div>
                 </div>
               )}
@@ -352,7 +462,7 @@ export default function VendePage() {
                         <div key={item.id} style={{ ...styles.summaryBox, display: "flex", justifyContent: "space-between", gap: 12 }}>
                           <div>
                             <strong>#{index + 1} {item.name}</strong>
-                            <div style={styles.muted}>{item.quantity} · {item.language} · {item.rarity || "Rareza no indicada"} · {item.condition}</div>
+                            <div style={styles.muted}>{item.quantity} · {item.language} · {item.rarity || "Rareza no indicada"} · {item.condition} · {item.expectedAmount || "$ —"}</div>
                             {item.defects && <div style={{ ...styles.muted, marginTop: 3 }}>Defectos: {item.defects}</div>}
                           </div>
                           <button type="button" style={styles.secondary} onClick={() => setItems((prev) => prev.filter((x) => x.id !== item.id))}>Quitar</button>
@@ -373,7 +483,7 @@ export default function VendePage() {
                   </p>
 
                   <div style={{ marginTop: 18 }}>
-                    <Field label="Nombre de la colección (opcional)" placeholder="Binder Pokémon 2023–2026" />
+                    <Field label="Nombre de la colección (opcional)" placeholder="Binder Pokémon 2023–2026" value={collectionName} onChange={(e) => setCollectionName(e.target.value)} />
                   </div>
 
                   <label style={{ ...styles.upload, display: "block", marginTop: 15 }}>
@@ -413,15 +523,15 @@ export default function VendePage() {
                   </div>
 
                   <div style={{ ...styles.summaryBox, marginTop: 15 }}>
-                    <div style={styles.pill}>✓ Entrega sin envío</div>
-                    <div style={{ marginTop: 10, fontWeight: 900 }}>CDMX · Puebla · Mérida · Campeche</div>
-                    <div style={{ ...styles.muted, marginTop: 5 }}>Podemos coordinar la entrega directamente contigo.</div>
-                  </div>
-
-                  <div style={{ ...styles.summaryBox, marginTop: 15 }}>
-                    <div style={styles.pill}>📦 Resto de la República</div>
-                    <div style={{ marginTop: 10, fontWeight: 900 }}>Coordinamos el envío contigo.</div>
-                    <div style={{ ...styles.muted, marginTop: 5 }}>Para el resto del país coordinamos el envío contigo, con opciones desde $200 MXN hasta 3 kg. El costo se considera al cerrar la operación.</div>
+                    <div style={{ fontWeight: 900 }}>¿Cómo nos entregarás tus productos?</div>
+                    <div style={{ display: "grid", gap: 8, marginTop: 10 }}>
+                      <button type="button" onClick={() => setDeliveryMethod("coordinated")} style={{ ...styles.secondary, textAlign: "left", ...(deliveryMethod === "coordinated" ? { borderColor: "#d48636", background: "#24170d", color: "#f0b45b" } : {}) }}>
+                        <strong>📍 Entrega coordinada</strong><div style={styles.muted}>CDMX · Puebla · Mérida · Campeche</div>
+                      </button>
+                      <button type="button" onClick={() => setDeliveryMethod("national")} style={{ ...styles.secondary, textAlign: "left", ...(deliveryMethod === "national" ? { borderColor: "#d48636", background: "#24170d", color: "#f0b45b" } : {}) }}>
+                        <strong>📦 Envío nacional</strong><div style={styles.muted}>Resto de México · opciones desde $200 MXN hasta 3 kg</div>
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -441,8 +551,8 @@ export default function VendePage() {
 
               <div style={styles.actionRow}>
                 <button type="button" style={styles.secondary} onClick={back}>← Regresar</button>
-                <button type="button" style={{ ...styles.primary, opacity: canContinue() ? 1 : .55 }} onClick={next}>
-                  {step === steps.length ? "Enviar solicitud" : "Continuar →"}
+                <button type="button" style={{ ...styles.primary, opacity: canContinue() && !submitting ? 1 : .55 }} onClick={next} disabled={!canContinue() || submitting}>
+                  {submitting ? "Enviando..." : step === steps.length ? "Enviar solicitud" : "Continuar →"}
                 </button>
               </div>
             </div>
