@@ -405,29 +405,49 @@ export default function Inventario() {
 
   async function undoImport(audit: Audit, status: "deleted" | "cancelled" | "rejected") {
     const ids = Array.isArray(audit.details?.card_ids) ? audit.details.card_ids : [];
-    const paths = Array.isArray(audit.details?.photo_paths) ? audit.details.photo_paths : [];
-    if (ids.length) {
-      const { error } = await sb.from("cards").delete().in("id", ids);
-      if (error) throw error;
+    const photoPaths = Array.isArray(audit.details?.photo_paths) ? audit.details.photo_paths : [];
+    const sourcePath = typeof audit.details?.source_file === "string" ? audit.details.source_file : null;
+
+    // Use the SECURITY DEFINER RPC so the admin action is not blocked by the
+    // normal client-side RLS policy on cards.
+    const { error: undoError } = await sb.rpc("undo_inventory_import", {
+      p_import_id: audit.id,
+      p_reason: status === "rejected"
+        ? "Carga rechazada"
+        : status === "cancelled"
+          ? "Carga cancelada"
+          : "Importación deshecha",
+    });
+    if (undoError) throw undoError;
+
+    // The database RPC removes the catalog records. Storage cleanup is kept
+    // here because PostgreSQL cannot call Supabase Storage's object API.
+    const storagePaths = [...new Set([
+      ...photoPaths,
+      ...(sourcePath ? [sourcePath] : []),
+    ])];
+
+    let storageError = "";
+    if (storagePaths.length) {
+      const { error } = await sb.storage.from("card-images").remove(storagePaths);
+      if (error) storageError = error.message;
     }
-    if (paths.length) {
-      const { error } = await sb.storage.from("card-images").remove(paths);
-      if (error) console.warn(error.message);
-    }
-    const updatedDetails = {
+
+    // Record the Storage cleanup result without undoing the successful
+    // catalog operation.
+    const cleanupDetails = {
       ...(audit.details || {}),
-      removed_card_ids: ids,
-      action_at: new Date().toISOString(),
-      action_by: userId,
+      storage_cleanup_at: new Date().toISOString(),
+      storage_removed_paths: storageError ? [] : storagePaths,
+      ...(storageError ? { storage_cleanup_error: storageError } : {}),
     };
-    const { error } = await sb.from("inventory_import_audit").update({
-      status,
-      details: updatedDetails,
-      deleted_at: new Date().toISOString(),
-      deleted_by: userId,
-      deleted_reason: status === "rejected" ? "Carga rechazada" : status === "cancelled" ? "Carga cancelada" : "Importación deshecha",
-    }).eq("id", audit.id);
-    if (error) throw error;
+    await sb.from("inventory_import_audit")
+      .update({ details: cleanupDetails })
+      .eq("id", audit.id);
+
+    if (storageError) {
+      throw new Error(`La importación fue deshecha, pero no se pudieron eliminar todos los archivos de Storage: ${storageError}`);
+    }
   }
 
   async function approveImport(audit: Audit) {
