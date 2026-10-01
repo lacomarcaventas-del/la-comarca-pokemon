@@ -5,11 +5,10 @@
  * - No modifica carrito, checkout, stock ni autenticación.
  * - Si analytics falla, nunca debe afectar la experiencia del cliente.
  * - No guarda nombres, correos, IPs ni datos personales.
- * - Los eventos se pueden activar gradualmente desde los componentes.
- *
- * Esta primera versión NO envía nada a Supabase.
- * Solo prepara la interfaz y permite probar el flujo en consola.
+ * - Solo persiste eventos mínimos y anónimos en Supabase.
  */
+
+import { supabaseBrowser } from "./supabase";
 
 export type AnalyticsEvent =
   | "page_view"
@@ -23,7 +22,7 @@ export type AnalyticsEvent =
 export type AnalyticsPayload = {
   product_id?: string;
   category_id?: string;
-  query?: string;
+  query_length?: number;
   source?: string;
   medium?: string;
   campaign?: string;
@@ -35,7 +34,7 @@ export type AnalyticsPayload = {
 type AnalyticsEventRecord = {
   event: AnalyticsEvent;
   session_id: string;
-  timestamp: string;
+  occurred_at: string;
   payload: AnalyticsPayload;
 };
 
@@ -79,12 +78,24 @@ function getAttribution(): Pick<
   }
 }
 
+async function sendAnalytics(record: AnalyticsEventRecord): Promise<void> {
+  try {
+    const sb = supabaseBrowser();
+
+    await sb.from("analytics_events").insert({
+      event: record.event,
+      session_id: record.session_id,
+      occurred_at: record.occurred_at,
+      payload: record.payload,
+    });
+  } catch {
+    // Analytics nunca debe afectar al catálogo, carrito o checkout.
+  }
+}
+
 /**
  * Punto único de entrada para toda la analítica.
- *
- * IMPORTANTE:
- * Nunca debe lanzar una excepción que pueda romper una función
- * comercial del sitio.
+ * Nunca debe lanzar una excepción que pueda romper una función comercial.
  */
 export function track(
   event: AnalyticsEvent,
@@ -94,20 +105,19 @@ export function track(
     const record: AnalyticsEventRecord = {
       event,
       session_id: getSessionId(),
-      timestamp: new Date().toISOString(),
+      occurred_at: new Date().toISOString(),
       payload: {
         ...getAttribution(),
         ...payload,
       },
     };
 
-    // Modo prueba: no hay escritura en Supabase todavía.
     if (process.env.NODE_ENV !== "production") {
       console.debug("[COMARCA_ANALYTICS]", record);
     }
 
-    // Futura implementación:
-    // void sendAnalytics(record);
+    // Fire-and-forget: no bloquea navegación, carrito ni checkout.
+    void sendAnalytics(record);
   } catch {
     // Analytics nunca debe afectar al catálogo, carrito o checkout.
   }
@@ -129,8 +139,13 @@ export function trackProductView(productId: string, page?: string): void {
 }
 
 export function trackSearch(query: string): void {
-  if (!query.trim()) return;
-  track("search", { query: query.trim() });
+  const normalized = query.trim();
+  if (!normalized) return;
+
+  // No persistimos el texto buscado: solo medimos que hubo una búsqueda y su longitud.
+  track("search", {
+    query_length: Math.min(normalized.length, 200),
+  });
 }
 
 export function trackAddToCart(
