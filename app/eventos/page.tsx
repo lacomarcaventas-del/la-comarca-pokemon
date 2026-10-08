@@ -32,9 +32,13 @@ export default function Eventos(){
        <div style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",opacity:.65,marginBottom:10}}>{e.game}</div>
        <h3 style={{margin:"0 0 10px",fontSize:"1.45rem",color:"#f2d08b"}}>{e.title}</h3>
 
-       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
-        <small style={{opacity:.75}}><strong style={{color:full?"#e58a8a":"#f2d08b"}}>{count}/8</strong></small>
-        <strong style={{color:full?"#e58a8a":"#f2d08b"}}>{full?"Cupo lleno":"Inscribirme →"}</strong>
+       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:14,marginTop:18,paddingTop:16,borderTop:"1px solid rgba(255,255,255,.08)"}}>
+        <span style={{fontSize:12,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",color:full?"#e58a8a":"rgba(255,255,255,.62)"}}>
+         {count}/8 {full?"· Cupo lleno":"· lugares"}
+        </span>
+        <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:118,padding:"10px 16px",borderRadius:999,border:full?"1px solid rgba(229,138,138,.35)":"1px solid rgba(242,208,139,.55)",background:full?"rgba(229,138,138,.08)":"linear-gradient(180deg,rgba(242,208,139,.18),rgba(180,125,45,.10))",boxShadow:full?"none":"0 6px 20px rgba(0,0,0,.22)",color:full?"#e58a8a":"#f2d08b",fontSize:12,fontWeight:800,letterSpacing:".08em",textTransform:"uppercase"}}>
+         {full?"Cupo lleno":"Inscribirme"}
+        </span>
        </div>
       </Link>
     })}
