@@ -4,10 +4,10 @@ import {useEffect,useState} from "react";
 import {supabaseBrowser} from "../../lib/supabase";
 
 const EVENTS=[
-  {slug:"heroclix-pulp-300",game:"HeroClix",title:"Pulp · 300 puntos",desc:"Formato Pulp de 300 puntos. Construye tu equipo y demuestra tu estrategia.",meta:"HeroClix · 300 pts"},
-  {slug:"pokemon-standard",game:"Pokémon TCG",title:"Standard",desc:"Compite con un mazo legal en el formato Standard vigente de Pokémon TCG.",meta:"Pokémon TCG · Standard"},
-  {slug:"mtg-brawl",game:"Magic: The Gathering",title:"Brawl",desc:"Duelo de Brawl para quienes quieren poner a prueba su comandante y construcción.",meta:"MTG · Brawl"},
-  {slug:"mtg-commander-multiplayer",game:"Magic: The Gathering",title:"Commander Multiplayer",desc:"Commander en mesa multijugador. Prepara tu mazo y disfruta la partida.",meta:"MTG · Commander Multiplayer"}
+  {slug:"heroclix-pulp-300",game:"HeroClix",title:"Pulp · 300 puntos",meta:"HeroClix · 300 pts"},
+  {slug:"pokemon-standard",game:"Pokémon TCG",title:"Standard",meta:"Pokémon TCG · Standard"},
+  {slug:"mtg-brawl",game:"Magic: The Gathering",title:"Brawl",meta:"MTG · Brawl"},
+  {slug:"mtg-commander-multiplayer",game:"Magic: The Gathering",title:"Commander Multiplayer",meta:"MTG · Commander Multiplayer"}
 ];
 
 export default function Eventos(){
@@ -24,14 +24,14 @@ export default function Eventos(){
  return <main className="siteShell">
   <header className="top siteTop"><Link href="/" className="logoLink">← La Comarca</Link><nav className="mainNav navPills"><Link href="/catalogo">Catálogo</Link><Link href="/eventos">Eventos</Link></nav></header>
   <section className="wrap sectionBlock">
-   <div className="sectionTitle"><h2>EVENTOS</h2><span>Inscripciones abiertas · La Comarca</span></div>
+   <div className="sectionTitle"><h2>EVENTOS · OCTUBRE</h2><span>Inscripciones abiertas · La Comarca</span></div>
    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:18}}>
     {EVENTS.map(e=>{
       const count=counts[e.slug]||0,full=count>=8;
       return <Link key={e.slug} href={"/eventos/"+e.slug} style={{textDecoration:"none",display:"block",padding:24,border:"1px solid rgba(255,255,255,.14)",borderRadius:16,background:"linear-gradient(145deg,rgba(18,27,39,.95),rgba(9,14,22,.95))"}}>
        <div style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",opacity:.65,marginBottom:10}}>{e.game}</div>
        <h3 style={{margin:"0 0 10px",fontSize:"1.45rem",color:"#f2d08b"}}>{e.title}</h3>
-       <p style={{margin:"0 0 14px",lineHeight:1.55,opacity:.82}}>{e.desc}</p>
+
        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
         <small style={{opacity:.75}}>{e.meta} · <strong style={{color:full?"#e58a8a":"#f2d08b"}}>{count}/8</strong></small>
         <strong style={{color:full?"#e58a8a":"#f2d08b"}}>{full?"Cupo lleno":"Inscribirme →"}</strong>
