@@ -12,15 +12,16 @@ const EVENTS={
 
 type Slug=keyof typeof EVENTS;
 
-export default function EventRegistration({params}:{params:{slug:string}}){
- const event=EVENTS[params.slug as Slug];
+export default async function EventRegistration({params}:{params:Promise<{slug:string}>}){
+ const {slug}=await params;
+ const event=EVENTS[slug as Slug];
  const sb=supabaseBrowser();
  const [full_name,setName]=useState(""),[phone,setPhone]=useState(""),[email,setEmail]=useState(""),[busy,setBusy]=useState(false),[done,setDone]=useState(false),[error,setError]=useState("");
  if(!event)return <main className="siteShell"><section className="wrap sectionBlock"><h2>Evento no encontrado</h2><Link href="/eventos">← Volver a Eventos</Link></section></main>;
 
  async function submit(e:React.FormEvent){
   e.preventDefault();setBusy(true);setError("");
-  const {error}=await sb.from("event_registrations").insert({event_slug:params.slug,event_name:event.title,full_name,phone,email,game:event.game});
+  const {error}=await sb.from("event_registrations").insert({event_slug:slug,event_name:event.title,full_name,phone,email,game:event.game});
   setBusy(false);
   if(error){setError("No se pudo completar la inscripción. Intenta nuevamente.");return;}
   setDone(true);
