@@ -3,11 +3,11 @@ import {useEffect,useState} from "react";
 import Link from "next/link";
 import {supabaseBrowser} from "../../../lib/supabase";
 
-type EventData={game:string;title:string;details:string};
+type EventData={game:string;title:string;details:string;format:string};
 export default function EventRegistrationForm({slug,event}:{slug:string;event:EventData}){
  const sb=supabaseBrowser();
  const [count,setCount]=useState(0),[loadingCount,setLoadingCount]=useState(true);
- const [full_name,setName]=useState(""),[phone,setPhone]=useState(""),[email,setEmail]=useState(""),[busy,setBusy]=useState(false),[done,setDone]=useState(false),[error,setError]=useState("");
+ const [full_name,setName]=useState(""),[phone,setPhone]=useState(""),[email,setEmail]=useState(""),[code,setCode]=useState(""),[busy,setBusy]=useState(false),[done,setDone]=useState(false),[error,setError]=useState("");
 
  async function refreshCount(){
   const {count,error}=await sb.from("event_registrations").select("id",{count:"exact",head:true}).eq("event_slug",slug);
@@ -16,11 +16,20 @@ export default function EventRegistrationForm({slug,event}:{slug:string;event:Ev
  }
  useEffect(()=>{refreshCount()},[slug]);
 
+ function makeLeagueCode(){
+  const month=new Intl.DateTimeFormat("en-US",{month:"short"}).format(new Date()).toUpperCase();
+  const year=String(new Date().getFullYear()).slice(-2);
+  const format=event.format.toUpperCase().replace(/[^A-Z0-9]+/g,"-").replace(/^-|-$/g,"");
+  const suffix=crypto.randomUUID().replace(/-/g,"").slice(0,6).toUpperCase();
+  return `LIGA-${format}-${month}${year}-${suffix}`;
+ }
+
  async function submit(e:React.FormEvent){
   e.preventDefault();
   if(count>=8){setError("Este evento ya está lleno. Cupo máximo: 8 jugadores.");return}
   setBusy(true);setError("");
-  const {error}=await sb.from("event_registrations").insert({event_slug:slug,event_name:event.title,full_name,phone,email,game:event.game});
+  const leagueCode=makeLeagueCode();
+  const {error}=await sb.from("event_registrations").insert({event_slug:slug,event_name:event.title,full_name,phone,email,game:event.game,redemption_code:leagueCode});
   setBusy(false);
   if(error){
    if(error.message?.includes("EVENT_FULL")){setCount(8);setError("Este evento ya está lleno. Cupo máximo: 8 jugadores.");}
@@ -28,6 +37,7 @@ export default function EventRegistrationForm({slug,event}:{slug:string;event:Ev
    return;
   }
   setCount(c=>Math.min(8,c+1));
+  setCode(leagueCode);
   setDone(true);
  }
  if(done)return <div style={{textAlign:"center",padding:"40px 10px"}}>
@@ -35,6 +45,7 @@ export default function EventRegistrationForm({slug,event}:{slug:string;event:Ev
    <h2 style={{fontSize:"clamp(2rem,5vw,3rem)",margin:"10px 0"}}>¡Listo!</h2>
    <p style={{opacity:.82,lineHeight:1.6}}>Tu inscripción para <strong>{event.title}</strong> fue registrada correctamente.</p>
    <p style={{color:"#f2d08b",fontWeight:700}}>Cupo: {count}/8</p>
+   <div style={{margin:"22px auto",padding:"18px 22px",border:"1px solid rgba(214,166,83,.45)",borderRadius:12,background:"rgba(10,18,29,.7)",maxWidth:420}}><div style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",opacity:.7}}>Código de Liga</div><div style={{fontSize:"1.35rem",fontWeight:800,letterSpacing:1.5,marginTop:7}}>{code}</div></div>
    <Link href="/eventos" style={{display:"inline-block",marginTop:18,padding:"11px 22px",border:"1px solid rgba(214,166,83,.65)",borderRadius:9,color:"#f2d08b",textDecoration:"none"}}>← Volver a Eventos</Link>
   </div>;
  const full=count>=8;
