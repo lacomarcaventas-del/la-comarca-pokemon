@@ -28,7 +28,7 @@ export default function AdminEventos(){
    Teléfono:r.phone,
    Correo:r.email,
    Juego:r.game||"",
-   "Código de demo":r.redemption_code||"",
+   "Código de Liga":r.redemption_code||"",
    "Fecha de registro":new Date(r.created_at).toLocaleString("es-MX")
   }));
   const ws=XLSX.utils.json_to_sheet(exportRows);
