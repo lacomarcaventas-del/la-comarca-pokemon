@@ -33,7 +33,7 @@ export default function Eventos(){
        <h3 style={{margin:"0 0 10px",fontSize:"1.45rem",color:"#f2d08b"}}>{e.title}</h3>
 
        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
-        <small style={{opacity:.75}}>{e.meta} · <strong style={{color:full?"#e58a8a":"#f2d08b"}}>{count}/8</strong></small>
+        <small style={{opacity:.75}}><strong style={{color:full?"#e58a8a":"#f2d08b"}}>{count}/8</strong></small>
         <strong style={{color:full?"#e58a8a":"#f2d08b"}}>{full?"Cupo lleno":"Inscribirme →"}</strong>
        </div>
       </Link>
