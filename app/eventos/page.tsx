@@ -7,7 +7,7 @@ const EVENTS=[
   {slug:"heroclix-pulp-300",game:"HeroClix",title:"Pulp · 300 puntos",meta:"HeroClix · 300 pts"},
   {slug:"pokemon-standard",game:"Pokémon TCG",title:"Standard",meta:"Pokémon TCG · Standard"},
   {slug:"mtg-brawl",game:"Magic: The Gathering",title:"Brawl",meta:"MTG · Brawl"},
-  {slug:"mtg-commander-multiplayer",game:"Magic: The Gathering",title:"Commander Multiplayer",meta:"MTG · Commander Multiplayer"}
+  {slug:"mtg-commander-multiplayer",game:"Magic: The Gathering",title:"Commander Multiplayer · Bracket 1",meta:"MTG · Commander Multiplayer · Bracket 1"}
 ];
 
 export default function Eventos(){
