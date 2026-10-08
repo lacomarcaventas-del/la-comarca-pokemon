@@ -47,9 +47,9 @@ export default function EventRegistrationForm({slug,event}:{slug:string;event:Ev
    <p style={{color:"#f2d08b",fontWeight:700}}>Cupo: {count}/8</p>
    <div style={{margin:"22px auto",padding:"18px 22px",border:"1px solid rgba(214,166,83,.45)",borderRadius:12,background:"rgba(10,18,29,.7)",maxWidth:420}}><div style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",opacity:.7}}>Código de Liga</div><div style={{fontSize:"1.35rem",fontWeight:800,letterSpacing:1.5,marginTop:7}}>{code}</div></div>
    <p style={{maxWidth:500,margin:"0 auto 14px",lineHeight:1.6,opacity:.82}}>Tu lugar quedó reservado. Ahora adquiere tu <strong>ticket de la liga</strong> para completar tu participación.</p>
-   <Link href="/tickets" style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:8,marginTop:4,padding:"13px 24px",border:"1px solid rgba(242,208,139,.75)",borderRadius:10,background:"linear-gradient(135deg,#d6a653,#a8752d)",color:"#111",fontWeight:800,textDecoration:"none",boxShadow:"0 8px 24px rgba(0,0,0,.28)"}}>🎟 Comprar ticket de la Liga →</Link>
+   <a href={`/tickets?liga=${slug}`} style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:8,marginTop:4,padding:"13px 24px",border:"1px solid rgba(242,208,139,.75)",borderRadius:10,background:"linear-gradient(135deg,#d6a653,#a8752d)",color:"#111",fontWeight:800,textDecoration:"none",boxShadow:"0 8px 24px rgba(0,0,0,.28)"}}>🎟 Comprar ticket de la Liga →</a>
    <br/>
-   <Link href="/eventos" style={{display:"inline-block",marginTop:16,padding:"10px 20px",border:"1px solid rgba(214,166,83,.45)",borderRadius:9,color:"#f2d08b",textDecoration:"none"}} style={{display:"inline-block",marginTop:18,padding:"11px 22px",border:"1px solid rgba(214,166,83,.65)",borderRadius:9,color:"#f2d08b",textDecoration:"none"}}>← Volver a Eventos</Link>
+   <Link href="/eventos" style={{display:"inline-block",marginTop:18,padding:"11px 22px",border:"1px solid rgba(214,166,83,.65)",borderRadius:9,color:"#f2d08b",textDecoration:"none"}}>← Volver a Eventos</Link>
   </div>;
  const full=count>=8;
  return <>
