@@ -22,26 +22,8 @@ export default function Eventos(){
   }
  })()},[]);
  return <main className="siteShell">
-  <style>{`
-   .eventsPromo{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;margin:4px 0 30px;padding:30px 34px;border:1px solid rgba(240,180,91,.55);border-radius:20px;background:radial-gradient(ellipse at 85% 20%,rgba(124,58,237,.22),transparent 36%),radial-gradient(ellipse at 0% 100%,rgba(232,121,40,.18),transparent 42%),linear-gradient(120deg,#15100e,#101724 65%,#0b0e16);box-shadow:0 16px 40px #0005}
-   .eventsPromo:after{content:"";position:absolute;z-index:-1;inset:0;opacity:.25;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(240,180,91,.12) 29px 30px,transparent 31px 58px)}
-   .eventsPromoKicker{font-size:11px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:#f0b45b}
-   .eventsPromo h1{font-family:'Cinzel',Georgia,serif;font-size:clamp(25px,4vw,42px);line-height:1.08;margin:9px 0;color:#fff}
-   .eventsPromo p{margin:0;color:#c2c7d0;font-size:14px;line-height:1.6;max-width:620px}
-   .eventsPromoAction{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;border-radius:999px;background:linear-gradient(135deg,#f0b45b,#d68b27);color:#15100b;font-weight:900;font-size:12px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;box-shadow:0 8px 24px rgba(214,139,39,.22)}
-   .eventsPromoAction:hover{filter:brightness(1.08);transform:translateY(-1px)}
-   @media(max-width:620px){.eventsPromo{grid-template-columns:1fr;gap:18px;padding:24px 18px;margin-bottom:24px;border-radius:16px}.eventsPromo p{font-size:13px}.eventsPromoAction{width:100%;white-space:normal;text-align:center}}
-  `}</style>
   <header className="top siteTop"><Link href="/" className="logoLink">← La Comarca</Link><nav className="mainNav navPills"><Link href="/catalogo">Catálogo</Link><Link href="/eventos">Eventos</Link></nav></header>
   <section className="wrap sectionBlock">
-   <div className="eventsPromo">
-    <div>
-     <div className="eventsPromoKicker">La Comarca · Temporada de eventos</div>
-     <h1>¡Inscripciones abiertas!</h1>
-     <p>Elige tu juego, consulta los lugares disponibles y reserva tu lugar en la próxima liga. Cada evento tiene cupo limitado.</p>
-    </div>
-    <a className="eventsPromoAction" href="#eventos-disponibles">Ver eventos e inscribirme <span aria-hidden="true">→</span></a>
-   </div>
    <div className="sectionTitle" id="eventos-disponibles"><h2>EVENTOS · OCTUBRE</h2><span>Inscripciones abiertas · La Comarca</span></div>
    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:18}}>
     {EVENTS.map(e=>{
