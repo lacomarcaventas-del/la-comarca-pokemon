@@ -90,37 +90,3 @@
   }
   input::placeholder,textarea::placeholder{color:#b8c0cb!important}
 }
-
-
-/* Mayor luminosidad percibida en móviles: superficies y colores más vivos */
-@media(max-width:700px){
-  body{
-    background:linear-gradient(155deg,#202b3a 0%,#172333 46%,#111a27 100%);
-  }
-  .top.siteTop{
-    background:#111a26;
-    box-shadow:0 6px 22px rgba(0,0,0,.28);
-  }
-  .panel,.card,.categoryPanel,.leagueEntry,.eventsPromo{
-    background:linear-gradient(145deg,#202d3d,#172333);
-    border-color:#6b5a46;
-  }
-  .lineCard,.categoryCard{
-    background:linear-gradient(145deg,#243448,#1a2738);
-    border-color:#796044;
-  }
-  .lineIcon{
-    background:radial-gradient(circle at 30% 30%,#5b4327,#243244 75%);
-    border-color:#a8783b;
-  }
-  .sectionTitle h2,.panel h2,.panel h3{
-    color:#ffd28a;
-  }
-  .sectionTitle span,.sectionTitle a,.muted,small{
-    color:#c4ccd7;
-  }
-  .btn{
-    background:linear-gradient(135deg,#ffad45,#d84b2f);
-    box-shadow:0 7px 22px rgba(232,121,40,.28);
-  }
-}
