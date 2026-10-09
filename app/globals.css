@@ -60,3 +60,33 @@
   .top.siteTop .mainNav.navPills{gap:6px}
   .top.siteTop .mainNav.navPills a{padding:7px 10px!important;font-size:11px}
 }
+
+
+/* Mejor contraste y lectura en celulares sin cambiar la identidad visual */
+@media(max-width:700px){
+  body{
+    background:radial-gradient(circle at 50% 0%,#2b2119 0,#121b27 48%,#0d141e 100%);
+    color:#fff8ed;
+  }
+  body:before{opacity:.045}
+  .panel,.card,.categoryPanel{
+    background:linear-gradient(145deg,rgba(25,36,50,.98),rgba(17,26,38,.98));
+    border-color:#5a4938;
+  }
+  .sectionTitle span,.sectionTitle a{color:#d0c2ad}
+  .sectionTitle h2{color:#ffd083}
+  .lineCard,.categoryCard{
+    background:linear-gradient(145deg,#1a2737,#121c29);
+    border-color:#65503a;
+    box-shadow:0 5px 16px rgba(0,0,0,.2);
+  }
+  .lineMark,.categoryCard span{color:#fff8ed}
+  .lineCard strong,.categoryCard small{color:#e0d3c1}
+  .top.siteTop{background:rgba(13,18,27,.98);border-bottom-color:#5a422a}
+  input,select,textarea{
+    background:#172333!important;
+    color:#fff8ed!important;
+    border-color:#66513a!important;
+  }
+  input::placeholder,textarea::placeholder{color:#b8c0cb!important}
+}
