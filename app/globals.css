@@ -90,3 +90,10 @@
   }
   input::placeholder,textarea::placeholder{color:#b8c0cb!important}
 }
+
+
+/* Catálogo: fichas más amplias y proporción vertical para mostrar la carta completa. Solo afecta a la cuadrícula dentro de .wrap. */
+.wrap > .grid{grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:20px}
+.wrap > .grid .cardImage{aspect-ratio:0.72}
+.wrap > .grid .cardImage img{object-fit:contain;padding:8px}
+@media(max-width:700px){.wrap > .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.wrap > .grid .cardImage{aspect-ratio:0.72}.wrap > .grid .info{padding:11px}}
