@@ -42,7 +42,7 @@ export default function Eventos(){
       </Link>
     })}
    </div>
-   <div style={{marginTop:28}}><img src="/liga-ranking-agosto.webp" alt="Ranking de Ligas de Agosto" style={{width:"100%",maxWidth:"1600px",height:"auto",display:"block",margin:"0 auto",borderRadius:16,border:"1px solid rgba(255,255,255,.16)"}}/></div>
+   <div style={{marginTop:28,display:"grid",gap:24}}><img src="/liga-ranking-septiembre.svg" alt="Ranking de Ligas de Septiembre" style={{width:"100%",maxWidth:"1200px",height:"auto",display:"block",margin:"0 auto",borderRadius:16,border:"1px solid rgba(255,255,255,.16)"}}/><img src="/liga-ranking-agosto.webp" alt="Ranking de Ligas de Agosto" style={{width:"100%",maxWidth:"1600px",height:"auto",display:"block",margin:"0 auto",borderRadius:16,border:"1px solid rgba(255,255,255,.16)"}}/></div>
   </section>
  </main>
 }

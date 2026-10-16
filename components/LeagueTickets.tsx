@@ -96,7 +96,7 @@ export default function LeagueTickets(){
         </div>
       </section>
       <section style={{marginBottom:30,paddingTop:18}}>
-        <img src="/circuito-mensual-ligas.png.png" alt="Circuito mensual de ligas por cada línea" style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}/>
+        <img src="/circuito-mensual-ligas.svg" alt="Circuito mensual de ligas por cada línea" style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}/>
       </section>
       <button className="cart" onClick={()=>{if(!user){window.alert("Necesitas una cuenta de cliente para comprar. Regístrate o inicia sesión para continuar.");router.push("/cuenta");return}setOpen(true)}}>🛒 Carrito ({cart.reduce((sum,x)=>sum+x.qty,0)})</button>
     </main>
@@ -108,8 +108,8 @@ export default function LeagueTickets(){
     </div></div>}
       <section style={{marginTop:28,marginBottom:36}}>
         <img
-          src="/liga-ranking-agosto.webp"
-          alt="Ranking de Ligas · Agosto"
+          src="/liga-ranking-septiembre.svg"
+          alt="Ranking de Ligas · Septiembre"
           style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}
         />
       </section>
