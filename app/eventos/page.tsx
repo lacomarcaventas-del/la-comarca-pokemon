@@ -42,6 +42,7 @@ export default function Eventos(){
       </Link>
     })}
    </div>
+   <div style={{marginTop:28,marginBottom:28}}><img src="/circuito-mensual-ligas-q80.webp" alt="Circuito mensual de ligas por cada línea" style={{width:"100%",maxWidth:"1000px",height:"auto",display:"block",margin:"0 auto",borderRadius:16,border:"1px solid rgba(255,255,255,.16)"}}/></div>
    <div style={{marginTop:28}}><img src="/liga_septiembre_optimizada.webp" alt="Ranking de Ligas de Septiembre" style={{width:"100%",maxWidth:"1600px",height:"auto",display:"block",margin:"0 auto",borderRadius:16,border:"1px solid rgba(255,255,255,.16)"}}/></div>
    <div style={{marginTop:28}}><img src="/liga-ranking-agosto.webp" alt="Ranking de Ligas de Agosto" style={{width:"100%",maxWidth:"1600px",height:"auto",display:"block",margin:"0 auto",borderRadius:16,border:"1px solid rgba(255,255,255,.16)"}}/></div>
   </section>
