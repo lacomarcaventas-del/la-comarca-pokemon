@@ -94,7 +94,8 @@ export default function CapturaProductosPage() {
     setError(""); setMessage("");
     const incoming = Array.from(files).filter((f) => f.type.startsWith("image/"));
     if (!incoming.length) { setError("Selecciona un archivo de imagen válido."); return; }
-    if (photoBusy || busy) { setError("Espera a que termine la operación actual."); return; }\n    if (photos.length + incoming.length > 1) { setError("El catálogo actual admite una imagen principal por producto. La galería múltiple requiere ampliar su modelo de datos."); return; }
+    if (photoBusy || busy) { setError("Espera a que termine la operación actual."); return; }
+    if (photos.length + incoming.length > 1) { setError("El catálogo actual admite una imagen principal por producto. La galería múltiple requiere ampliar su modelo de datos."); return; }
     const next: Photo[] = [];
     for (const file of incoming) {
       if (file.size > 15 * 1024 * 1024) { setError(file.name + " supera el límite de 15 MB."); continue; }
@@ -201,8 +202,8 @@ export default function CapturaProductosPage() {
         set_id: cardFields ? (form.set_id || null) : null,
         card_number: cardFields ? (form.card_number.trim() || sku.trim() || null) : (sku.trim() || null),
         rarity: cardFields ? (form.rarity.trim() || null) : null,
-        language: cardFields ? form.language : "N/A",
-        condition: cardFields ? form.condition : "N/A",
+        language: cardFields ? form.language : "English",
+        condition: cardFields ? form.condition : "Near Mint",
         price: canEditPrice ? Number(form.price) : 0,
         stock: canEditStock ? Number(form.stock) : 0,
         published: role === "admin" && published && canPublish,
@@ -265,7 +266,8 @@ export default function CapturaProductosPage() {
   }
 
   return (
-    <main className="wrap" style={{ maxWidth: 1500, paddingTop: 22, paddingBottom: 50 }}>\n      {checking && <div className="panel">Verificando acceso y permisos…</div>}
+    <main className="wrap" style={{ maxWidth: 1500, paddingTop: 22, paddingBottom: 50 }}>
+      {checking && <div className="panel">Verificando acceso y permisos…</div>}
       <header className="top" style={{ position: "relative", top: "auto", margin: "-22px -24px 22px", flexWrap: "wrap" }}>
         <a href="/admin">← Administración</a><b>La Comarca · Estación de Captura</b>
         <span className="adminAccess">{role === "agent" ? "Modo agente" : "Modo administrador"}</span>
