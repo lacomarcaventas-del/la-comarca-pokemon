@@ -5,30 +5,56 @@ import { createClient } from "@supabase/supabase-js";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
+const MAX_BYTES = 15 * 1024 * 1024;
+const MAX_PIXELS = 40_000_000;
+const ALLOWED_FORMATS = new Set(["jpeg", "png", "webp", "tiff", "heif", "avif"]);
+
 export async function POST(request: NextRequest) {
   try {
     const authorization = request.headers.get("authorization") || "";
     const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
     if (!token) return NextResponse.json({ error: "Se requiere una sesión activa." }, { status: 401 });
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "https://wwqkeeducvxxvdpdxxnu.supabase.co",
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_kPyc-lUnT2-pL9yUF-ITlg_Kr6Ylnwh"
-    );
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    if (!supabaseUrl || !supabaseKey) {
+      return NextResponse.json({ error: "El servicio de imágenes no está configurado." }, { status: 503 });
+    }
+    const supabase = createClient(supabaseUrl, supabaseKey);
     const { data: auth, error: authError } = await supabase.auth.getUser(token);
     if (authError || !auth.user) return NextResponse.json({ error: "Sesión no válida." }, { status: 401 });
-    const { data: profile } = await supabase.from("profiles").select("role").eq("id", auth.user.id).maybeSingle();
-    if (!profile || !["admin", "agent"].includes(profile.role)) return NextResponse.json({ error: "Acceso no autorizado." }, { status: 403 });
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles").select("role").eq("id", auth.user.id).maybeSingle();
+    if (profileError || !profile || !["admin", "agent"].includes(profile.role)) {
+      return NextResponse.json({ error: "Acceso no autorizado." }, { status: 403 });
+    }
+
     const data = await request.formData();
     const file = data.get("file");
     if (!(file instanceof File)) return NextResponse.json({ error: "No se recibió una imagen." }, { status: 400 });
-    if (file.size <= 0 || file.size > 15 * 1024 * 1024) return NextResponse.json({ error: "La imagen debe pesar entre 1 byte y 15 MB." }, { status: 413 });
-    const input = Buffer.from(await file.arrayBuffer());
-    const image = sharp(input, { failOn: "error", limitInputPixels: 40000000 });
-    const metadata = await image.metadata();
-    if (!metadata.format || !["jpeg", "png", "webp", "tiff", "gif", "heif", "avif", "svg"].includes(metadata.format)) {
-      return NextResponse.json({ error: "Formato de imagen no compatible." }, { status: 415 });
+    if (file.size <= 0 || file.size > MAX_BYTES) {
+      return NextResponse.json({ error: "La imagen debe pesar entre 1 byte y 15 MB." }, { status: 413 });
     }
-    const output = await image.rotate().resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true }).webp({ quality: 82, effort: 4 }).toBuffer();
+
+    const input = Buffer.from(await file.arrayBuffer());
+    const image = sharp(input, { failOn: "error", limitInputPixels: MAX_PIXELS, animated: true });
+    const metadata = await image.metadata();
+    if (!metadata.format || !ALLOWED_FORMATS.has(metadata.format)) {
+      return NextResponse.json({ error: "Formato no compatible. Utiliza JPEG, PNG, WebP, TIFF, HEIC o AVIF." }, { status: 415 });
+    }
+    if ((metadata.pages || 1) > 1) {
+      return NextResponse.json({ error: "No se admiten imágenes animadas o multipágina. Exporta una fotografía fija." }, { status: 415 });
+    }
+    if (!metadata.width || !metadata.height || metadata.width * metadata.height > MAX_PIXELS) {
+      return NextResponse.json({ error: "La resolución de la imagen supera el límite permitido." }, { status: 413 });
+    }
+
+    const output = await image.rotate()
+      .resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true })
+      .webp({ quality: 82, effort: 4 })
+      .toBuffer();
+
     return new NextResponse(new Uint8Array(output), {
       headers: {
         "Content-Type": "image/webp",
@@ -38,7 +64,7 @@ export async function POST(request: NextRequest) {
         "X-Optimized-Bytes": String(output.byteLength),
       },
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "No se pudo procesar la imagen." }, { status: 422 });
+  } catch {
+    return NextResponse.json({ error: "No se pudo procesar la imagen. Verifica que el archivo sea válido." }, { status: 422 });
   }
 }
