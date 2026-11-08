@@ -14,7 +14,7 @@ const initial = {
 function isCardCategory(name: string) {
   // Match the existing TCG/game-line categories; hobby, modelism and accessory
   // categories retain the general product form.
-  return /pokemon|pokémon|magic|mtg|yu.?gi.?oh|one\\s*piece|lorcana|weiss|gundam|riftbound|heroclix|hololive|digimon|dragon\\s*ball|\\btcgs?\\b|\\bcartas?\\b/i.test(name);
+  return /pokemon|pokémon|magic|mtg|yu.?gi.?oh|one\s*piece|lorcana|weiss|gundam|riftbound|heroclix|hololive|digimon|dragon\s*ball|\btcgs?\b|\bcartas?\b/i.test(name);
 }
 
 export default function CapturaProductosPage() {
@@ -44,12 +44,12 @@ export default function CapturaProductosPage() {
       if (!auth.user) { router.replace("/login"); return; }
       const { data: profile } = await sb.from("profiles").select("role").eq("id", auth.user.id).maybeSingle();
       if (!profile || !["admin", "agent"].includes(profile.role)) { await sb.auth.signOut(); router.replace("/login"); return; }
-      const [{ data: cats, error: catError }, { data: setRows }] = await Promise.all([
+      const [{ data: cats, error: catError }, { data: setRows, error: setErrorResult }] = await Promise.all([
         sb.from("categories").select("id,name").order("name"),
         sb.from("sets").select("id,name,code").order("name"),
       ]);
       if (!alive) return;
-      if (catError) { setError("No fue posible cargar las categorías: " + catError.message); setChecking(false); return; }
+      if (catError || setErrorResult) { setError("No fue posible cargar la configuración: " + (catError?.message || setErrorResult?.message)); setChecking(false); return; }
       setRole(profile.role);
       setUserId(auth.user.id);
       setSets(setRows || []);
@@ -94,7 +94,7 @@ export default function CapturaProductosPage() {
     setError(""); setMessage("");
     const incoming = Array.from(files).filter((f) => f.type.startsWith("image/"));
     if (!incoming.length) { setError("Selecciona un archivo de imagen válido."); return; }
-    if (photos.length + incoming.length > 1) { setError("El catálogo actual admite una imagen principal por producto. La galería múltiple requiere ampliar su modelo de datos."); return; }
+    if (photoBusy || busy) { setError("Espera a que termine la operación actual."); return; }\n    if (photos.length + incoming.length > 1) { setError("El catálogo actual admite una imagen principal por producto. La galería múltiple requiere ampliar su modelo de datos."); return; }
     const next: Photo[] = [];
     for (const file of incoming) {
       if (file.size > 15 * 1024 * 1024) { setError(file.name + " supera el límite de 15 MB."); continue; }
@@ -137,50 +137,126 @@ export default function CapturaProductosPage() {
 
   async function saveProduct() {
     setError(""); setMessage("");
-    if (!form.name.trim() || !form.category_id || form.price === "" || form.stock === "") {
-      setError("Completa nombre, categoría, precio y existencia."); return;
+    if (!form.name.trim() || !form.category_id ||
+        (canEditPrice && form.price === "") || (canEditStock && form.stock === "")) {
+      setError("Completa nombre, categoría y los campos de precio/existencia que tienes autorizados.");
+      return;
     }
-    if (!Number.isFinite(Number(form.price)) || Number(form.price) < 0 ||
-        !Number.isInteger(Number(form.stock)) || Number(form.stock) < 0) {
-      setError("Revisa el precio y la existencia."); return;
+    if ((canEditPrice && (!Number.isFinite(Number(form.price)) || Number(form.price) < 0)) ||
+        (canEditStock && (!Number.isInteger(Number(form.stock)) || Number(form.stock) < 0))) {
+      setError("Revisa el precio y la existencia.");
+      return;
     }
     if (!photoReady || photoBusy) { setError("Espera a que termine la optimización de la fotografía."); return; }
-    if (role === "agent" && !allowed[form.category_id]?.can_create) { setError("No tienes permiso para crear productos en esta categoría."); return; }
+    if (role === "agent" && !allowed[form.category_id]?.can_create) {
+      setError("No tienes permiso para crear productos en esta categoría.");
+      return;
+    }
+
     setBusy(true);
     let uploadedPath: string | null = null;
+    let auditId: string | null = null;
+    let insertedId: string | null = null;
     try {
+      const { data: authData } = await sb.auth.getUser();
+      const actor = authData.user;
+      if (!actor) throw new Error("Sesión expirada. Vuelve a iniciar sesión.");
+
+      const { data: audit, error: auditError } = await sb.from("inventory_import_audit").insert({
+        actor_id: actor.id,
+        actor_role: role,
+        file_name: `captura-individual-${new Date().toISOString()}`,
+        total_rows: 1,
+        created_rows: 0,
+        updated_rows: 0,
+        rejected_rows: 0,
+        status: "started",
+        details: {
+          actor_email: actor.email || "",
+          card_ids: [],
+          photo_paths: [],
+          errors: [],
+          source_file: null,
+          approval_note: role === "agent" ? "Pendiente de aprobación por administrador" : "Captura individual de administrador",
+        },
+      }).select("id").single();
+      if (auditError || !audit?.id) throw auditError || new Error("No fue posible registrar la auditoría de captura.");
+      auditId = audit.id;
+
       let imageUrl: string | null = null;
       if (photos.length) {
-        const path = `capture/${userId}/${crypto.randomUUID()}.webp`;
+        const path = `inventory/${userId}/${auditId}/capture-${crypto.randomUUID()}.webp`;
         const { error: uploadError } = await sb.storage.from("card-images").upload(path, photos[0].optimized!, {
-          contentType: "image/webp", upsert: false,
+          contentType: "image/webp",
+          upsert: false,
         });
         if (uploadError) throw uploadError;
         uploadedPath = path;
         imageUrl = sb.storage.from("card-images").getPublicUrl(path).data.publicUrl;
       }
+
       const payload = {
-        name: form.name.trim(), category_id: form.category_id,
+        name: form.name.trim(),
+        category_id: form.category_id,
         set_id: cardFields ? (form.set_id || null) : null,
         card_number: cardFields ? (form.card_number.trim() || sku.trim() || null) : (sku.trim() || null),
         rarity: cardFields ? (form.rarity.trim() || null) : null,
         language: cardFields ? form.language : "N/A",
         condition: cardFields ? form.condition : "N/A",
-        price: canEditPrice ? Number(form.price) : 0, stock: canEditStock ? Number(form.stock) : 0,
+        price: canEditPrice ? Number(form.price) : 0,
+        stock: canEditStock ? Number(form.stock) : 0,
         published: role === "admin" && published && canPublish,
         image_url: imageUrl,
-        created_by: userId, updated_by: userId,
+        created_by: userId,
+        updated_by: userId,
       };
-      const { error: insertError } = await sb.from("cards").insert(payload);
-      if (insertError) throw insertError;
-      setQueue((old) => [{ sku: sku.trim() || "Sin código", name: form.name.trim(), state: role === "admin" && published ? "Publicado" : "Registrado" }, ...old]);
-      setMessage(role === "agent" ? "Producto registrado. Quedó sin publicar para revisión administrativa." : (published ? "Producto publicado correctamente." : "Producto guardado como no publicado."));
-      clearPhotos(); setForm(initial); setSku(""); setPublished(false);
+      const { data: inserted, error: insertError } = await sb.from("cards").insert(payload).select("id").single();
+      if (insertError || !inserted?.id) throw insertError || new Error("No se confirmó el registro del producto.");
+      insertedId = inserted.id;
+
+      const { error: auditUpdateError } = await sb.from("inventory_import_audit").update({
+        created_rows: 1,
+        status: role === "agent" ? "pending" : "completed",
+        details: {
+          actor_email: actor.email || "",
+          card_ids: [inserted.id],
+          photo_paths: uploadedPath ? [uploadedPath] : [],
+          errors: [],
+          source_file: null,
+          approval_note: role === "agent" ? "Pendiente de aprobación por administrador" : "Captura individual completada",
+        },
+      }).eq("id", auditId);
+
+      setQueue((old) => [{
+        sku: sku.trim() || "Sin código",
+        name: form.name.trim(),
+        state: role === "agent" ? "Pendiente de revisión" : (published ? "Publicado" : "Registrado"),
+      }, ...old]);
+      setMessage(role === "agent"
+        ? "Producto registrado y pendiente de aprobación administrativa."
+        : (published ? "Producto publicado correctamente." : "Producto guardado como no publicado."));
+      if (auditUpdateError) {
+        setError("El producto se guardó, pero la auditoría no pudo actualizarse: " + auditUpdateError.message);
+      }
+      clearPhotos();
+      setForm(initial);
+      setSku("");
+      setPublished(false);
       scannerRef.current?.focus();
     } catch (e: any) {
+      if (insertedId) await sb.from("cards").delete().eq("id", insertedId);
       if (uploadedPath) await sb.storage.from("card-images").remove([uploadedPath]);
+      if (auditId) {
+        await sb.from("inventory_import_audit").update({
+          status: "failed",
+          rejected_rows: 1,
+          details: { card_ids: [], photo_paths: [], errors: [{ error: e?.message || "Error de captura" }], source_file: null },
+        }).eq("id", auditId);
+      }
       setError(e?.message || "No se pudo guardar el producto.");
-    } finally { setBusy(false); }
+    } finally {
+      setBusy(false);
+    }
   }
 
   function nextItem() {
@@ -215,7 +291,7 @@ export default function CapturaProductosPage() {
         <section className="panel">
           <h2>Fotografía del producto</h2>
           <label className="notice" style={{ display: "block", cursor: "pointer", textAlign: "center", padding: 22 }}>
-            <input type="file" accept="image/jpeg,image/png,image/webp,image/tiff,image/avif,image/heic" capture="environment"
+            <input type="file" disabled={photoBusy || busy} accept="image/jpeg,image/png,image/webp,image/tiff,image/avif,image/heic" capture="environment"
               onChange={(e) => { if (e.target.files) addPhotos(e.target.files); e.currentTarget.value = ""; }} style={{ display: "none" }} />
             <span style={{ fontSize: 28 }}>＋</span><br />Tomar o agregar fotografía
             <small style={{ display: "block", marginTop: 6 }}>Una imagen principal · Máximo 15 MB · Salida WebP</small>
@@ -223,7 +299,7 @@ export default function CapturaProductosPage() {
           <div style={{ background: "#080d13", border: "1px solid #463727", borderRadius: 12, minHeight: 260, display: "grid", placeItems: "center", overflow: "hidden", marginTop: 12 }}>
             {photos[0] ? <img src={photos[0].preview} alt="Vista previa" style={{ width: "100%", height: 280, objectFit: "contain" }} /> : <div className="muted">Sin fotografía. Puedes usar la cámara del dispositivo.</div>}
           </div>
-          {photos.length > 0 && <button type="button" className="btn2" onClick={removePhoto} style={{ marginTop: 8 }}>Quitar fotografía</button>}
+          {photos.length > 0 && <button type="button" className="btn2" onClick={removePhoto} disabled={photoBusy || busy} style={{ marginTop: 8 }}>Quitar fotografía</button>}
           <div className="notice" style={{ marginTop: 14 }}>
             <b>Optimización automática</b>
             <div className="muted" style={{ marginTop: 5 }}>{photoBusy ? "Procesando imagen…" : photos.length ? "Imagen convertida a WebP" : "Al agregar la imagen se convertirá a WebP."}</div>
