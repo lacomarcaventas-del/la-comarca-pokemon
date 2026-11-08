@@ -12,7 +12,9 @@ const initial = {
 };
 
 function isCardCategory(name: string) {
-  return /\b(tcg|cartas?|pokemon|pokémon|yu.?gi.?oh|magic|mtg|one piece|lorcana|weiss|gundam|riftbound|heroclix|digimon|dragon ball)\b/i.test(name);
+  // Match the existing TCG/game-line categories; hobby, modelism and accessory
+  // categories retain the general product form.
+  return /pokemon|pokémon|magic|mtg|yu.?gi.?oh|one\\s*piece|lorcana|weiss|gundam|riftbound|heroclix|hololive|digimon|dragon\\s*ball|\\btcgs?\\b|\\bcartas?\\b/i.test(name);
 }
 
 export default function CapturaProductosPage() {
@@ -20,6 +22,7 @@ export default function CapturaProductosPage() {
   const sb = supabaseBrowser();
   const scannerRef = useRef<HTMLInputElement>(null);
   const [role, setRole] = useState("");
+  const [checking, setChecking] = useState(true);
   const [userId, setUserId] = useState("");
   const [categories, setCategories] = useState<Option[]>([]);
   const [sets, setSets] = useState<Option[]>([]);
@@ -40,13 +43,13 @@ export default function CapturaProductosPage() {
       const { data: auth } = await sb.auth.getUser();
       if (!auth.user) { router.replace("/login"); return; }
       const { data: profile } = await sb.from("profiles").select("role").eq("id", auth.user.id).maybeSingle();
-      if (!profile || !["admin", "agent"].includes(profile.role)) { router.replace("/login"); return; }
+      if (!profile || !["admin", "agent"].includes(profile.role)) { await sb.auth.signOut(); router.replace("/login"); return; }
       const [{ data: cats, error: catError }, { data: setRows }] = await Promise.all([
         sb.from("categories").select("id,name").order("name"),
         sb.from("sets").select("id,name,code").order("name"),
       ]);
       if (!alive) return;
-      if (catError) { setError("No fue posible cargar las categorías: " + catError.message); return; }
+      if (catError) { setError("No fue posible cargar las categorías: " + catError.message); setChecking(false); return; }
       setRole(profile.role);
       setUserId(auth.user.id);
       setSets(setRows || []);
@@ -55,12 +58,13 @@ export default function CapturaProductosPage() {
         const { data: permissions, error: permError } = await sb.from("agent_category_permissions")
           .select("category_id,can_view,can_create,can_publish,can_change_price,can_change_stock")
           .eq("agent_id", auth.user.id);
-        if (permError) { setError("No fue posible consultar tus permisos: " + permError.message); return; }
+        if (permError) { setError("No fue posible consultar tus permisos: " + permError.message); setChecking(false); return; }
         const map: Record<string, any> = {};
         (permissions || []).forEach((p: any) => { map[p.category_id] = p; });
         setAllowed(map);
         setCategories((cats || []).filter((c: Option) => map[c.id]?.can_view && map[c.id]?.can_create));
       }
+      setChecking(false);
       scannerRef.current?.focus();
     })();
     return () => { alive = false; };
@@ -164,7 +168,7 @@ export default function CapturaProductosPage() {
         rarity: cardFields ? (form.rarity.trim() || null) : null,
         language: cardFields ? form.language : "N/A",
         condition: cardFields ? form.condition : "N/A",
-        price: Number(form.price), stock: Number(form.stock),
+        price: canEditPrice ? Number(form.price) : 0, stock: canEditStock ? Number(form.stock) : 0,
         published: role === "admin" && published && canPublish,
         image_url: imageUrl,
         ...(role === "admin" ? { created_by: userId, updated_by: userId } : {}),
@@ -187,13 +191,13 @@ export default function CapturaProductosPage() {
   }
 
   return (
-    <main className="wrap" style={{ maxWidth: 1500, paddingTop: 22, paddingBottom: 50 }}>
+    <main className="wrap" style={{ maxWidth: 1500, paddingTop: 22, paddingBottom: 50 }}>\n      {checking && <div className="panel">Verificando acceso y permisos…</div>}
       <header className="top" style={{ position: "relative", top: "auto", margin: "-22px -24px 22px", flexWrap: "wrap" }}>
         <a href="/admin">← Administración</a><b>La Comarca · Estación de Captura</b>
         <span className="adminAccess">{role === "agent" ? "Modo agente" : "Modo administrador"}</span>
         <a href="/admin/inventario" className="btn2">Carga masiva (sistema anterior)</a>
       </header>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(230px,.72fr) minmax(280px,1.15fr) minmax(320px,1.25fr)", gap: 16, alignItems: "start" }}>
+      {!checking && <div style={{ display: "grid", gridTemplateColumns: "minmax(230px,.72fr) minmax(280px,1.15fr) minmax(320px,1.25fr)", gap: 16, alignItems: "start" }}>
         <section className="panel">
           <h2>Flujo de captura</h2>
           <div className="notice" style={{ marginBottom: 14 }}>1. Escanear código · 2. Fotografiar · 3. Clasificar · 4. Guardar y continuar</div>
@@ -246,8 +250,8 @@ export default function CapturaProductosPage() {
             </div>
           </>}
           <div className="row">
-            <div><label>Precio MXN *</label><input type="number" min="0" step="0.01" disabled={!canEditPrice} value={form.price} onChange={(e) => update("price", e.target.value)} /></div>
-            <div><label>Existencia *</label><input type="number" min="0" step="1" disabled={!canEditStock} value={form.stock} onChange={(e) => update("stock", e.target.value)} /></div>
+            <div><label>Precio MXN {canEditPrice ? "*" : "(sin permiso de edición)"}</label><input type="number" min="0" step="0.01" disabled={!canEditPrice} value={canEditPrice ? form.price : "0"} onChange={(e) => update("price", e.target.value)} />{!canEditPrice && <small className="muted">Se registra temporalmente en $0 para revisión administrativa.</small>}</div>
+            <div><label>Existencia {canEditStock ? "*" : "(sin permiso de edición)"}</label><input type="number" min="0" step="1" disabled={!canEditStock} value={canEditStock ? form.stock : "0"} onChange={(e) => update("stock", e.target.value)} />{!canEditStock && <small className="muted">Se registra temporalmente en 0 para revisión administrativa.</small>}</div>
           </div>
           {form.category_id && <p className="muted">{cardFields ? "Categoría de cartas: se muestran los datos de set, número, rareza, idioma y condición." : "Categoría general: se capturan los datos comunes del producto; no se solicitan campos exclusivos de cartas."}</p>}
           {role === "admin" && <label style={{ display: "flex", alignItems: "center", gap: 9 }}><input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} style={{ width: "auto" }} /> Publicar inmediatamente</label>}
