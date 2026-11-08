@@ -104,7 +104,7 @@ export default function CapturaProductosPage() {
         }
         const blob = await response.blob();
         setPhotos((old) => old.map((p) => p.preview === item.preview
-          ? { ...p, optimized: blob, optimizedSize: blob.size } : p));
+          ? { ...p, preview: URL.createObjectURL(blob), optimized: blob, optimizedSize: blob.size } : p));
       } catch (e: any) {
         setError((old) => [old, e.message || "Error de optimización"].filter(Boolean).join(" · "));
       }
@@ -150,7 +150,7 @@ export default function CapturaProductosPage() {
       }
       const payload = {
         name: form.name.trim(), category_id: form.category_id, set_id: form.set_id || null,
-        card_number: form.card_number.trim() || null, rarity: form.rarity.trim() || null,
+        card_number: form.card_number.trim() || sku.trim() || null, rarity: form.rarity.trim() || null,
         language: form.language, condition: form.condition, price: Number(form.price),
         stock: Number(form.stock), published: role === "admin" && published && canPublish,
         image_url: imageUrl,
@@ -236,7 +236,7 @@ export default function CapturaProductosPage() {
             <div><label>Set / expansión</label><select value={form.set_id} onChange={(e) => update("set_id", e.target.value)}><option value="">Sin set</option>{sets.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></div>
           </div>
           <div className="row">
-            <div><label>Número</label><input value={form.card_number} onChange={(e) => update("card_number", e.target.value)} /></div>
+            <div><label>Número / código</label><input value={form.card_number} onChange={(e) => update("card_number", e.target.value)} /></div>
             <div><label>Rareza</label><input value={form.rarity} onChange={(e) => update("rarity", e.target.value)} /></div>
           </div>
           <div className="row">
