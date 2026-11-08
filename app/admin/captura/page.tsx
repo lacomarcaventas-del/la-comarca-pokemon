@@ -21,6 +21,7 @@ export default function CapturaProductosPage() {
   const router = useRouter();
   const sb = supabaseBrowser();
   const scannerRef = useRef<HTMLInputElement>(null);
+  const saveLockRef = useRef(false);
   const [role, setRole] = useState("");
   const [checking, setChecking] = useState(true);
   const [userId, setUserId] = useState("");
@@ -137,20 +138,29 @@ export default function CapturaProductosPage() {
   }
 
   async function saveProduct() {
+    if (saveLockRef.current) return;
+    saveLockRef.current = true;
     setError(""); setMessage("");
     if (!form.name.trim() || !form.category_id ||
         (canEditPrice && form.price === "") || (canEditStock && form.stock === "")) {
       setError("Completa nombre, categoría y los campos de precio/existencia que tienes autorizados.");
+      saveLockRef.current = false;
       return;
     }
     if ((canEditPrice && (!Number.isFinite(Number(form.price)) || Number(form.price) < 0)) ||
         (canEditStock && (!Number.isInteger(Number(form.stock)) || Number(form.stock) < 0))) {
       setError("Revisa el precio y la existencia.");
+      saveLockRef.current = false;
       return;
     }
-    if (!photoReady || photoBusy) { setError("Espera a que termine la optimización de la fotografía."); return; }
+    if (!photoReady || photoBusy) {
+      setError("Espera a que termine la optimización de la fotografía.");
+      saveLockRef.current = false;
+      return;
+    }
     if (role === "agent" && !allowed[form.category_id]?.can_create) {
       setError("No tienes permiso para crear productos en esta categoría.");
+      saveLockRef.current = false;
       return;
     }
 
@@ -231,13 +241,15 @@ export default function CapturaProductosPage() {
       setQueue((old) => [{
         sku: sku.trim() || "Sin código",
         name: form.name.trim(),
-        state: role === "agent" ? "Pendiente de revisión" : (published ? "Publicado" : "Registrado"),
+        state: auditUpdateError ? "Guardado · auditoría pendiente" : role === "agent" ? "Pendiente de revisión" : (published ? "Publicado" : "Registrado"),
       }, ...old]);
-      setMessage(role === "agent"
-        ? "Producto registrado y pendiente de aprobación administrativa."
-        : (published ? "Producto publicado correctamente." : "Producto guardado como no publicado."));
+      setMessage(auditUpdateError
+        ? "El producto sí se guardó, pero no se confirmó su estado de auditoría. No continúes con el siguiente artículo hasta que un administrador revise el historial."
+        : role === "agent"
+          ? "Producto registrado y pendiente de aprobación administrativa."
+          : (published ? "Producto publicado correctamente." : "Producto guardado como no publicado."));
       if (auditUpdateError) {
-        setError("El producto se guardó, pero la auditoría no pudo actualizarse: " + auditUpdateError.message);
+        setError("Auditoría sin sincronizar: " + auditUpdateError.message);
       }
       clearPhotos();
       setForm(initial);
@@ -256,6 +268,7 @@ export default function CapturaProductosPage() {
       }
       setError(e?.message || "No se pudo guardar el producto.");
     } finally {
+      saveLockRef.current = false;
       setBusy(false);
     }
   }
