@@ -30,6 +30,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Acceso no autorizado." }, { status: 403 });
     }
 
+    // Reject oversized multipart requests before buffering the body in memory.
+    const contentLength = Number(request.headers.get("content-length") || 0);
+    if (contentLength > MAX_BYTES + 1024 * 1024) {
+      return NextResponse.json({ error: "La solicitud supera el límite permitido de 15 MB." }, { status: 413 });
+    }
+
     const data = await request.formData();
     const file = data.get("file");
     if (!(file instanceof File)) return NextResponse.json({ error: "No se recibió una imagen." }, { status: 400 });
