@@ -92,7 +92,12 @@ export default function CapturaProductosPage() {
       try {
         const body = new FormData();
         body.append("file", item.file);
-        const response = await fetch("/api/image/optimize", { method: "POST", body });
+        const { data: sessionData } = await sb.auth.getSession();
+        const accessToken = sessionData.session?.access_token;
+        if (!accessToken) throw new Error("Tu sesión expiró. Vuelve a iniciar sesión.");
+        const response = await fetch("/api/image/optimize", {
+          method: "POST", body, headers: { Authorization: `Bearer ${accessToken}` },
+        });
         if (!response.ok) {
           const result = await response.json().catch(() => ({}));
           throw new Error(result.error || "No se pudo optimizar " + item.file.name);
