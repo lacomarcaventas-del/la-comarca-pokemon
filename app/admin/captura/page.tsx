@@ -37,6 +37,7 @@ export default function CapturaProductosPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [published, setPublished] = useState(false);
+  const [auditIssue, setAuditIssue] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -138,6 +139,10 @@ export default function CapturaProductosPage() {
   }
 
   async function saveProduct() {
+    if (auditIssue) {
+      setError("La captura anterior requiere revisión administrativa. Recarga la estación antes de continuar.");
+      return;
+    }
     if (saveLockRef.current) return;
     saveLockRef.current = true;
     setError(""); setMessage("");
@@ -249,13 +254,15 @@ export default function CapturaProductosPage() {
           ? "Producto registrado y pendiente de aprobación administrativa."
           : (published ? "Producto publicado correctamente." : "Producto guardado como no publicado."));
       if (auditUpdateError) {
+        setAuditIssue(true);
         setError("Auditoría sin sincronizar: " + auditUpdateError.message);
+      } else {
+        clearPhotos();
+        setForm(initial);
+        setSku("");
+        setPublished(false);
+        scannerRef.current?.focus();
       }
-      clearPhotos();
-      setForm(initial);
-      setSku("");
-      setPublished(false);
-      scannerRef.current?.focus();
     } catch (e: any) {
       if (insertedId) await sb.from("cards").delete().eq("id", insertedId);
       if (uploadedPath) await sb.storage.from("card-images").remove([uploadedPath]);
@@ -274,6 +281,10 @@ export default function CapturaProductosPage() {
   }
 
   function nextItem() {
+    if (auditIssue) {
+      setError("No es posible iniciar otra captura hasta revisar el registro anterior. Recarga la estación.");
+      return;
+    }
     clearPhotos(); setForm(initial); setSku(""); setPublished(false);
     setError(""); setMessage(""); scannerRef.current?.focus();
   }
@@ -348,8 +359,8 @@ export default function CapturaProductosPage() {
           {error && <p className="notice" style={{ borderColor: "#a33", color: "#ffb4b4" }}>{error}</p>}
           {message && <p className="notice" style={{ borderColor: "#477b42", color: "#b8f0a7" }}>{message}</p>}
           <div className="actions" style={{ marginTop: 18, display: "flex", flexWrap: "wrap" }}>
-            <button type="button" className="btn2" onClick={nextItem} disabled={busy || photoBusy}>Limpiar / siguiente</button>
-            <button type="button" className="btn" onClick={saveProduct} disabled={busy || photoBusy || !photoReady}>{busy ? "Guardando..." : "Guardar producto"}</button>
+            <button type="button" className="btn2" onClick={nextItem} disabled={busy || photoBusy || auditIssue}>Limpiar / siguiente</button>
+            <button type="button" className="btn" onClick={saveProduct} disabled={busy || photoBusy || !photoReady || auditIssue}>{busy ? "Guardando..." : "Guardar producto"}</button>
           </div>
         </section>
       </div>
