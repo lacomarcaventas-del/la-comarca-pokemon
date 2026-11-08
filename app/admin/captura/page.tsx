@@ -79,7 +79,7 @@ export default function CapturaProductosPage() {
     setError(""); setMessage("");
     const incoming = Array.from(files).filter((f) => f.type.startsWith("image/"));
     if (!incoming.length) { setError("Selecciona archivos de imagen."); return; }
-    if (photos.length + incoming.length > 8) { setError("Puedes asociar hasta 8 fotografías por producto."); return; }
+    if (photos.length + incoming.length > 1) { setError("El catálogo actual admite una imagen principal por producto. La galería múltiple requiere ampliar su modelo de datos."); return; }
     const next: Photo[] = [];
     for (const file of incoming) {
       if (file.size > 15 * 1024 * 1024) { setError(file.name + " supera el límite de 15 MB."); continue; }
@@ -201,12 +201,12 @@ export default function CapturaProductosPage() {
         <section className="panel">
           <h2>Fotografías del producto</h2>
           <label className="notice" style={{ display: "block", cursor: "pointer", textAlign: "center", padding: 22 }}>
-            <input type="file" accept="image/*" multiple onChange={(e) => { if (e.target.files) addPhotos(e.target.files); e.currentTarget.value = ""; }} style={{ display: "none" }} />
+            <input type="file" accept="image/*" onChange={(e) => { if (e.target.files) addPhotos(e.target.files); e.currentTarget.value = ""; }} style={{ display: "none" }} />
             <span style={{ fontSize: 28 }}>＋</span><br />Agregar fotografías
-            <small style={{ display: "block", marginTop: 6 }}>Hasta 8 imágenes · Máximo 15 MB por archivo</small>
+            <small style={{ display: "block", marginTop: 6 }}>Una imagen principal · Máximo 15 MB</small>
           </label>
           <div style={{ background: "#080d13", border: "1px solid #463727", borderRadius: 12, minHeight: 260, display: "grid", placeItems: "center", overflow: "hidden", marginTop: 12 }}>
-            {photos[activePhoto] ? <img src={photos[activePhoto].preview} alt="Vista previa" style={{ width: "100%", height: 280, objectFit: "contain" }} /> : <div className="muted">Sin fotografías. Escanea y toma la foto del producto.</div>}
+            {photos[activePhoto] ? <img src={photos[activePhoto].preview} alt="Vista previa" style={{ width: "100%", height: 280, objectFit: "contain" }} /> : <div className="muted">Sin fotografía. Escanea y toma la foto del producto.</div>}
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
             {photos.map((p, i) => <div key={p.preview} style={{ position: "relative" }}>
