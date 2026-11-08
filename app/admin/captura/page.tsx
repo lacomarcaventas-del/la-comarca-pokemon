@@ -146,8 +146,6 @@ export default function CapturaProductosPage() {
     }
     if (!photoReady || photoBusy) { setError("Espera a que termine la optimización de la fotografía."); return; }
     if (role === "agent" && !allowed[form.category_id]?.can_create) { setError("No tienes permiso para crear productos en esta categoría."); return; }
-    if (role === "agent" && !canEditPrice) { setError("No tienes permiso para asignar precios en esta categoría."); return; }
-    if (role === "agent" && !canEditStock) { setError("No tienes permiso para asignar existencias en esta categoría."); return; }
     setBusy(true);
     let uploadedPath: string | null = null;
     try {
@@ -171,7 +169,7 @@ export default function CapturaProductosPage() {
         price: canEditPrice ? Number(form.price) : 0, stock: canEditStock ? Number(form.stock) : 0,
         published: role === "admin" && published && canPublish,
         image_url: imageUrl,
-        ...(role === "admin" ? { created_by: userId, updated_by: userId } : {}),
+        created_by: userId, updated_by: userId,
       };
       const { error: insertError } = await sb.from("cards").insert(payload);
       if (insertError) throw insertError;
