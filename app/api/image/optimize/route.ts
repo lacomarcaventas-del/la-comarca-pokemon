@@ -21,7 +21,13 @@ export async function POST(request: NextRequest) {
     if (!SUPABASE_URL || !SUPABASE_KEY) {
       return NextResponse.json({ error: "El servicio de imágenes no está configurado." }, { status: 503 });
     }
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+      // Forward the caller's verified access token to PostgREST as well as Auth.
+      // getUser(token) validates the token, but does not attach it to later
+      // database requests unless it is supplied as a global Authorization header.
+      global: { headers: { Authorization: `Bearer ${token}` } },
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
     const { data: auth, error: authError } = await supabase.auth.getUser(token);
     if (authError || !auth.user) return NextResponse.json({ error: "Sesión no válida." }, { status: 401 });
 
