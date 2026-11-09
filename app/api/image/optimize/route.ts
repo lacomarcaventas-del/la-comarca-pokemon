@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 import { createClient } from "@supabase/supabase-js";
+import { SUPABASE_KEY, SUPABASE_URL } from "../../../../lib/supabase";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -15,12 +16,12 @@ export async function POST(request: NextRequest) {
     const token = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
     if (!token) return NextResponse.json({ error: "Se requiere una sesión activa." }, { status: 401 });
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-    if (!supabaseUrl || !supabaseKey) {
+    // Use the same public Supabase configuration as the browser client. Preview
+    // deployments may not define these variables independently in Vercel.
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
       return NextResponse.json({ error: "El servicio de imágenes no está configurado." }, { status: 503 });
     }
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const { data: auth, error: authError } = await supabase.auth.getUser(token);
     if (authError || !auth.user) return NextResponse.json({ error: "Sesión no válida." }, { status: 401 });
 
