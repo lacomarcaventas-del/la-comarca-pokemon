@@ -405,10 +405,6 @@ export default function CapturaProductosPage() {
           </div>
         </section>
       </div>
-      <style jsx>{`
-        @media(max-width:1050px){main > div:nth-of-type(1){grid-template-columns:1fr 1fr!important} main > div:nth-of-type(1) section:last-child{grid-column:1/-1}}
-        @media(max-width:680px){main > div:nth-of-type(1){grid-template-columns:1fr!important} main > div:nth-of-type(1) section:last-child{grid-column:auto}}
-      `}</style>
     </main>
   );
 }
