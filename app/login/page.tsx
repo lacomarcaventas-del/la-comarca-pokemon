@@ -31,7 +31,7 @@ export default function Login(){
         const {data:profile,error}=await sb.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
         if(error){setErr("No se pudo verificar el perfil administrativo.");setChecking(false);return}
         if(profile?.role==="admin") router.replace("/admin");
-        else if(profile?.role==="agent") router.replace("/admin/inventario");
+        else if(profile?.role==="agent") router.replace("/admin/captura");
         else {setErr("La sesión actual no tiene permisos de administración.");setChecking(false);}
       }
     });
@@ -42,7 +42,7 @@ export default function Login(){
         const {data:profile,error}=await sb.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
         if(error){setErr("No se pudo verificar el perfil administrativo.");setChecking(false);return;}
         if(profile?.role==="admin") router.replace("/admin");
-        else if(profile?.role==="agent") router.replace("/admin/inventario");
+        else if(profile?.role==="agent") router.replace("/admin/captura");
         else {setErr("La sesión actual no tiene permisos de administración.");setChecking(false);}
       });
     }
@@ -58,7 +58,7 @@ export default function Login(){
     const {data:profile,error:profileError}=await sb.from("profiles").select("role").eq("id",data.user.id).maybeSingle();
     if(profileError){setErr("No se pudo verificar el perfil administrativo.");setBusy(false);return}
     if(!["admin","agent"].includes(profile?.role||"")){setErr("Esta cuenta no tiene permisos de administración.");setBusy(false);return}
-    router.replace(profile?.role==="agent"?"/admin/inventario":"/admin");
+    router.replace(profile?.role==="agent"?"/admin/captura":"/admin");
   }
 
   async function forgot(){
