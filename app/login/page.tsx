@@ -14,25 +14,40 @@ export default function Login(){
   const [recovery,setRecovery]=useState(false);
   const router=useRouter();
 
-  async function enterExistingSession(){
+  useEffect(()=>{
     const sb=supabaseBrowser();
-    const {data:{session}}=await sb.auth.getSession();
-    if(window.location.hash.includes("type=recovery")){
-      setRecovery(true);
-      setChecking(false);
-      return true;
+    let recoveryDetected=window.location.hash.includes("type=recovery");
+    if(recoveryDetected){setRecovery(true);setChecking(false);}
+    const {data:{subscription}}=sb.auth.onAuthStateChange(async (event, session)=>{
+      if(event==="PASSWORD_RECOVERY"){
+        recoveryDetected=true;
+        setRecovery(true);
+        setChecking(false);
+        setErr("");
+        setNotice("Enlace de recuperación validado. Establece tu nueva contraseña.");
+        return;
+      }
+      if(event==="SIGNED_IN" && !recoveryDetected && session?.user){
+        const {data:profile,error}=await sb.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
+        if(error){setErr("No se pudo verificar el perfil administrativo.");setChecking(false);return}
+        if(profile?.role==="admin") router.replace("/admin");
+        else if(profile?.role==="agent") router.replace("/admin/inventario");
+        else {setErr("La sesión actual no tiene permisos de administración.");setChecking(false);}
+      }
+    });
+    if(!recoveryDetected){
+      void sb.auth.getSession().then(async ({data:{session}})=>{
+        if(recoveryDetected) return;
+        if(!session?.user){setChecking(false);return;}
+        const {data:profile,error}=await sb.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
+        if(error){setErr("No se pudo verificar el perfil administrativo.");setChecking(false);return;}
+        if(profile?.role==="admin") router.replace("/admin");
+        else if(profile?.role==="agent") router.replace("/admin/inventario");
+        else {setErr("La sesión actual no tiene permisos de administración.");setChecking(false);}
+      });
     }
-    if(!session?.user){setChecking(false);return false}
-    const {data:profile,error}=await sb.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
-    if(error){setErr("No se pudo verificar el perfil administrativo.");setChecking(false);return true}
-    if(profile?.role==="admin"){router.replace("/admin");return true}
-    if(profile?.role==="agent"){router.replace("/admin/inventario");return true}
-    setErr("La sesión actual no tiene permisos de administración.");
-    setChecking(false);
-    return true;
-  }
-
-  useEffect(()=>{void enterExistingSession()},[]);
+    return ()=>subscription.unsubscribe();
+  },[router]);
 
   async function go(e:any){
     e.preventDefault();setBusy(true);setErr("");setNotice("");
