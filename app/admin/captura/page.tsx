@@ -260,8 +260,8 @@ export default function CapturaProductosPage() {
         rarity: cardFields ? (form.rarity.trim() || null) : null,
         language: cardFields ? form.language : "English",
         condition: cardFields ? form.condition : "Near Mint",
-        price: canEditPrice ? Number(form.price) : 0,
-        stock: canEditStock ? Number(form.stock) : 0,
+        ...(canEditPrice ? { price: Number(form.price) } : {}),
+        ...(canEditStock ? { stock: Number(form.stock) } : {}),
         published: role === "admin" && published && canPublish,
         image_url: imageUrl,
         created_by: userId,
@@ -391,8 +391,8 @@ export default function CapturaProductosPage() {
             </div>
           </>}
           <div className="row">
-            <div><label>Precio MXN {canEditPrice ? "*" : "(sin permiso de edición)"}</label><input type="number" min="0" step="0.01" disabled={!canEditPrice} value={canEditPrice ? form.price : "0"} onChange={(e) => update("price", e.target.value)} />{!canEditPrice && <small className="muted">Se registra temporalmente en $0 para revisión administrativa.</small>}</div>
-            <div><label>Existencia {canEditStock ? "*" : "(sin permiso de edición)"}</label><input type="number" min="0" step="1" disabled={!canEditStock} value={canEditStock ? form.stock : "0"} onChange={(e) => update("stock", e.target.value)} />{!canEditStock && <small className="muted">Se registra temporalmente en 0 para revisión administrativa.</small>}</div>
+            <div><label>Precio MXN {canEditPrice ? "*" : "(sin permiso de edición)"}</label><input type="number" min="0" step="0.01" disabled={!canEditPrice} value={canEditPrice ? form.price : ""} onChange={(e) => update("price", e.target.value)} />{!canEditPrice && <small className="muted">No se enviará un precio sin autorización; se aplicará el valor predeterminado de la base de datos, si está configurado.</small>}</div>
+            <div><label>Existencia {canEditStock ? "*" : "(sin permiso de edición)"}</label><input type="number" min="0" step="1" disabled={!canEditStock} value={canEditStock ? form.stock : ""} onChange={(e) => update("stock", e.target.value)} />{!canEditStock && <small className="muted">No se enviará una existencia sin autorización; se aplicará el valor predeterminado de la base de datos, si está configurado.</small>}</div>
           </div>
           {form.category_id && <p className="muted">{cardFields ? "Categoría de cartas: se muestran los datos de set, número, rareza, idioma y condición." : "Categoría general: se capturan los datos comunes del producto; no se solicitan campos exclusivos de cartas."}</p>}
           {role === "admin" && <label style={{ display: "flex", alignItems: "center", gap: 9 }}><input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} style={{ width: "auto" }} /> Publicar inmediatamente</label>}
