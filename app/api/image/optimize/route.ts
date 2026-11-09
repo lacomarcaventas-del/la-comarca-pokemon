@@ -64,8 +64,8 @@ export async function POST(request: NextRequest) {
     }
 
     const output = await image.rotate()
-      .resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true })
-      .webp({ quality: 82, effort: 4 })
+      .resize({ width: 1400, height: 1400, fit: "inside", withoutEnlargement: true })
+      .webp({ quality: 74, effort: 5 })
       .toBuffer();
 
     return new NextResponse(new Uint8Array(output), {
