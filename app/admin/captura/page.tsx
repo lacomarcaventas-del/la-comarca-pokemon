@@ -404,7 +404,7 @@ export default function CapturaProductosPage() {
             <button type="button" className="btn" onClick={saveProduct} disabled={busy || photoBusy || !photoReady || auditIssue}>{busy ? "Guardando..." : "Guardar producto"}</button>
           </div>
         </section>
-      </div>
+      </div>}
     </main>
   );
 }
