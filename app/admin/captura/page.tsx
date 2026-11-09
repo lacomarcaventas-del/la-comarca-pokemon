@@ -46,7 +46,7 @@ const CARD_CATEGORIES = new Set([
 ]);
 
 function normalizeCategory(name: string) {
-  return name.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "")
+  return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/&/g, "and").replace(/[^a-z0-9]+/gi, " ").trim().toLowerCase();
 }
 
