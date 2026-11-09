@@ -11,10 +11,51 @@ const initial = {
   language: "English", condition: "Near Mint", price: "", stock: "1",
 };
 
+const MENU_CATEGORIES = new Set([
+  "accesorios",
+  "coleccionables",
+  "disney lorcana",
+  "dungeons and dragons",
+  "gundam card game",
+  "heroclix",
+  "hololive official card game",
+  "juegos de mesa",
+  "magic the gathering",
+  "miniaturas",
+  "modelismo",
+  "one piece card game",
+  "pokemon tcg",
+  "riftbound",
+  "rol",
+  "ropa",
+  "weiss schwarz",
+  "yu gi oh",
+]);
+
+const CARD_CATEGORIES = new Set([
+  "disney lorcana",
+  "gundam card game",
+  "heroclix",
+  "hololive official card game",
+  "magic the gathering",
+  "one piece card game",
+  "pokemon tcg",
+  "riftbound",
+  "weiss schwarz",
+  "yu gi oh",
+]);
+
+function normalizeCategory(name: string) {
+  return name.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "")
+    .replace(/&/g, "and").replace(/[^a-z0-9]+/gi, " ").trim().toLowerCase();
+}
+
+function isMenuCategory(name: string) {
+  return MENU_CATEGORIES.has(normalizeCategory(name));
+}
+
 function isCardCategory(name: string) {
-  // Match the existing TCG/game-line categories; hobby, modelism and accessory
-  // categories retain the general product form.
-  return /pokemon|pokémon|magic|mtg|yu.?gi.?oh|one\s*piece|lorcana|weiss|gundam|riftbound|heroclix|hololive|digimon|dragon\s*ball|\btcgs?\b|\bcartas?\b/i.test(name);
+  return CARD_CATEGORIES.has(normalizeCategory(name));
 }
 
 export default function CapturaProductosPage() {
@@ -55,7 +96,7 @@ export default function CapturaProductosPage() {
       setRole(profile.role);
       setUserId(auth.user.id);
       setSets(setRows || []);
-      if (profile.role === "admin") setCategories(cats || []);
+      if (profile.role === "admin") setCategories((cats || []).filter((c: Option) => isMenuCategory(c.name)));
       else {
         const { data: permissions, error: permError } = await sb.from("agent_category_permissions")
           .select("category_id,can_view,can_create,can_publish,can_change_price,can_change_stock")
@@ -64,7 +105,7 @@ export default function CapturaProductosPage() {
         const map: Record<string, any> = {};
         (permissions || []).forEach((p: any) => { map[p.category_id] = p; });
         setAllowed(map);
-        setCategories((cats || []).filter((c: Option) => map[c.id]?.can_view && map[c.id]?.can_create));
+        setCategories((cats || []).filter((c: Option) => isMenuCategory(c.name) && map[c.id]?.can_view && map[c.id]?.can_create));
       }
       setChecking(false);
       scannerRef.current?.focus();
