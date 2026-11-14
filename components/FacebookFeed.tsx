@@ -52,25 +52,23 @@ export default function FacebookFeed() {
         </a>
       </div>
 
-      <div style={{ width: "100%", minHeight: 805, marginTop: 16, display: "flex", justifyContent: "center", alignItems: "flex-start", overflow: "visible" }}>
-        <div style={{ width: 575, height: 805, flex: "0 0 575px", display: "flex", justifyContent: "center" }}>
-          <div style={{ width: 500, height: 700, transform: "scale(1.15)", transformOrigin: "top center" }}>
-            <div
-              className="fb-page"
-              data-href="https://www.facebook.com/ComarcaTCG"
-              data-tabs="timeline"
-              data-width="500"
-              data-height="700"
-              data-small-header="false"
-              data-adapt-container-width="true"
-              data-hide-cover="false"
-              data-show-facepile="true"
-              style={{ width: 500 }}
-            >
-              <blockquote cite="https://www.facebook.com/ComarcaTCG" className="fb-xfbml-parse-ignore">
-                <a href="https://www.facebook.com/ComarcaTCG">La Comarca</a>
-              </blockquote>
-            </div>
+      <div style={{ width: "100%", minHeight: 1000, marginTop: 16, display: "flex", justifyContent: "center", alignItems: "flex-start", overflow: "visible" }}>
+        <div style={{ width: 900, maxWidth: "100%", minHeight: 1000 }}>
+          <div
+            className="fb-page"
+            data-href="https://www.facebook.com/ComarcaTCG"
+            data-tabs="timeline"
+            data-width="900"
+            data-height="1000"
+            data-small-header="false"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="true"
+            style={{ width: 900, maxWidth: "100%" }}
+          >
+            <blockquote cite="https://www.facebook.com/ComarcaTCG" className="fb-xfbml-parse-ignore">
+              <a href="https://www.facebook.com/ComarcaTCG">La Comarca</a>
+            </blockquote>
           </div>
         </div>
       </div>
