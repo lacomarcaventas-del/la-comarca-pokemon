@@ -8,6 +8,7 @@ type GraphPost = {
   created_time?: string;
   permalink_url?: string;
   full_picture?: string;
+  is_published?: boolean;
   attachments?: {
     data?: Array<{
       media?: { image?: { src?: string } };
@@ -28,11 +29,10 @@ export async function GET() {
   }
 
   const fields =
-    "id,message,created_time,permalink_url,full_picture,attachments{media,type,url,subattachments}";
+    "id,message,created_time,permalink_url,full_picture,is_published,attachments{media,type,url,subattachments}";
   const url = new URL(`https://graph.facebook.com/v27.0/${encodeURIComponent(pageId)}/feed`);
   url.searchParams.set("fields", fields);
   url.searchParams.set("limit", "6");
-  url.searchParams.set("is_published", "true");
   url.searchParams.set("access_token", accessToken);
 
   try {
@@ -54,7 +54,7 @@ export async function GET() {
       );
     }
 
-    const posts = ((payload.data || []) as GraphPost[]).map((post) => {
+    const posts = ((payload.data || []) as GraphPost[]).filter((post) => post.is_published !== false).map((post) => {
       const attachment = post.attachments?.data?.[0];
       const nestedImage = attachment?.subattachments?.data?.[0]?.media?.image?.src;
       const imageUrl =
