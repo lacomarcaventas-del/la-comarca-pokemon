@@ -54,7 +54,7 @@ export default function FacebookFeed() {
   }, []);
 
   return (
-    <section className="panel" style={{ marginTop: 24 }}>
+    <section className="panel" style={{ width: "100%", maxWidth: 900, margin: "24px auto 0" }}>
       <div className="categoryHeader">
         <div>
           <h2>📢 La Comarca en Facebook</h2>
