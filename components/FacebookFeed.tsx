@@ -92,7 +92,7 @@ export default function FacebookFeed() {
           <div
             className="fb-page"
             data-href="https://www.facebook.com/ComarcaTCG"
-            data-show-posts="true"
+            data-tabs="timeline"
             data-width="500"
             data-height="700"
             data-small-header="false"
