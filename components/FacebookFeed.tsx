@@ -54,7 +54,7 @@ export default function FacebookFeed() {
   }, []);
 
   return (
-    <section className="panel" style={{ marginTop: 24 }}>
+    <section className="panel" style={{ width: "100%", maxWidth: 1100, margin: "24px auto 0" }}>
       <div className="categoryHeader">
         <div>
           <h2>📢 La Comarca en Facebook</h2>
@@ -74,32 +74,27 @@ export default function FacebookFeed() {
 
       <div
         style={{
+          width: "100%",
+          minHeight: 1000,
+          marginTop: 16,
           display: "flex",
           justifyContent: "center",
-          width: "100%",
-          marginTop: 16,
+          alignItems: "flex-start",
+          overflow: "visible",
         }}
       >
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 500,
-            minWidth: 0,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        <div style={{ width: 900, maxWidth: "100%", minHeight: 1000 }}>
           <div
             className="fb-page"
             data-href="https://www.facebook.com/ComarcaTCG"
-            data-show-posts="true"
-            data-width="500"
-            data-height="700"
+            data-tabs="timeline"
+            data-width="900"
+            data-height="1000"
             data-small-header="false"
             data-adapt-container-width="true"
             data-hide-cover="false"
             data-show-facepile="true"
-            style={{ width: "100%" }}
+            style={{ width: 900, maxWidth: "100%" }}
           >
             <blockquote
               cite="https://www.facebook.com/ComarcaTCG"
