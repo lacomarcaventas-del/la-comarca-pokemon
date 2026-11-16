@@ -24,6 +24,25 @@ const normalize = (v: any) => String(v ?? "")
   .replace(/[^a-z0-9]+/gi, " ")
   .trim()
   .toLowerCase();
+const safeNamePart = (value: string) => normalize(value).replace(/\\s+/g, "-").slice(0, 36).toUpperCase() || "PRODUCTO";
+function categoryCode(value: string) {
+  const v = normalize(value);
+  if (v.includes("pokemon")) return "POKE";
+  if (v.includes("magic")) return "MTG";
+  if (v.includes("yu gi oh") || v.includes("yugioh")) return "YGO";
+  if (v.includes("lorcana")) return "LORC";
+  if (v.includes("dungeons") || v === "rol") return "DND";
+  if (v.includes("one piece")) return "OPTCG";
+  if (v.includes("gundam")) return "GUND";
+  if (v.includes("weiss")) return "WEISS";
+  return safeNamePart(value).slice(0, 8);
+}
+function captureFileName(product: string, category: string, createdAt: string) {
+  const date = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date(createdAt)).replace(/[^0-9]/g, "");
+  return `${safeNamePart(product)}_${categoryCode(category)}_${date}`;
+}
 const dateKey = (v: string) => new Date(v).toLocaleDateString("es-MX", {
   timeZone: "America/Mexico_City",
   year: "numeric",
@@ -88,7 +107,35 @@ export default function Inventario() {
     let query = sb.from("inventory_import_audit").select("*").order("created_at", { ascending: false }).limit(100);
     if (currentRole === "agent" && currentUserId) query = query.eq("actor_id", currentUserId);
     const { data, error } = await query;
-    if (!error) setHistory(data || []);
+    if (error) return;
+    const audits = data || [];
+    const cardIds = [...new Set(audits.flatMap((audit: Audit) =>
+      Array.isArray(audit.details?.card_ids) ? audit.details.card_ids : []
+    ))];
+    let cardsById = new Map<string, any>();
+    let categoriesById = new Map<string, string>();
+    if (cardIds.length) {
+      const { data: cards } = await sb.from("cards").select("id,name,category_id").in("id", cardIds);
+      cardsById = new Map((cards || []).map((card: any) => [card.id, card]));
+      const categoryIds = [...new Set((cards || []).map((card: any) => card.category_id).filter(Boolean))];
+      if (categoryIds.length) {
+        const { data: categories } = await sb.from("categories").select("id,name").in("id", categoryIds);
+        categoriesById = new Map((categories || []).map((category: any) => [category.id, category.name]));
+      }
+    }
+    setHistory(audits.map((audit: Audit) => {
+      const firstId = Array.isArray(audit.details?.card_ids) ? audit.details.card_ids[0] : null;
+      const card = firstId ? cardsById.get(firstId) : null;
+      const productName = audit.details?.product_name || card?.name;
+      const categoryName = audit.details?.category_name || (card ? categoriesById.get(card.category_id) : "");
+      const isLegacyCapture = String(audit.file_name || "").startsWith("captura-individual-");
+      return {
+        ...audit,
+        display_file_name: productName && categoryName && isLegacyCapture
+          ? captureFileName(productName, categoryName, audit.created_at)
+          : audit.file_name || "—",
+      };
+    }));
   }
 
   function makeXlsx(data: Row[], name: string) {
@@ -504,6 +551,33 @@ export default function Inventario() {
     }
   }
 
+  async function toggleImportActive(audit: Audit) {
+    if (role !== "admin" || !["approved", "completed"].includes(audit.status)) return;
+    setBusy(true);
+    try {
+      const nextActive = audit.is_active === false;
+      const historyChanges = Array.isArray(audit.details?.activation_history) ? audit.details.activation_history : [];
+      const { error } = await sb.from("inventory_import_audit").update({
+        is_active: nextActive,
+        details: {
+          ...(audit.details || {}),
+          activation_history: [...historyChanges, {
+            active: nextActive,
+            changed_at: new Date().toISOString(),
+            changed_by: userId,
+          }],
+        },
+      }).eq("id", audit.id);
+      if (error) throw error;
+      setMsg(nextActive ? "Importación activada." : "Importación desactivada. Los productos y las fotografías se conservaron.");
+      await loadHistory();
+    } catch (error: any) {
+      setMsg(`No se pudo cambiar la vigencia: ${error?.message || error}`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   function requestUndo(audit: Audit) {
     if (role !== "admin" || ["deleted", "rejected", "cancelled", "pending", "started", "failed"].includes(audit.status)) return;
     setConfirmImportId(audit.id);
@@ -533,12 +607,13 @@ export default function Inventario() {
   const statusText = (status: string) => {
     if (status === "pending") return "🟡 Pendiente";
     if (status === "approved") return "🟢 Aprobada";
+    if (status === "completed") return "✓ Completada";
     if (status === "rejected") return "🔴 Rechazada";
     if (status === "cancelled") return "⚪ Cancelada";
     if (status === "deleted") return "🗑️ Deshecha";
     if (status === "started") return "🔵 En curso";
     if (status === "failed") return "🔴 Fallida";
-    return "✓ Activa";
+    return "—";
   };
 
   function renderRows(list: Audit[], approval = false) {
@@ -562,20 +637,22 @@ export default function Inventario() {
               {open && (
                 <div style={{ overflow: "auto" }}>
                   <table className="table">
-                    <thead><tr><th>Hora</th><th>Agente</th><th>Archivo</th><th>Registros</th><th>Nuevos</th><th>Errores</th><th>Estado</th><th>Acciones</th></tr></thead>
+                    <thead><tr><th>Hora</th><th>Agente</th><th>Archivo</th><th>Registros</th><th>Nuevos</th><th>Errores</th><th>Estado de carga</th><th>Vigencia</th><th>Acciones</th></tr></thead>
                     <tbody>
                       {items.map((audit) => (
                         <tr key={audit.id}>
                           <td>{new Date(audit.created_at).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}</td>
                           <td>{audit.details?.actor_email || audit.actor_id || "—"}</td>
-                          <td>{audit.file_name || "—"}</td>
+                          <td>{audit.display_file_name || audit.file_name || "—"}</td>
                           <td>{audit.total_rows}</td>
                           <td>{audit.created_rows}</td>
                           <td>{audit.rejected_rows}</td>
                           <td>{statusText(audit.status)}</td>
+                          <td>{["approved", "completed"].includes(audit.status) ? (audit.is_active === false ? "⏸ Desactivada" : "● Activa") : "—"}</td>
                           <td>
                             <div className="actions">
                               <button className="btn2" onClick={() => downloadImport(audit)} disabled={!audit.details?.source_file}>⬇ Archivo</button>
+                              {role === "admin" && ["approved", "completed"].includes(audit.status) && <button className="btn2" onClick={() => toggleImportActive(audit)} disabled={busy}>{audit.is_active === false ? "▶ Activar" : "⏸ Desactivar"}</button>}
                               {approval && audit.status === "pending" && <>
                                 <button className="btn" onClick={() => approveImport(audit)} disabled={busy}>✓ Aprobar</button>
                                 <button className="btn2" onClick={() => rejectImport(audit)} disabled={busy}>✕ Rechazar</button>
