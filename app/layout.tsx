@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import PrivacyFilteredAnalytics from "../components/PrivacyFilteredAnalytics";
 import "./globals.css";
 import "./account-hero-quality.css";
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         {children}
         <PrivacyFilteredAnalytics />
+        <SpeedInsights />
       </body>
     </html>
   );
