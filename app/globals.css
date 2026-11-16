@@ -97,3 +97,138 @@
 .wrap > .grid .cardImage{aspect-ratio:0.72}
 .wrap > .grid .cardImage img{object-fit:contain;padding:8px}
 @media(max-width:700px){.wrap > .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.wrap > .grid .cardImage{aspect-ratio:0.72}.wrap > .grid .info{padding:11px}}
+
+
+/* La Comarca — ajuste móvil progresivo. No altera escritorio ni componentes de negocio. */
+@media (max-width:700px){
+  /* Envíos compactos: dos transportistas visibles sin ocupar media pantalla. */
+  .shippingHero{min-height:0}
+  .shippingInner{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px 14px;
+    min-height:0;
+    padding:12px 16px;
+  }
+  .shippingLead{grid-column:1/-1;text-align:center}
+  .shippingLead strong{font-size:19px;line-height:1.1;white-space:nowrap}
+  .shippingRoute{display:none}
+  .carrier{
+    min-width:0;
+    min-height:0;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    padding:8px 4px 4px;
+    border-left:0;
+    border-top:1px solid rgba(255,255,255,.16);
+    text-align:center;
+  }
+  .carrier b{font-size:18px;white-space:normal}
+  .fedex b{font-size:20px}
+  .carrier span{font-size:10px;line-height:1.35}
+
+  /* Cabecera en dos bandas compactas; los cuatro accesos siguen disponibles. */
+  .top.siteTop{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:9px 10px;
+    padding:9px 13px 10px;
+    min-height:0;
+  }
+  .top.siteTop .logoLink{grid-column:1;grid-row:1;width:124px;max-width:100%}
+  .top.siteTop .topActions{
+    grid-column:2;
+    grid-row:1;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:6px;
+    margin:0;
+    min-width:0;
+    font-size:10px;
+  }
+  .top.siteTop .topActions a{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:7px 9px;
+    white-space:nowrap;
+  }
+  .top.siteTop .mainNav.navPills{
+    grid-column:1/-1;
+    grid-row:2;
+    display:flex;
+    flex-wrap:nowrap;
+    justify-content:flex-start;
+    gap:7px;
+    width:100%;
+    min-width:0;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:1px 0 4px;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .top.siteTop .mainNav.navPills::-webkit-scrollbar{display:none}
+  .top.siteTop .mainNav.navPills a{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:7px 11px!important;
+    font-size:11px;
+    white-space:nowrap;
+  }
+
+  /* Banner de cuenta: contenido y marcas con espacio legible. */
+  .accountHero{min-height:390px}
+  .accountCopy{padding:25px 17px 0}
+  .accountKicker{font-size:8px;letter-spacing:.12em}
+  .accountHero h1{font-size:clamp(34px,9vw,43px);line-height:.98}
+  .accountBenefits{gap:9px;margin-top:14px;font-size:9px}
+  .accountButton{min-width:0;margin-top:16px;padding:12px 18px;font-size:13px}
+  .accountVisuals{
+    width:100%;
+    height:160px;
+    padding:10px 13px 12px;
+  }
+  .brandTitle{font-size:10px;letter-spacing:.12em;margin-bottom:6px}
+  .brandGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:2px 4px}
+  .brandLogo{height:29px;padding:2px;font-size:8px}
+  .brandLogo.pokemon,.brandLogo.magic,.brandLogo.yugioh,
+  .brandLogo.onepiece,.brandLogo.riftbound,.brandLogo.lorcana,
+  .brandLogo.weiss{font-size:8px}
+  .brandLogo:nth-child(3n){border-right:1px solid rgba(255,255,255,.18)}
+  .brandLogo:nth-child(4n){border-right:0}
+
+  /* Mejor lectura de las líneas y de sus tarjetas. */
+  .wrap{padding-left:14px;padding-right:14px}
+  .sectionBlock{padding-top:25px}
+  .sectionTitle{align-items:flex-start;flex-direction:column;gap:6px;margin-bottom:13px}
+  .sectionTitle h2{font-size:22px;line-height:1.2}
+  .lineGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .lineCard{
+    min-height:104px;
+    padding:11px 10px;
+    gap:9px;
+    border-radius:14px;
+  }
+  .lineIcon{width:42px;height:42px;border-radius:11px;font-size:23px}
+  .lineMark{font-size:11px;line-height:1.2}
+  .lineCard strong{font-size:10px}
+}
+@media (max-width:380px){
+  .top.siteTop{padding-left:10px;padding-right:10px}
+  .top.siteTop .logoLink{width:112px}
+  .top.siteTop .topActions{gap:4px;font-size:9px}
+  .top.siteTop .topActions a{padding:6px 7px}
+  .top.siteTop .mainNav.navPills a{padding:7px 9px!important}
+  .shippingInner{padding-left:10px;padding-right:10px;gap:7px 10px}
+  .shippingLead strong{font-size:17px}
+  .carrier b{font-size:16px}
+  .fedex b{font-size:18px}
+  .accountHero{min-height:375px}
+  .lineCard{gap:7px;padding:9px}
+  .lineIcon{width:36px;height:36px;font-size:20px}
+}
