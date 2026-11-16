@@ -17,7 +17,10 @@ export default function PrivacyFilteredAnalytics() {
         }
 
         // Remove query strings and fragments to avoid collecting identifiers or tokens in URLs.
-        return { ...event, url: pathname };
+        return {
+          ...event,
+          url: new URL(pathname, window.location.origin).toString()
+        };
       }}
     />
   );
