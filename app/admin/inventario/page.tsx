@@ -107,27 +107,14 @@ export default function Inventario() {
     let query = sb.from("inventory_import_audit").select("*").order("created_at", { ascending: false }).limit(100);
     if (currentRole === "agent" && currentUserId) query = query.eq("actor_id", currentUserId);
     const { data, error } = await query;
-    if (error) return;
-    const audits = data || [];
-    const cardIds = [...new Set(audits.flatMap((audit: Audit) =>
-      Array.isArray(audit.details?.card_ids) ? audit.details.card_ids : []
-    ))];
-    let cardsById = new Map<string, any>();
-    let categoriesById = new Map<string, string>();
-    if (cardIds.length) {
-      const { data: cards } = await sb.from("cards").select("id,name,category_id").in("id", cardIds);
-      cardsById = new Map((cards || []).map((card: any) => [card.id, card]));
-      const categoryIds = [...new Set((cards || []).map((card: any) => card.category_id).filter(Boolean))];
-      if (categoryIds.length) {
-        const { data: categories } = await sb.from("categories").select("id,name").in("id", categoryIds);
-        categoriesById = new Map((categories || []).map((category: any) => [category.id, category.name]));
-      }
+    if (error) {
+      setMsg(`No se pudo cargar el historial de importaciones: ${error.message}`);
+      return;
     }
-    setHistory(audits.map((audit: Audit) => {
-      const firstId = Array.isArray(audit.details?.card_ids) ? audit.details.card_ids[0] : null;
-      const card = firstId ? cardsById.get(firstId) : null;
-      const productName = audit.details?.product_name || card?.name;
-      const categoryName = audit.details?.category_name || (card ? categoriesById.get(card.category_id) : "");
+    // One request only: descriptive names are stored with new capture audits.
+    setHistory((data || []).map((audit: Audit) => {
+      const productName = audit.details?.product_name;
+      const categoryName = audit.details?.category_name;
       const isLegacyCapture = String(audit.file_name || "").startsWith("captura-individual-");
       return {
         ...audit,
@@ -569,8 +556,17 @@ export default function Inventario() {
         },
       }).eq("id", audit.id);
       if (error) throw error;
+      setHistory((previous) => previous.map((item) => item.id === audit.id
+        ? { ...item, is_active: nextActive, details: {
+            ...(item.details || {}),
+            activation_history: [...historyChanges, {
+              active: nextActive,
+              changed_at: new Date().toISOString(),
+              changed_by: userId,
+            }],
+          } }
+        : item));
       setMsg(nextActive ? "Importación activada." : "Importación desactivada. Los productos y las fotografías se conservaron.");
-      await loadHistory();
     } catch (error: any) {
       setMsg(`No se pudo cambiar la vigencia: ${error?.message || error}`);
     } finally {
