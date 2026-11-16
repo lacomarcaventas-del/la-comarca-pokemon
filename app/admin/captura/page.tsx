@@ -384,9 +384,9 @@ export default function CapturaProductosPage() {
         <section className="panel">
           <h2>Fotografía del producto</h2>
           <label className="notice" style={{ display: "block", cursor: "pointer", textAlign: "center", padding: 22 }}>
-            <input type="file" disabled={photoBusy || busy} accept="image/jpeg,image/png,image/webp,image/tiff,image/avif,image/heic" capture="environment"
+            <input type="file" disabled={photoBusy || busy} accept="image/jpeg,image/png,image/webp,image/tiff,image/avif,image/heic"
               onChange={(e) => { if (e.target.files) addPhotos(e.target.files); e.currentTarget.value = ""; }} style={{ display: "none" }} />
-            <span style={{ fontSize: 28 }}>＋</span><br />Tomar o agregar fotografía
+            <span style={{ fontSize: 28 }}>＋</span><br />Elegir archivo o tomar fotografía
             <small style={{ display: "block", marginTop: 6 }}>Una imagen principal · Máximo 15 MB · Salida WebP</small>
           </label>
           <div style={{ background: "#080d13", border: "1px solid #463727", borderRadius: 12, minHeight: 260, display: "grid", placeItems: "center", overflow: "hidden", marginTop: 12 }}>
