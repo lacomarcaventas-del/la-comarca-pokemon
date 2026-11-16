@@ -58,6 +58,28 @@ function isCardCategory(name: string) {
   return CARD_CATEGORIES.has(normalizeCategory(name));
 }
 
+function fileSafePart(value: string) {
+  return normalizeCategory(value).replace(/\\s+/g, "-").slice(0, 36).toUpperCase() || "PRODUCTO";
+}
+function categoryFileCode(value: string) {
+  const v = normalizeCategory(value);
+  if (v.includes("pokemon")) return "POKE";
+  if (v.includes("magic")) return "MTG";
+  if (v.includes("yu gi oh") || v.includes("yugioh")) return "YGO";
+  if (v.includes("lorcana")) return "LORC";
+  if (v.includes("dungeons") || v === "rol") return "DND";
+  if (v.includes("one piece")) return "OPTCG";
+  if (v.includes("gundam")) return "GUND";
+  if (v.includes("weiss")) return "WEISS";
+  return fileSafePart(value).slice(0, 8);
+}
+function makeCaptureFileName(product: string, category: string) {
+  const date = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date()).replace(/[^0-9]/g, "");
+  return `${fileSafePart(product)}_${categoryFileCode(category)}_${date}`;
+}
+
 export default function CapturaProductosPage() {
   const router = useRouter();
   const sb = supabaseBrowser();
@@ -222,7 +244,7 @@ export default function CapturaProductosPage() {
       const { data: audit, error: auditError } = await sb.from("inventory_import_audit").insert({
         actor_id: actor.id,
         actor_role: role,
-        file_name: `captura-individual-${new Date().toISOString()}`,
+        file_name: makeCaptureFileName(form.name.trim(), selectedCategory?.name || "General"),
         total_rows: 1,
         created_rows: 0,
         updated_rows: 0,
@@ -235,6 +257,8 @@ export default function CapturaProductosPage() {
           errors: [],
           source_file: null,
           approval_note: role === "agent" ? "Pendiente de aprobación por administrador" : "Captura individual de administrador",
+          product_name: form.name.trim(),
+          category_name: selectedCategory?.name || "General",
         },
       }).select("id").single();
       if (auditError || !audit?.id) throw auditError || new Error("No fue posible registrar la auditoría de captura.");
@@ -281,6 +305,8 @@ export default function CapturaProductosPage() {
           errors: [],
           source_file: null,
           approval_note: role === "agent" ? "Pendiente de aprobación por administrador" : "Captura individual completada",
+          product_name: form.name.trim(),
+          category_name: selectedCategory?.name || "General",
         },
       }).eq("id", auditId);
 
