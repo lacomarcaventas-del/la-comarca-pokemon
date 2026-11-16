@@ -573,31 +573,20 @@ export default function Inventario() {
       const cardIds = Array.isArray(audit.details?.card_ids) ? audit.details.card_ids : [];
       if (!cardIds.length) throw new Error("Esta importación no tiene productos vinculados para cambiar su publicación.");
 
-      // Pause must also hide imported products from the public catalog.
-      // Keep each product's prior published value so reactivation restores it safely.
-      let previousPublished = audit.details?.previous_published || null;
-      if (!nextActive) {
-        const { data: cards, error: cardsError } = await sb
-          .from("cards").select("id,published").in("id", cardIds);
-        if (cardsError) throw cardsError;
-        previousPublished = Object.fromEntries((cards || []).map((card: any) => [card.id, card.published === true]));
-        const { error: hideError } = await sb.from("cards").update({ published: false }).in("id", cardIds);
-        if (hideError) throw hideError;
-      } else {
-        if (!previousPublished) {
-          throw new Error("No hay registro del estado de publicación anterior. No se reactivó para evitar publicar productos incorrectamente.");
-        }
-        for (const [cardId, wasPublished] of Object.entries(previousPublished)) {
-          const { error: restoreError } = await sb.from("cards")
-            .update({ published: wasPublished === true }).eq("id", cardId);
-          if (restoreError) throw restoreError;
-        }
-      }
+      // Vigencia controls catalog visibility directly: active = published, paused = hidden.
+      // One bulk update keeps this fast even for large imports.
+      const { data: linkedCards, error: cardsError } = await sb
+        .from("cards").select("id").in("id", cardIds);
+      if (cardsError) throw cardsError;
+      const foundIds = (linkedCards || []).map((card: any) => card.id);
+      if (!foundIds.length) throw new Error("No se encontraron productos de esta importación; no se cambió su vigencia.");
+      const { error: publishError } = await sb.from("cards")
+        .update({ published: nextActive }).in("id", foundIds);
+      if (publishError) throw publishError;
 
       const historyChanges = Array.isArray(audit.details?.activation_history) ? audit.details.activation_history : [];
       const updatedDetails = {
         ...(audit.details || {}),
-        previous_published: previousPublished,
         activation_history: [...historyChanges, {
           active: nextActive,
           changed_at: new Date().toISOString(),
@@ -609,18 +598,15 @@ export default function Inventario() {
         details: updatedDetails,
       }).eq("id", audit.id);
       if (error) {
-        // Best-effort compensation if the audit write fails.
-        for (const [cardId, wasPublished] of Object.entries(previousPublished || {})) {
-          await sb.from("cards").update({ published: nextActive ? false : wasPublished === true }).eq("id", cardId);
-        }
+        await sb.from("cards").update({ published: !nextActive }).in("id", foundIds);
         throw error;
       }
       setHistory((previous) => previous.map((item) => item.id === audit.id
         ? { ...item, is_active: nextActive, details: updatedDetails }
         : item));
       setMsg(nextActive
-        ? "Importación activada y publicación restaurada según su estado anterior."
-        : "Importación pausada: los productos ya no aparecen en el catálogo. Las fichas y fotografías se conservaron.");
+        ? "Importación activada: sus productos volvieron a publicarse en el catálogo."
+        : "Importación pausada: sus productos ya no aparecen en el catálogo. Las fichas y fotografías se conservaron.");
     } catch (error: any) {
       setMsg(`No se pudo cambiar la vigencia: ${error?.message || error}`);
     } finally {
