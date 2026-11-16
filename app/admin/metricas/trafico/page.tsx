@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "../../../../lib/supabase";
 
 type EventRow = { id: string; event: string; session_id: string; occurred_at: string; payload: Record<string, string | number> };
+const decodeGeo = (value: string) => { try { return decodeURIComponent(value); } catch { return value; } };
 const money = (n: number) => new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
 const labels: Record<string, string> = { page_view: "Página vista", product_view: "Interacción con producto", search: "Búsqueda", category_view: "Categoría", add_to_cart: "Añadido al carrito", cart_open: "Carrito abierto", checkout_started: "Checkout iniciado", purchase: "Compra confirmada" };
 
@@ -41,7 +42,7 @@ export default function TrafficAnalyticsPage() {
     return [...map.entries()].map(([id, rows]) => {
       const ordered = [...rows].sort((a, b) => a.occurred_at.localeCompare(b.occurred_at));
       const latest = ordered[ordered.length - 1], first = ordered[0];
-      return { id, rows: ordered, first, latest, city: String(latest.payload.city || first.payload.city || "No disponible"), region: String(latest.payload.region || first.payload.region || ""), country: String(latest.payload.country || first.payload.country || "—"), source: String(first.payload.source || "direct"), pages: ordered.filter(x => x.event === "page_view").map(x => String(x.payload.page || "/")) };
+      return { id, rows: ordered, first, latest, city: decodeGeo(String(latest.payload.city || first.payload.city || "No disponible")), region: String(latest.payload.region || first.payload.region || ""), country: String(latest.payload.country || first.payload.country || "—"), source: String(first.payload.source || "direct"), pages: ordered.filter(x => x.event === "page_view").map(x => String(x.payload.page || "/")) };
     }).sort((a, b) => b.latest.occurred_at.localeCompare(a.latest.occurred_at));
   }, [events]);
 
@@ -53,7 +54,7 @@ export default function TrafficAnalyticsPage() {
 
   const aggregate = (key: string, fallback: string, only = "page_view") => {
     const map = new Map<string, number>();
-    for (const e of events.filter(x => x.event === only)) { const value = String(e.payload[key] || fallback); map.set(value, (map.get(value) || 0) + 1); }
+    for (const e of events.filter(x => x.event === only)) { const raw = String(e.payload[key] || fallback); const value = key === "city" ? decodeGeo(raw) : raw; map.set(value, (map.get(value) || 0) + 1); }
     return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
   };
   const topPages = aggregate("page", "—"), topCities = aggregate("city", "No disponible"), sources = aggregate("source", "direct");
