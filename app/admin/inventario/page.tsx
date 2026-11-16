@@ -111,8 +111,35 @@ export default function Inventario() {
       setMsg(`No se pudo cargar el historial de importaciones: ${error.message}`);
       return;
     }
-    // One request only: descriptive names are stored with new capture audits.
-    setHistory((data || []).map((audit: Audit) => {
+    let audits = data || [];
+
+    // Repair older paused imports created before product publication was linked
+    // to the activation switch. Only admins run this one-time reconciliation.
+    if (currentRole === "admin") {
+      const needsPauseSync = audits.filter((audit: Audit) =>
+        audit.is_active === false &&
+        ["approved", "completed"].includes(audit.status) &&
+        !audit.details?.previous_published &&
+        Array.isArray(audit.details?.card_ids) &&
+        audit.details.card_ids.length
+      );
+      const repairIds = [...new Set(needsPauseSync.flatMap((audit: Audit) => audit.details.card_ids))];
+      if (repairIds.length) {
+        const { data: linkedCards } = await sb.from("cards").select("id,published").in("id", repairIds);
+        const publicationById = Object.fromEntries((linkedCards || []).map((card: any) => [card.id, card.published === true]));
+        const idsToHide = (linkedCards || []).filter((card: any) => card.published === true).map((card: any) => card.id);
+        if (idsToHide.length) await sb.from("cards").update({ published: false }).in("id", idsToHide);
+        for (const audit of needsPauseSync) {
+          const previousPublished = Object.fromEntries(audit.details.card_ids.map((id: string) => [id, publicationById[id] === true]));
+          const updatedDetails = { ...(audit.details || {}), previous_published: previousPublished };
+          const { error: auditUpdateError } = await sb.from("inventory_import_audit")
+            .update({ details: updatedDetails }).eq("id", audit.id);
+          if (!auditUpdateError) audit.details = updatedDetails;
+        }
+      }
+    }
+
+    setHistory(audits.map((audit: Audit) => {
       const productName = audit.details?.product_name;
       const categoryName = audit.details?.category_name;
       const isLegacyCapture = String(audit.file_name || "").startsWith("captura-individual-");
