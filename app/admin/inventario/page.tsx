@@ -570,43 +570,28 @@ export default function Inventario() {
     setBusy(true);
     try {
       const nextActive = audit.is_active === false;
-      const cardIds = Array.isArray(audit.details?.card_ids) ? audit.details.card_ids : [];
-      if (!cardIds.length) throw new Error("Esta importación no tiene productos vinculados para cambiar su publicación.");
-
-      // Vigencia controls catalog visibility directly: active = published, paused = hidden.
-      // One bulk update keeps this fast even for large imports.
-      const { data: linkedCards, error: cardsError } = await sb
-        .from("cards").select("id").in("id", cardIds);
-      if (cardsError) throw cardsError;
-      const foundIds = (linkedCards || []).map((card: any) => card.id);
-      if (!foundIds.length) throw new Error("No se encontraron productos de esta importación; no se cambió su vigencia.");
-      const { error: publishError } = await sb.from("cards")
-        .update({ published: nextActive }).in("id", foundIds);
-      if (publishError) throw publishError;
-
-      const historyChanges = Array.isArray(audit.details?.activation_history) ? audit.details.activation_history : [];
-      const updatedDetails = {
-        ...(audit.details || {}),
-        activation_history: [...historyChanges, {
-          active: nextActive,
-          changed_at: new Date().toISOString(),
-          changed_by: userId,
-        }],
-      };
-      const { error } = await sb.from("inventory_import_audit").update({
-        is_active: nextActive,
-        details: updatedDetails,
-      }).eq("id", audit.id);
-      if (error) {
-        await sb.from("cards").update({ published: !nextActive }).in("id", foundIds);
-        throw error;
-      }
+      const { data, error } = await sb.rpc("set_inventory_import_active", {
+        p_audit_id: audit.id,
+        p_active: nextActive,
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error("La base de datos no confirmó el cambio de vigencia.");
       setHistory((previous) => previous.map((item) => item.id === audit.id
-        ? { ...item, is_active: nextActive, details: updatedDetails }
+        ? {
+            ...item,
+            is_active: nextActive,
+            details: {
+              ...(item.details || {}),
+              activation_history: [
+                ...(Array.isArray(item.details?.activation_history) ? item.details.activation_history : []),
+                { active: nextActive, changed_at: new Date().toISOString(), changed_by: userId },
+              ],
+            },
+          }
         : item));
       setMsg(nextActive
-        ? "Importación activada: sus productos volvieron a publicarse en el catálogo."
-        : "Importación pausada: sus productos ya no aparecen en el catálogo. Las fichas y fotografías se conservaron.");
+        ? `Importación activada: ${data.products_updated} productos publicados nuevamente en el catálogo.`
+        : `Importación pausada: ${data.products_updated} productos ocultos del catálogo. Sus fichas y fotografías se conservaron.`);
     } catch (error: any) {
       setMsg(`No se pudo cambiar la vigencia: ${error?.message || error}`);
     } finally {
