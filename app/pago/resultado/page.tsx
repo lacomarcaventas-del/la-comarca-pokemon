@@ -2,6 +2,7 @@
 import {Suspense,useEffect,useState} from "react";
 import {useSearchParams} from "next/navigation";
 import {supabaseBrowser} from "../../../lib/supabase";
+import {trackEvent} from "../../../lib/analytics";
 
 function PagoResultadoContenido(){
   const q=useSearchParams();
@@ -30,6 +31,12 @@ function PagoResultadoContenido(){
       }
 
       if(data.status==="paid"){
+        const purchaseKey = `lc_purchase_${orderId}`;
+        if (typeof window !== "undefined" && !sessionStorage.getItem(purchaseKey)) {
+          const { data: order } = await sb.from("orders").select("total").eq("id", orderId).maybeSingle();
+          trackEvent("purchase", { value: Number(order?.total || 0) });
+          sessionStorage.setItem(purchaseKey, "1");
+        }
         setStatus("¡Pago confirmado!");
         setDetail("Tu pedido fue pagado correctamente y ya está siendo procesado.");
         clearInterval(timer);
