@@ -652,7 +652,17 @@ export default function Inventario() {
                           <td>
                             <div className="actions">
                               <button className="btn2" onClick={() => downloadImport(audit)} disabled={!audit.details?.source_file}>⬇ Archivo</button>
-                              {role === "admin" && ["approved", "completed"].includes(audit.status) && <button className="btn2" onClick={() => toggleImportActive(audit)} disabled={busy}>{audit.is_active === false ? "▶ Activar" : "⏸ Desactivar"}</button>}
+                              {role === "admin" && ["approved", "completed"].includes(audit.status) && (
+                                <button type="button" onClick={() => toggleImportActive(audit)} disabled={busy}
+                                  aria-pressed={audit.is_active !== false}
+                                  title={audit.is_active === false ? "Activar importación" : "Desactivar importación"}
+                                  style={{ display: "inline-flex", alignItems: "center", gap: 8, border: "1px solid #51402c", borderRadius: 999, padding: "7px 10px", background: "transparent", color: "inherit", cursor: busy ? "wait" : "pointer", opacity: busy ? .6 : 1 }}>
+                                  <span style={{ width: 34, height: 19, borderRadius: 999, background: audit.is_active === false ? "#64748b" : "#16a34a", display: "inline-block", position: "relative", transition: "background .15s" }}>
+                                    <span style={{ position: "absolute", top: 2, left: audit.is_active === false ? 2 : 17, width: 15, height: 15, borderRadius: "50%", background: "#fff", transition: "left .15s" }} />
+                                  </span>
+                                  {audit.is_active === false ? "Desactivada" : "Activa"}
+                                </button>
+                              )}
                               {approval && audit.status === "pending" && <>
                                 <button className="btn" onClick={() => approveImport(audit)} disabled={busy}>✓ Aprobar</button>
                                 <button className="btn2" onClick={() => rejectImport(audit)} disabled={busy}>✕ Rechazar</button>
