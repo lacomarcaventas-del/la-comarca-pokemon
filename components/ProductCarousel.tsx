@@ -30,20 +30,32 @@ export default function ProductCarousel() {
     async function loadProducts() {
       try {
         const sb = supabaseBrowser();
-        const { data, error } = await sb
-          .from("cards")
-          .select("id,name,image_url,price,stock,card_number")
-          .eq("published", true)
-          .gt("stock", 0)
-          .order("name", { ascending: true })
-          .limit(24);
-        if (error) throw error;
-        const hidden = new Set(["producto al azar", "producto al azar 1", "producto al azar 2"]);
-        if (active) {
-          setProducts((data || []).filter((p: FeaturedProduct) =>
-            !hidden.has(String(p.name || "").trim().toLowerCase())
-          ) as FeaturedProduct[]);
+        const pageSize = 1000;
+        let from = 0;
+        let available: FeaturedProduct[] = [];
+        while (true) {
+          const { data, error } = await sb
+            .from("cards")
+            .select("id,name,image_url,price,stock,card_number")
+            .eq("published", true)
+            .gt("stock", 0)
+            .range(from, from + pageSize - 1);
+          if (error) throw error;
+          const page = (data || []) as FeaturedProduct[];
+          available = available.concat(page);
+          if (page.length < pageSize) break;
+          from += pageSize;
         }
+        const hidden = new Set(["producto al azar", "producto al azar 1", "producto al azar 2"]);
+        const eligible = available.filter((p) =>
+          !hidden.has(String(p.name || "").trim().toLowerCase())
+        );
+        // Fisher-Yates: select a fresh random sample on each page load.
+        for (let i = eligible.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [eligible[i], eligible[j]] = [eligible[j], eligible[i]];
+        }
+        if (active) setProducts(eligible.slice(0, 24));
       } catch (error) {
         console.error("No fue posible cargar los productos destacados", error);
         if (active) setProducts([]);
