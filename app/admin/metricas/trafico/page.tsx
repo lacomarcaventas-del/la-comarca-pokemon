@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "../../../../lib/supabase";
+import InternalTrafficEnrollment from "../../../../components/InternalTrafficEnrollment";
 
 type EventRow = { id: string; event: string; session_id: string; occurred_at: string; payload: Record<string, string | number> };
 type Tab = "resumen" | "audiencia" | "comportamiento" | "conversion";
@@ -109,6 +110,7 @@ export default function TrafficAnalyticsPage() {
           <Metric label="Interés en productos" value={summary.productViews.toLocaleString("es-MX")} detail="Interacciones capturadas" />
           <Metric label="Compras atribuidas" value={summary.purchases.toLocaleString("es-MX")} detail={money(summary.revenue) + " registrados"} />
         </div>
+        <InternalTrafficEnrollment />
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 20, borderBottom: "1px solid var(--border, #e5e7eb)", paddingBottom: 8 }}>
           {tabs.map(t => <button key={t.id} onClick={() => setTab(t.id)} aria-pressed={tab === t.id} style={{ border: 0, borderRadius: 20, padding: "9px 14px", cursor: "pointer", background: tab === t.id ? "#166534" : "transparent", color: tab === t.id ? "white" : "inherit", fontWeight: tab === t.id ? 700 : 500 }}>{t.label}</button>)}
         </div>
