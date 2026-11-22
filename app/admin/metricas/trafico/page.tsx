@@ -62,9 +62,12 @@ export default function TrafficAnalyticsPage() {
     return [...map.entries()].map(([id, rows]) => {
       const ordered = [...rows].sort((a, b) => a.occurred_at.localeCompare(b.occurred_at));
       const latest = ordered[ordered.length - 1], first = ordered[0];
-      return { id, rows: ordered, first, latest, city: decodeGeo(String(latest.payload.city || first.payload.city || "No disponible")), region: String(latest.payload.region || first.payload.region || ""), country: String(latest.payload.country || first.payload.country || "—"), source: String(first.payload.source || "direct"), pages: ordered.filter(x => x.event === "page_view").map(x => String(x.payload.page || "/")) };
+      const internalDevice = ordered.find((event) => typeof event.payload.internal_device === "string")?.payload.internal_device as string | undefined;
+      return { id, rows: ordered, first, latest, internalDevice, city: decodeGeo(String(latest.payload.city || first.payload.city || "No disponible")), region: String(latest.payload.region || first.payload.region || ""), country: String(latest.payload.country || first.payload.country || "—"), source: String(first.payload.source || "direct"), pages: ordered.filter(x => x.event === "page_view").map(x => String(x.payload.page || "/")) };
     }).sort((a, b) => b.latest.occurred_at.localeCompare(a.latest.occurred_at));
   }, [visibleEvents]);
+
+  const internalSessionCount = useMemo(() => new Set(events.filter((event) => event.payload.internal_device).map((event) => event.session_id)).size, [events]);
 
   const summary = useMemo(() => {
     const count = (name: string) => visibleEvents.filter(e => e.event === name).length;
@@ -113,9 +116,10 @@ export default function TrafficAnalyticsPage() {
           <Metric label="Interés en productos" value={summary.productViews.toLocaleString("es-MX")} detail="Interacciones capturadas" />
           <Metric label="Compras atribuidas" value={summary.purchases.toLocaleString("es-MX")} detail={money(summary.revenue) + " registrados"} />
         </div>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 16 }}>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginTop: 16 }}>
           <button className="btn2" type="button" aria-pressed={trafficMode === "external"} onClick={() => setTrafficMode("external")}>Solo clientes</button>
           <button className="btn2" type="button" aria-pressed={trafficMode === "all"} onClick={() => setTrafficMode("all")}>Todo el tráfico</button>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, borderRadius: 999, padding: "6px 11px", background: "rgba(22,163,74,.14)", color: "#4ade80", border: "1px solid rgba(74,222,128,.35)", fontSize: 12, fontWeight: 700 }}><span style={{ width: 8, height: 8, borderRadius: 99, background: "#22c55e" }} /> {internalSessionCount} sesiones internas identificadas</span>
         </div>
         <InternalTrafficEnrollment />
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 20, borderBottom: "1px solid var(--border, #e5e7eb)", paddingBottom: 8 }}>
@@ -156,7 +160,7 @@ export default function TrafficAnalyticsPage() {
       </>}
 
       <section className="panel" style={{ marginTop: 16 }}><div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}><div><h2 style={{ marginBottom: 4 }}>Actividad reciente</h2><p className="muted" style={{ margin: 0 }}>Sesiones anónimas del periodo · No identifica personas</p></div><span className="muted" style={{ fontSize: 12 }}>{sessions.length} sesiones</span></div>
-        {loading ? <div className="empty">Cargando actividad…</div> : sessions.length ? <div style={{ overflowX: "auto", marginTop: 12 }}><table className="table"><thead><tr><th>Sesión</th><th>Ubicación</th><th>Origen</th><th>Páginas</th><th>Acciones</th><th>Última actividad</th></tr></thead><tbody>{sessions.slice(0, 30).map(s => <tr key={s.id}><td><code>{s.id.slice(0, 8)}</code></td><td>{s.city}{s.region ? ", " + s.region : ""} · {s.country}</td><td>{s.source}</td><td>{s.pages.length ? s.pages.join(" → ") : "—"}</td><td>{s.rows.map(x => labels[x.event] || x.event).join(" · ")}</td><td>{new Date(s.latest.occurred_at).toLocaleString("es-MX")}</td></tr>)}</tbody></table></div> : <div className="empty">Todavía no hay sesiones registradas. Navega por la tienda para generar eventos.</div>}
+        {loading ? <div className="empty">Cargando actividad…</div> : sessions.length ? <div style={{ overflowX: "auto", marginTop: 12 }}><table className="table"><thead><tr><th>Sesión</th><th>Tipo</th><th>Ubicación</th><th>Origen</th><th>Páginas</th><th>Acciones</th><th>Última actividad</th></tr></thead><tbody>{sessions.slice(0, 30).map(s => <tr key={s.id} style={s.internalDevice ? { background: "rgba(22,163,74,.10)" } : undefined}><td><code>{s.id.slice(0, 8)}</code></td><td>{s.internalDevice ? <span style={{ display: "inline-flex", alignItems: "center", gap: 5, borderRadius: 999, padding: "4px 9px", background: "rgba(22,163,74,.18)", color: "#4ade80", border: "1px solid rgba(74,222,128,.35)", fontSize: 11, fontWeight: 800, whiteSpace: "nowrap" }}><span style={{ width: 7, height: 7, borderRadius: 99, background: "#22c55e" }} />{s.internalDevice === "store_pc" ? "PC LA COMARCA" : s.internalDevice === "marco_mobile_chrome" ? "MÓVIL MARCO" : "INTERNO"}</span> : <span className="muted" style={{ fontSize: 12 }}>Cliente</span>}</td><td>{s.city}{s.region ? ", " + s.region : ""} · {s.country}</td><td>{s.source}</td><td>{s.pages.length ? s.pages.join(" → ") : "—"}</td><td>{s.rows.map(x => labels[x.event] || x.event).join(" · ")}</td><td>{new Date(s.latest.occurred_at).toLocaleString("es-MX")}</td></tr>)}</tbody></table></div> : <div className="empty">Todavía no hay sesiones registradas. Navega por la tienda para generar eventos.</div>}
       </section>
       <p className="muted" style={{ fontSize: 12, textAlign: "center", margin: "18px 0" }}>Datos anónimos. No se almacenan direcciones IP, nombres, correos ni términos de búsqueda. Las sesiones representan navegadores, no personas únicas.</p>
     </main>
