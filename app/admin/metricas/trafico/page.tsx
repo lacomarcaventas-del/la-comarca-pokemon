@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "../../../../lib/supabase";
+import InternalTrafficEnrollment from "../../../../components/InternalTrafficEnrollment";
 
 type EventRow = { id: string; event: string; session_id: string; occurred_at: string; payload: Record<string, string | number> };
 type Tab = "resumen" | "audiencia" | "comportamiento" | "conversion";
@@ -24,6 +25,7 @@ export default function TrafficAnalyticsPage() {
   const sb = useMemo(() => supabaseBrowser(), []);
   const router = useRouter();
   const [days, setDays] = useState(30);
+  const [trafficMode, setTrafficMode] = useState<"external" | "all">("external");
   const [tab, setTab] = useState<Tab>("resumen");
   const [events, setEvents] = useState<EventRow[]>([]);
   const [productNames, setProductNames] = useState<Record<string, string>>({});
@@ -52,38 +54,43 @@ export default function TrafficAnalyticsPage() {
 
   useEffect(() => { load(); }, [load]);
 
+  const visibleEvents = useMemo(() => trafficMode === "external" ? events.filter((e) => !e.payload.internal_device) : events, [events, trafficMode]);
+
   const sessions = useMemo(() => {
     const map = new Map<string, EventRow[]>();
-    for (const event of events) { const list = map.get(event.session_id) || []; list.push(event); map.set(event.session_id, list); }
+    for (const event of visibleEvents) { const list = map.get(event.session_id) || []; list.push(event); map.set(event.session_id, list); }
     return [...map.entries()].map(([id, rows]) => {
       const ordered = [...rows].sort((a, b) => a.occurred_at.localeCompare(b.occurred_at));
       const latest = ordered[ordered.length - 1], first = ordered[0];
-      return { id, rows: ordered, first, latest, city: decodeGeo(String(latest.payload.city || first.payload.city || "No disponible")), region: String(latest.payload.region || first.payload.region || ""), country: String(latest.payload.country || first.payload.country || "—"), source: String(first.payload.source || "direct"), pages: ordered.filter(x => x.event === "page_view").map(x => String(x.payload.page || "/")) };
+      const internalDevice = ordered.find((event) => typeof event.payload.internal_device === "string")?.payload.internal_device as string | undefined;
+      return { id, rows: ordered, first, latest, internalDevice, city: decodeGeo(String(latest.payload.city || first.payload.city || "No disponible")), region: String(latest.payload.region || first.payload.region || ""), country: String(latest.payload.country || first.payload.country || "—"), source: String(first.payload.source || "direct"), pages: ordered.filter(x => x.event === "page_view").map(x => String(x.payload.page || "/")) };
     }).sort((a, b) => b.latest.occurred_at.localeCompare(a.latest.occurred_at));
-  }, [events]);
+  }, [visibleEvents]);
+
+  const internalSessionCount = useMemo(() => new Set(events.filter((event) => event.payload.internal_device).map((event) => event.session_id)).size, [events]);
 
   const summary = useMemo(() => {
-    const count = (name: string) => events.filter(e => e.event === name).length;
-    const purchases = events.filter(e => e.event === "purchase");
-    const uniqueSessions = (name: string) => new Set(events.filter(e => e.event === name).map(e => e.session_id)).size;
+    const count = (name: string) => visibleEvents.filter(e => e.event === name).length;
+    const purchases = visibleEvents.filter(e => e.event === "purchase");
+    const uniqueSessions = (name: string) => new Set(visibleEvents.filter(e => e.event === name).map(e => e.session_id)).size;
     return { sessions: sessions.length, views: count("page_view"), productViews: count("product_view"), cartOpens: count("cart_open"), carts: count("add_to_cart"), checkouts: count("checkout_started"), purchases: purchases.length, revenue: purchases.reduce((sum, e) => sum + Number(e.payload.value || 0), 0), productSessions: uniqueSessions("product_view"), cartSessions: uniqueSessions("add_to_cart"), checkoutSessions: uniqueSessions("checkout_started"), purchaseSessions: uniqueSessions("purchase") };
-  }, [events, sessions]);
+  }, [visibleEvents, sessions]);
 
   const aggregate = useCallback((key: string, fallback: string, only = "page_view") => {
     const map = new Map<string, number>();
-    for (const e of events.filter(x => x.event === only)) { const raw = String(e.payload[key] || fallback); const value = key === "city" ? decodeGeo(raw) : raw; map.set(value, (map.get(value) || 0) + 1); }
+    for (const e of visibleEvents.filter(x => x.event === only)) { const raw = String(e.payload[key] || fallback); const value = key === "city" ? decodeGeo(raw) : raw; map.set(value, (map.get(value) || 0) + 1); }
     return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
-  }, [events]);
+  }, [visibleEvents]);
   const topPages = aggregate("page", "—"), topCities = aggregate("city", "No disponible"), topCountries = aggregate("country", "No disponible"), sources = aggregate("source", "direct"), devices = aggregate("device", "No disponible"), campaigns = aggregate("campaign", "Sin campaña"), categories = aggregate("category_name", "Sin categoría", "category_view");
-  const topProducts = useMemo(() => { const map = new Map<string, number>(); for (const e of events.filter(x => x.event === "product_view" || x.event === "add_to_cart")) { const id = String(e.payload.product_id || ""); if (id) map.set(id, (map.get(id) || 0) + 1); } return [...map.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,n])=>[productNames[id] || id.slice(0,8),n] as [string,number]); }, [events, productNames]);
+  const topProducts = useMemo(() => { const map = new Map<string, number>(); for (const e of visibleEvents.filter(x => x.event === "product_view" || x.event === "add_to_cart")) { const id = String(e.payload.product_id || ""); if (id) map.set(id, (map.get(id) || 0) + 1); } return [...map.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,n])=>[productNames[id] || id.slice(0,8),n] as [string,number]); }, [visibleEvents, productNames]);
 
   const daily = useMemo(() => {
     const today = new Date(); const start = new Date(today); start.setDate(today.getDate() - days + 1); start.setHours(0,0,0,0);
     const buckets = Array.from({ length: days }, (_, i) => { const date = new Date(start); date.setDate(start.getDate() + i); return { date, views: 0, sessions: new Set<string>() }; });
     const index = new Map(buckets.map((b, i) => [b.date.toISOString().slice(0,10), i]));
-    for (const e of events) if (e.event === "page_view") { const i = index.get(new Date(e.occurred_at).toISOString().slice(0,10)); if (i !== undefined) { buckets[i].views++; buckets[i].sessions.add(e.session_id); } }
+    for (const e of visibleEvents) if (e.event === "page_view") { const i = index.get(new Date(e.occurred_at).toISOString().slice(0,10)); if (i !== undefined) { buckets[i].views++; buckets[i].sessions.add(e.session_id); } }
     return buckets.map(b => ({ date: b.date, views: b.views, sessions: b.sessions.size }));
-  }, [events, days]);
+  }, [visibleEvents, days]);
 
   const maxDaily = Math.max(1, ...daily.map(x => x.views));
   const chartPoints = daily.map((d, i) => ({ x: 12 + (i * 296 / Math.max(1, daily.length - 1)), y: 92 - d.views / maxDaily * 76 }));
@@ -98,7 +105,7 @@ export default function TrafficAnalyticsPage() {
     <main className="wrap" style={{ maxWidth: 1440 }}>
       <div className="panel" style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-          <div><div className="muted" style={{ fontSize: 12, letterSpacing: ".08em", textTransform: "uppercase" }}>Centro de inteligencia comercial</div><h1 style={{ margin: "5px 0", fontSize: "clamp(24px,3vw,34px)" }}>¿Qué está pasando en La Comarca?</h1><p className="muted" style={{ margin: 0 }}>Actividad anónima de la tienda online · Últimos {days} días</p></div>
+          <div><div className="muted" style={{ fontSize: 12, letterSpacing: ".08em", textTransform: "uppercase" }}>Centro de inteligencia comercial</div><h1 style={{ margin: "5px 0", fontSize: "clamp(24px,3vw,34px)" }}>¿Qué está pasando en La Comarca?</h1><p className="muted" style={{ margin: 0 }}>{trafficMode === "external" ? "Tráfico externo · excluye dispositivos internos registrados" : "Tráfico total · incluye dispositivos internos"} · Últimos {days} días</p></div>
           <div className="muted" style={{ fontSize: 12 }}>{loading ? "Actualizando datos…" : `Actualizado ${new Date().toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}`}</div>
         </div>
         {error && <div className="notice" style={{ border: "1px solid #dc2626", marginTop: 14 }}>⚠️ {error}</div>}
@@ -109,6 +116,21 @@ export default function TrafficAnalyticsPage() {
           <Metric label="Interés en productos" value={summary.productViews.toLocaleString("es-MX")} detail="Interacciones capturadas" />
           <Metric label="Compras atribuidas" value={summary.purchases.toLocaleString("es-MX")} detail={money(summary.revenue) + " registrados"} />
         </div>
+        <div style={{ display: "grid", gap: 8, marginTop: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <span className="muted" style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>Vista activa:</span>
+            <span role="status" style={{ display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 999, padding: "6px 11px", background: trafficMode === "all" ? "rgba(22,163,74,.18)" : "rgba(59,130,246,.16)", color: trafficMode === "all" ? "#4ade80" : "#93c5fd", border: trafficMode === "all" ? "1px solid rgba(74,222,128,.45)" : "1px solid rgba(147,197,253,.4)", fontSize: 12, fontWeight: 800 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 99, background: trafficMode === "all" ? "#22c55e" : "#60a5fa" }} />
+              {trafficMode === "all" ? "TODO EL TRÁFICO · incluye internos" : "SOLO CLIENTES · internos excluidos"}
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <button className="btn2" type="button" aria-pressed={trafficMode === "external"} onClick={() => setTrafficMode("external")} style={trafficMode === "external" ? { background: "rgba(59,130,246,.18)", color: "#bfdbfe", border: "2px solid #60a5fa", boxShadow: "0 0 0 2px rgba(96,165,250,.12)", fontWeight: 800 } : { opacity: .72 }}>Solo clientes {trafficMode === "external" ? "✓ ACTIVO" : ""}</button>
+            <button className="btn2" type="button" aria-pressed={trafficMode === "all"} onClick={() => setTrafficMode("all")} style={trafficMode === "all" ? { background: "rgba(22,163,74,.18)", color: "#bbf7d0", border: "2px solid #22c55e", boxShadow: "0 0 0 2px rgba(34,197,94,.12)", fontWeight: 800 } : { opacity: .72 }}>Todo el tráfico {trafficMode === "all" ? "✓ ACTIVO" : ""}</button>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, borderRadius: 999, padding: "6px 11px", background: "rgba(22,163,74,.14)", color: "#4ade80", border: "1px solid rgba(74,222,128,.35)", fontSize: 12, fontWeight: 700 }}><span style={{ width: 8, height: 8, borderRadius: 99, background: "#22c55e" }} /> {internalSessionCount} sesiones internas registradas</span>
+          </div>
+        </div>
+        <InternalTrafficEnrollment />
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 20, borderBottom: "1px solid var(--border, #e5e7eb)", paddingBottom: 8 }}>
           {tabs.map(t => <button key={t.id} onClick={() => setTab(t.id)} aria-pressed={tab === t.id} style={{ border: 0, borderRadius: 20, padding: "9px 14px", cursor: "pointer", background: tab === t.id ? "#166534" : "transparent", color: tab === t.id ? "white" : "inherit", fontWeight: tab === t.id ? 700 : 500 }}>{t.label}</button>)}
         </div>
@@ -138,7 +160,7 @@ export default function TrafficAnalyticsPage() {
         <Ranking title="Páginas más consultadas" rows={topPages} empty="Aún no hay datos." />
         <Ranking title="Productos con interacción" rows={topProducts} empty="Aún no hay interacciones con productos." />
         <Ranking title="Categorías consultadas" rows={categories} empty="Aún no hay interacciones por categoría." />
-        <section className="panel"><h2>Acciones en la tienda</h2>{[["Búsquedas", events.filter(e=>e.event==="search").length],["Carritos abiertos",summary.cartOpens],["Añadidos al carrito",summary.carts],["Checkouts iniciados",summary.checkouts]].map(([name,n])=><div className="row" key={String(name)}><span>{name}</span><b>{Number(n).toLocaleString("es-MX")}</b></div>)}</section>
+        <section className="panel"><h2>Acciones en la tienda</h2>{[["Búsquedas", visibleEvents.filter(e=>e.event==="search").length],["Carritos abiertos",summary.cartOpens],["Añadidos al carrito",summary.carts],["Checkouts iniciados",summary.checkouts]].map(([name,n])=><div className="row" key={String(name)}><span>{name}</span><b>{Number(n).toLocaleString("es-MX")}</b></div>)}</section>
       </div>}
 
       {tab === "conversion" && <>
@@ -147,7 +169,7 @@ export default function TrafficAnalyticsPage() {
       </>}
 
       <section className="panel" style={{ marginTop: 16 }}><div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}><div><h2 style={{ marginBottom: 4 }}>Actividad reciente</h2><p className="muted" style={{ margin: 0 }}>Sesiones anónimas del periodo · No identifica personas</p></div><span className="muted" style={{ fontSize: 12 }}>{sessions.length} sesiones</span></div>
-        {loading ? <div className="empty">Cargando actividad…</div> : sessions.length ? <div style={{ overflowX: "auto", marginTop: 12 }}><table className="table"><thead><tr><th>Sesión</th><th>Ubicación</th><th>Origen</th><th>Páginas</th><th>Acciones</th><th>Última actividad</th></tr></thead><tbody>{sessions.slice(0, 30).map(s => <tr key={s.id}><td><code>{s.id.slice(0, 8)}</code></td><td>{s.city}{s.region ? ", " + s.region : ""} · {s.country}</td><td>{s.source}</td><td>{s.pages.length ? s.pages.join(" → ") : "—"}</td><td>{s.rows.map(x => labels[x.event] || x.event).join(" · ")}</td><td>{new Date(s.latest.occurred_at).toLocaleString("es-MX")}</td></tr>)}</tbody></table></div> : <div className="empty">Todavía no hay sesiones registradas. Navega por la tienda para generar eventos.</div>}
+        {loading ? <div className="empty">Cargando actividad…</div> : sessions.length ? <div style={{ overflowX: "auto", marginTop: 12 }}><table className="table"><thead><tr><th>Sesión</th><th>Tipo</th><th>Ubicación</th><th>Origen</th><th>Páginas</th><th>Acciones</th><th>Última actividad</th></tr></thead><tbody>{sessions.slice(0, 30).map(s => <tr key={s.id} style={s.internalDevice ? { background: "rgba(22,163,74,.10)" } : undefined}><td><code>{s.id.slice(0, 8)}</code></td><td>{s.internalDevice ? <span style={{ display: "inline-flex", alignItems: "center", gap: 5, borderRadius: 999, padding: "4px 9px", background: "rgba(22,163,74,.18)", color: "#4ade80", border: "1px solid rgba(74,222,128,.35)", fontSize: 11, fontWeight: 800, whiteSpace: "nowrap" }}><span style={{ width: 7, height: 7, borderRadius: 99, background: "#22c55e" }} />{s.internalDevice === "store_pc" ? "PC LA COMARCA" : s.internalDevice === "marco_mobile_chrome" ? "MÓVIL MARCO" : "INTERNO"}</span> : <span className="muted" style={{ fontSize: 12 }}>Cliente</span>}</td><td>{s.city}{s.region ? ", " + s.region : ""} · {s.country}</td><td>{s.source}</td><td>{s.pages.length ? s.pages.join(" → ") : "—"}</td><td>{s.rows.map(x => labels[x.event] || x.event).join(" · ")}</td><td>{new Date(s.latest.occurred_at).toLocaleString("es-MX")}</td></tr>)}</tbody></table></div> : <div className="empty">Todavía no hay sesiones registradas. Navega por la tienda para generar eventos.</div>}
       </section>
       <p className="muted" style={{ fontSize: 12, textAlign: "center", margin: "18px 0" }}>Datos anónimos. No se almacenan direcciones IP, nombres, correos ni términos de búsqueda. Las sesiones representan navegadores, no personas únicas.</p>
     </main>

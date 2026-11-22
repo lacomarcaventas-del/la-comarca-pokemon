@@ -23,6 +23,11 @@ function safePayload(input: Record<string, unknown>, request: NextRequest) {
     const value = cleanText(input[key], key === "campaign" ? 80 : 100);
     if (value) payload[key] = value;
   }
+  const internalDevice = input.internal_device;
+  if (internalDevice === "store_pc" || internalDevice === "marco_mobile_chrome") {
+    payload.internal_device = internalDevice;
+    payload.traffic_class = "internal";
+  }
   for (const key of ["product_id", "category_id"] as const) {
     const value = cleanText(input[key], 36);
     if (uuidPattern.test(value)) payload[key] = value;

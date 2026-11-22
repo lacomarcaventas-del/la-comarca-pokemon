@@ -10,6 +10,8 @@ export type AnalyticsEvent =
 
 type EventPayload = Record<string, string | number | boolean | null | undefined>;
 
+const INTERNAL_DEVICE_KEY = "lc_internal_traffic_device";
+
 function getSessionId() {
   const key = "lc_analytics_session";
   let id = sessionStorage.getItem(key);
@@ -20,12 +22,23 @@ function getSessionId() {
   return id;
 }
 
+function getInternalDevice() {
+  try {
+    const value = localStorage.getItem(INTERNAL_DEVICE_KEY);
+    return value === "store_pc" || value === "marco_mobile_chrome" ? value : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function trackEvent(event: AnalyticsEvent, payload: EventPayload = {}) {
   if (typeof window === "undefined") return;
   try {
     const sessionId = getSessionId();
+    const internalDevice = getInternalDevice();
     const safePayload: EventPayload = {
       ...payload,
+      ...(internalDevice ? { internal_device: internalDevice } : {}),
       page: window.location.pathname.slice(0, 160),
     };
     fetch("/api/analytics", {
