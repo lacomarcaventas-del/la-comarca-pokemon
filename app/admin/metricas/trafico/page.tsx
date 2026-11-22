@@ -64,7 +64,7 @@ export default function TrafficAnalyticsPage() {
       const latest = ordered[ordered.length - 1], first = ordered[0];
       return { id, rows: ordered, first, latest, city: decodeGeo(String(latest.payload.city || first.payload.city || "No disponible")), region: String(latest.payload.region || first.payload.region || ""), country: String(latest.payload.country || first.payload.country || "—"), source: String(first.payload.source || "direct"), pages: ordered.filter(x => x.event === "page_view").map(x => String(x.payload.page || "/")) };
     }).sort((a, b) => b.latest.occurred_at.localeCompare(a.latest.occurred_at));
-  }, [events]);
+  }, [visibleEvents]);
 
   const summary = useMemo(() => {
     const count = (name: string) => visibleEvents.filter(e => e.event === name).length;
@@ -77,7 +77,7 @@ export default function TrafficAnalyticsPage() {
     const map = new Map<string, number>();
     for (const e of visibleEvents.filter(x => x.event === only)) { const raw = String(e.payload[key] || fallback); const value = key === "city" ? decodeGeo(raw) : raw; map.set(value, (map.get(value) || 0) + 1); }
     return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
-  }, [events]);
+  }, [visibleEvents]);
   const topPages = aggregate("page", "—"), topCities = aggregate("city", "No disponible"), topCountries = aggregate("country", "No disponible"), sources = aggregate("source", "direct"), devices = aggregate("device", "No disponible"), campaigns = aggregate("campaign", "Sin campaña"), categories = aggregate("category_name", "Sin categoría", "category_view");
   const topProducts = useMemo(() => { const map = new Map<string, number>(); for (const e of visibleEvents.filter(x => x.event === "product_view" || x.event === "add_to_cart")) { const id = String(e.payload.product_id || ""); if (id) map.set(id, (map.get(id) || 0) + 1); } return [...map.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,n])=>[productNames[id] || id.slice(0,8),n] as [string,number]); }, [visibleEvents, productNames]);
 
