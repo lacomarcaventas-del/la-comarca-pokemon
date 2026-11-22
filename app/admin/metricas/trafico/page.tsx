@@ -116,10 +116,19 @@ export default function TrafficAnalyticsPage() {
           <Metric label="Interés en productos" value={summary.productViews.toLocaleString("es-MX")} detail="Interacciones capturadas" />
           <Metric label="Compras atribuidas" value={summary.purchases.toLocaleString("es-MX")} detail={money(summary.revenue) + " registrados"} />
         </div>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginTop: 16 }}>
-          <button className="btn2" type="button" aria-pressed={trafficMode === "external"} onClick={() => setTrafficMode("external")}>Solo clientes</button>
-          <button className="btn2" type="button" aria-pressed={trafficMode === "all"} onClick={() => setTrafficMode("all")}>Todo el tráfico</button>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, borderRadius: 999, padding: "6px 11px", background: "rgba(22,163,74,.14)", color: "#4ade80", border: "1px solid rgba(74,222,128,.35)", fontSize: 12, fontWeight: 700 }}><span style={{ width: 8, height: 8, borderRadius: 99, background: "#22c55e" }} /> {internalSessionCount} sesiones internas identificadas</span>
+        <div style={{ display: "grid", gap: 8, marginTop: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <span className="muted" style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>Vista activa:</span>
+            <span role="status" style={{ display: "inline-flex", alignItems: "center", gap: 7, borderRadius: 999, padding: "6px 11px", background: trafficMode === "all" ? "rgba(22,163,74,.18)" : "rgba(59,130,246,.16)", color: trafficMode === "all" ? "#4ade80" : "#93c5fd", border: trafficMode === "all" ? "1px solid rgba(74,222,128,.45)" : "1px solid rgba(147,197,253,.4)", fontSize: 12, fontWeight: 800 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 99, background: trafficMode === "all" ? "#22c55e" : "#60a5fa" }} />
+              {trafficMode === "all" ? "TODO EL TRÁFICO · incluye internos" : "SOLO CLIENTES · internos excluidos"}
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <button className="btn2" type="button" aria-pressed={trafficMode === "external"} onClick={() => setTrafficMode("external")} style={trafficMode === "external" ? { background: "rgba(59,130,246,.18)", color: "#bfdbfe", border: "2px solid #60a5fa", boxShadow: "0 0 0 2px rgba(96,165,250,.12)", fontWeight: 800 } : { opacity: .72 }}>Solo clientes {trafficMode === "external" ? "✓ ACTIVO" : ""}</button>
+            <button className="btn2" type="button" aria-pressed={trafficMode === "all"} onClick={() => setTrafficMode("all")} style={trafficMode === "all" ? { background: "rgba(22,163,74,.18)", color: "#bbf7d0", border: "2px solid #22c55e", boxShadow: "0 0 0 2px rgba(34,197,94,.12)", fontWeight: 800 } : { opacity: .72 }}>Todo el tráfico {trafficMode === "all" ? "✓ ACTIVO" : ""}</button>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, borderRadius: 999, padding: "6px 11px", background: "rgba(22,163,74,.14)", color: "#4ade80", border: "1px solid rgba(74,222,128,.35)", fontSize: 12, fontWeight: 700 }}><span style={{ width: 8, height: 8, borderRadius: 99, background: "#22c55e" }} /> {internalSessionCount} sesiones internas registradas</span>
+          </div>
         </div>
         <InternalTrafficEnrollment />
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 20, borderBottom: "1px solid var(--border, #e5e7eb)", paddingBottom: 8 }}>
