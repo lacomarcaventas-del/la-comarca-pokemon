@@ -25,6 +25,7 @@ export default function TrafficAnalyticsPage() {
   const sb = useMemo(() => supabaseBrowser(), []);
   const router = useRouter();
   const [days, setDays] = useState(30);
+  const [trafficMode, setTrafficMode] = useState<"external" | "all">("external");
   const [tab, setTab] = useState<Tab>("resumen");
   const [events, setEvents] = useState<EventRow[]>([]);
   const [productNames, setProductNames] = useState<Record<string, string>>({});
@@ -53,9 +54,11 @@ export default function TrafficAnalyticsPage() {
 
   useEffect(() => { load(); }, [load]);
 
+  const visibleEvents = useMemo(() => trafficMode === "external" ? events.filter((e) => !e.payload.internal_device) : events, [events, trafficMode]);
+
   const sessions = useMemo(() => {
     const map = new Map<string, EventRow[]>();
-    for (const event of events) { const list = map.get(event.session_id) || []; list.push(event); map.set(event.session_id, list); }
+    for (const event of visibleEvents) { const list = map.get(event.session_id) || []; list.push(event); map.set(event.session_id, list); }
     return [...map.entries()].map(([id, rows]) => {
       const ordered = [...rows].sort((a, b) => a.occurred_at.localeCompare(b.occurred_at));
       const latest = ordered[ordered.length - 1], first = ordered[0];
@@ -64,27 +67,27 @@ export default function TrafficAnalyticsPage() {
   }, [events]);
 
   const summary = useMemo(() => {
-    const count = (name: string) => events.filter(e => e.event === name).length;
-    const purchases = events.filter(e => e.event === "purchase");
-    const uniqueSessions = (name: string) => new Set(events.filter(e => e.event === name).map(e => e.session_id)).size;
+    const count = (name: string) => visibleEvents.filter(e => e.event === name).length;
+    const purchases = visibleEvents.filter(e => e.event === "purchase");
+    const uniqueSessions = (name: string) => new Set(visibleEvents.filter(e => e.event === name).map(e => e.session_id)).size;
     return { sessions: sessions.length, views: count("page_view"), productViews: count("product_view"), cartOpens: count("cart_open"), carts: count("add_to_cart"), checkouts: count("checkout_started"), purchases: purchases.length, revenue: purchases.reduce((sum, e) => sum + Number(e.payload.value || 0), 0), productSessions: uniqueSessions("product_view"), cartSessions: uniqueSessions("add_to_cart"), checkoutSessions: uniqueSessions("checkout_started"), purchaseSessions: uniqueSessions("purchase") };
-  }, [events, sessions]);
+  }, [visibleEvents, sessions]);
 
   const aggregate = useCallback((key: string, fallback: string, only = "page_view") => {
     const map = new Map<string, number>();
-    for (const e of events.filter(x => x.event === only)) { const raw = String(e.payload[key] || fallback); const value = key === "city" ? decodeGeo(raw) : raw; map.set(value, (map.get(value) || 0) + 1); }
+    for (const e of visibleEvents.filter(x => x.event === only)) { const raw = String(e.payload[key] || fallback); const value = key === "city" ? decodeGeo(raw) : raw; map.set(value, (map.get(value) || 0) + 1); }
     return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
   }, [events]);
   const topPages = aggregate("page", "—"), topCities = aggregate("city", "No disponible"), topCountries = aggregate("country", "No disponible"), sources = aggregate("source", "direct"), devices = aggregate("device", "No disponible"), campaigns = aggregate("campaign", "Sin campaña"), categories = aggregate("category_name", "Sin categoría", "category_view");
-  const topProducts = useMemo(() => { const map = new Map<string, number>(); for (const e of events.filter(x => x.event === "product_view" || x.event === "add_to_cart")) { const id = String(e.payload.product_id || ""); if (id) map.set(id, (map.get(id) || 0) + 1); } return [...map.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,n])=>[productNames[id] || id.slice(0,8),n] as [string,number]); }, [events, productNames]);
+  const topProducts = useMemo(() => { const map = new Map<string, number>(); for (const e of visibleEvents.filter(x => x.event === "product_view" || x.event === "add_to_cart")) { const id = String(e.payload.product_id || ""); if (id) map.set(id, (map.get(id) || 0) + 1); } return [...map.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,n])=>[productNames[id] || id.slice(0,8),n] as [string,number]); }, [visibleEvents, productNames]);
 
   const daily = useMemo(() => {
     const today = new Date(); const start = new Date(today); start.setDate(today.getDate() - days + 1); start.setHours(0,0,0,0);
     const buckets = Array.from({ length: days }, (_, i) => { const date = new Date(start); date.setDate(start.getDate() + i); return { date, views: 0, sessions: new Set<string>() }; });
     const index = new Map(buckets.map((b, i) => [b.date.toISOString().slice(0,10), i]));
-    for (const e of events) if (e.event === "page_view") { const i = index.get(new Date(e.occurred_at).toISOString().slice(0,10)); if (i !== undefined) { buckets[i].views++; buckets[i].sessions.add(e.session_id); } }
+    for (const e of visibleEvents) if (e.event === "page_view") { const i = index.get(new Date(e.occurred_at).toISOString().slice(0,10)); if (i !== undefined) { buckets[i].views++; buckets[i].sessions.add(e.session_id); } }
     return buckets.map(b => ({ date: b.date, views: b.views, sessions: b.sessions.size }));
-  }, [events, days]);
+  }, [visibleEvents, days]);
 
   const maxDaily = Math.max(1, ...daily.map(x => x.views));
   const chartPoints = daily.map((d, i) => ({ x: 12 + (i * 296 / Math.max(1, daily.length - 1)), y: 92 - d.views / maxDaily * 76 }));
@@ -99,7 +102,7 @@ export default function TrafficAnalyticsPage() {
     <main className="wrap" style={{ maxWidth: 1440 }}>
       <div className="panel" style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-          <div><div className="muted" style={{ fontSize: 12, letterSpacing: ".08em", textTransform: "uppercase" }}>Centro de inteligencia comercial</div><h1 style={{ margin: "5px 0", fontSize: "clamp(24px,3vw,34px)" }}>¿Qué está pasando en La Comarca?</h1><p className="muted" style={{ margin: 0 }}>Actividad anónima de la tienda online · Últimos {days} días</p></div>
+          <div><div className="muted" style={{ fontSize: 12, letterSpacing: ".08em", textTransform: "uppercase" }}>Centro de inteligencia comercial</div><h1 style={{ margin: "5px 0", fontSize: "clamp(24px,3vw,34px)" }}>¿Qué está pasando en La Comarca?</h1><p className="muted" style={{ margin: 0 }}>{trafficMode === "external" ? "Tráfico externo · excluye dispositivos internos registrados" : "Tráfico total · incluye dispositivos internos"} · Últimos {days} días</p></div>
           <div className="muted" style={{ fontSize: 12 }}>{loading ? "Actualizando datos…" : `Actualizado ${new Date().toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}`}</div>
         </div>
         {error && <div className="notice" style={{ border: "1px solid #dc2626", marginTop: 14 }}>⚠️ {error}</div>}
@@ -109,6 +112,10 @@ export default function TrafficAnalyticsPage() {
           <Metric label="Páginas vistas" value={summary.views.toLocaleString("es-MX")} detail="Vistas registradas" />
           <Metric label="Interés en productos" value={summary.productViews.toLocaleString("es-MX")} detail="Interacciones capturadas" />
           <Metric label="Compras atribuidas" value={summary.purchases.toLocaleString("es-MX")} detail={money(summary.revenue) + " registrados"} />
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 16 }}>
+          <button className="btn2" type="button" aria-pressed={trafficMode === "external"} onClick={() => setTrafficMode("external")}>Solo clientes</button>
+          <button className="btn2" type="button" aria-pressed={trafficMode === "all"} onClick={() => setTrafficMode("all")}>Todo el tráfico</button>
         </div>
         <InternalTrafficEnrollment />
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 20, borderBottom: "1px solid var(--border, #e5e7eb)", paddingBottom: 8 }}>
@@ -140,7 +147,7 @@ export default function TrafficAnalyticsPage() {
         <Ranking title="Páginas más consultadas" rows={topPages} empty="Aún no hay datos." />
         <Ranking title="Productos con interacción" rows={topProducts} empty="Aún no hay interacciones con productos." />
         <Ranking title="Categorías consultadas" rows={categories} empty="Aún no hay interacciones por categoría." />
-        <section className="panel"><h2>Acciones en la tienda</h2>{[["Búsquedas", events.filter(e=>e.event==="search").length],["Carritos abiertos",summary.cartOpens],["Añadidos al carrito",summary.carts],["Checkouts iniciados",summary.checkouts]].map(([name,n])=><div className="row" key={String(name)}><span>{name}</span><b>{Number(n).toLocaleString("es-MX")}</b></div>)}</section>
+        <section className="panel"><h2>Acciones en la tienda</h2>{[["Búsquedas", visibleEvents.filter(e=>e.event==="search").length],["Carritos abiertos",summary.cartOpens],["Añadidos al carrito",summary.carts],["Checkouts iniciados",summary.checkouts]].map(([name,n])=><div className="row" key={String(name)}><span>{name}</span><b>{Number(n).toLocaleString("es-MX")}</b></div>)}</section>
       </div>}
 
       {tab === "conversion" && <>
