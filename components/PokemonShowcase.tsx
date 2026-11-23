@@ -18,13 +18,11 @@ export default function PokemonShowcase() {
     async function loadShowcase() {
       try {
         const supabase = supabaseBrowser();
-        const { data: categories, error: categoryError } = await supabase.from("categories").select("id,name");
-        if (categoryError) throw categoryError;
-        const ids = (categories || []).filter((c: {id:string;name:string}) => normalize(c.name).includes("pokemon")).map((c: {id:string}) => c.id);
-        if (!ids.length) { if (active) setCards([]); return; }
+        // ID verificado de la categoría Pokémon TCG en la base de datos de La Comarca.
+        const pokemonCategoryId = "ca5d1774-27cc-4bc8-966b-e6078fa0d83e";
         const pageSize = 500; let from = 0; let available: PokemonCard[] = [];
         while (true) {
-          const { data, error: cardsError } = await supabase.from("cards").select("id,name,card_number,image_url,category_id").eq("published", true).gt("stock", 0).in("category_id", ids).order("name").range(from, from + pageSize - 1);
+          const { data, error: cardsError } = await supabase.from("cards").select("id,name,card_number,image_url,category_id").eq("published", true).gt("stock", 0).eq("category_id", pokemonCategoryId).order("name").range(from, from + pageSize - 1);
           if (cardsError) throw cardsError;
           const page = (data || []) as PokemonCard[];
           available = available.concat(page);
