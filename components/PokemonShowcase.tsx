@@ -13,7 +13,7 @@ type PokemonCard = {
 };
 
 const normalize = (value: string) =>
-  value.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").trim().toLowerCase();
+  value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
 
 const HIDDEN_PRODUCTS = new Set([
   "producto al azar",
