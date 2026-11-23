@@ -91,12 +91,12 @@ export default function PokemonShowcase() {
       </section>      <style jsx>{`
         .pokemonShowcase{min-height:100vh;width:100%;background:#080e18;color:#fff;overflow:hidden}
         .columnsStage{position:relative;min-height:100vh;overflow:hidden;background:linear-gradient(90deg,#080e18,#142338 50%,#080e18)}
-        .columnsGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:clamp(5px,.8vw,13px);padding:12px 10px;overflow:hidden}
+        .columnsGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;padding:10px 4px;overflow:hidden}
         .verticalViewport{height:100%;min-width:0;overflow:hidden;position:relative;mask-image:linear-gradient(180deg,transparent 0%,#000 8%,#000 92%,transparent 100%)}
         .verticalTrack{height:max-content;width:100%;display:flex;flex-direction:column;will-change:transform;animation:scrollUp 52s linear infinite}
         .verticalViewport.down .verticalTrack{animation-name:scrollDown;animation-duration:58s}
         .verticalViewport:hover .verticalTrack{animation-play-state:paused}
-        .verticalSet{width:100%;height:max-content;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:clamp(7px,.8vw,13px);padding:6px 0}
+        .verticalSet{width:100%;height:max-content;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:4px;padding:3px 0}
         .verticalCard{width:76px;height:106px;max-width:76px;max-height:106px;aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:3px;border:1px solid #52647a;border-radius:7px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 8px 20px #0008;overflow:hidden;box-sizing:border-box}
         .verticalCard img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
         .centerBanner{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88%,1050px);min-height:250px;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:36px clamp(24px,8vw,120px);box-sizing:border-box;background:radial-gradient(ellipse at 78% 50%,#244c70 0,transparent 34%),linear-gradient(110deg,#24170f,#101b2a 58%,#111827);border:2px solid #b17a3d;border-radius:10px;box-shadow:0 20px 70px #000c}
@@ -114,7 +114,7 @@ export default function PokemonShowcase() {
         @keyframes scrollDown{from{transform:translate3d(0,-50%,0)}to{transform:translate3d(0,0,0)}}
         @keyframes orbFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-9px) rotate(5deg)}}
         @keyframes spin{to{transform:rotate(360deg)}}
-        @media(max-width:700px){.columnsStage{min-height:100svh}.columnsGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:12px 8px}.verticalSet{gap:9px}.verticalCard{width:60px;height:84px;max-width:60px;max-height:84px;padding:2px}.verticalTrack{animation-duration:34s}.verticalViewport.down .verticalTrack{animation-duration:39s}.centerBanner{width:94%;min-height:220px;padding:22px 16px}.bannerCopy{max-width:76%}.bannerCopy h1{font-size:clamp(25px,6vw,32px)}.bannerCopy p{font-size:10px;line-height:1.5}.bannerCopy>span{font-size:7px}.bannerButton{padding:11px 12px;gap:9px;font-size:8px}.bannerOrb{width:58px;height:58px;box-shadow:0 0 0 7px #e6b45a0b}.orbBall{width:38px;height:38px;border-width:3px}.orbBall i{width:15px;height:15px;border-width:3px}}
+        @media(max-width:700px){.columnsStage{min-height:100svh}.columnsGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:8px 4px}.verticalSet{gap:9px}.verticalCard{width:60px;height:84px;max-width:60px;max-height:84px;padding:2px}.verticalTrack{animation-duration:34s}.verticalViewport.down .verticalTrack{animation-duration:39s}.centerBanner{width:94%;min-height:220px;padding:22px 16px}.bannerCopy{max-width:76%}.bannerCopy h1{font-size:clamp(25px,6vw,32px)}.bannerCopy p{font-size:10px;line-height:1.5}.bannerCopy>span{font-size:7px}.bannerButton{padding:11px 12px;gap:9px;font-size:8px}.bannerOrb{width:58px;height:58px;box-shadow:0 0 0 7px #e6b45a0b}.orbBall{width:38px;height:38px;border-width:3px}.orbBall i{width:15px;height:15px;border-width:3px}}
         @media(prefers-reduced-motion:reduce){.verticalTrack,.bannerOrb,.showcaseLoading span{animation:none!important}.verticalTrack{transform:translate3d(0,0,0)}}
       `}</style>
     </main>
