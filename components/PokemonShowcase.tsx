@@ -78,17 +78,43 @@ export default function PokemonShowcase() {
         <div className="columnsGrid">
           {strips.map((items, index) => renderColumn(items || cards, index))}
         </div>
-        <section className="centerBanner">
-          <div className="bannerTexture" aria-hidden="true"/>
-          <div className="bannerCopy">
-            <span>LA COMARCA · POKÉMON TCG</span>
-            <h1>Tu próxima carta<br/><em>te está esperando.</em></h1>
-            <p>Descubre el catálogo completo. Regístrate para consultar disponibilidad y comprar en línea.</p>
-            <Link href="/cuenta" className="bannerButton">ENTRAR A LA COMARCA <b>↗</b></Link>
+        <Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca">
+          <div className="accountCopy">
+            <div className="accountKicker">18 AÑOS · LLEVANDO DIVERSIÓN A TODO MÉXICO</div>
+            <h1>CREA TU <span>CUENTA HOY</span></h1>
+            <div className="accountBenefits"><span>◈ COMPRA</span><span>◇ COLECCIONA</span><span>♧ DISFRUTA</span></div>
+            <div className="accountButton">♙ &nbsp; CREAR CUENTA &nbsp; →</div>
           </div>
-          <div className="bannerOrb" aria-hidden="true"><div className="orbBall"><i/></div></div>
-        </section>
+          <div className="accountVisuals" aria-hidden="true">
+            <div className="brandTitle">TUS MUNDOS FAVORITOS</div>
+            <div className="brandGrid">
+              {["Pokémon","Magic: The Gathering","Yu-Gi-Oh!","One Piece","Disney Lorcana","Weiß Schwarz","Gundam Card Game","hololive","RIFTBOUND","Dungeons & Dragons","HeroClix","Juegos de Mesa","Modelismo","Accesorios"].map((name,i) => <div className={`brandLogo brand-${i}`} key={name}>{name}</div>)}
+            </div>
+            <div className="brandFooter">La Comarca · TCG & Hobby</div>
+          </div>
+        </Link>
       </section>      <style jsx>{`
+        .accountHero{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:4;display:block;min-height:300px;overflow:hidden;text-decoration:none;background:radial-gradient(circle at 82% 45%,rgba(255,0,220,.2),transparent 27%),radial-gradient(circle at 12% 50%,rgba(0,220,255,.16),transparent 32%),linear-gradient(115deg,#050819,#0b0920 52%,#16051f);border-top:1px solid rgba(0,238,255,.3);border-bottom:1px solid rgba(255,40,220,.45);isolation:isolate}
+        .accountHero:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 150px,rgba(0,220,255,.035) 151px,rgba(255,30,220,.07) 152px,transparent 154px);pointer-events:none}
+        .accountHero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#00eaff,#ff20e7,#00eaff,transparent);box-shadow:0 0 15px #00eaff,0 0 30px #ff20e7}
+        .accountCopy{position:relative;z-index:3;width:55%;padding:38px 20px 34px clamp(24px,7vw,110px);box-sizing:border-box}
+        .accountKicker{font:800 11px/1.2 Arial,sans-serif;letter-spacing:.18em;color:#8defff;text-shadow:0 0 10px rgba(0,220,255,.7);margin-bottom:10px}
+        .accountHero h1{margin:0;font:900 clamp(42px,6vw,70px)/.9 Arial,sans-serif;letter-spacing:-.045em;color:#fff;text-transform:uppercase;text-shadow:0 0 12px rgba(255,255,255,.25)}
+        .accountHero h1 span{display:block;background:linear-gradient(90deg,#32eaff,#738cff,#ff3be7);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 12px rgba(255,35,220,.55))}
+        .accountBenefits{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px;color:#d9eaff;font:800 11px Arial,sans-serif;letter-spacing:.08em}
+        .accountBenefits span{white-space:nowrap}
+        .accountButton{display:inline-flex;align-items:center;justify-content:center;min-width:250px;margin-top:20px;padding:14px 24px;border:1px solid #ff58f2;border-radius:12px;background:linear-gradient(100deg,#681cff,#e91bd7);color:#fff;font:900 15px Arial,sans-serif;letter-spacing:.06em;box-shadow:0 0 12px rgba(164,36,255,.75),0 0 28px rgba(255,25,220,.35);transition:.2s}
+        .accountVisuals{position:absolute;right:2%;top:0;width:44%;height:100%;padding:24px 2.5% 22px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;z-index:2}
+        .brandTitle{text-align:center;color:#fff;font:800 16px/1.25 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;margin-bottom:18px}
+        .brandTitle:before,.brandTitle:after{content:"";display:inline-block;width:9%;height:1px;vertical-align:middle;margin:0 12px;background:linear-gradient(90deg,transparent,#ff2de2)}
+        .brandTitle:after{background:linear-gradient(90deg,#00dfff,transparent)}
+        .brandGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px 10px}
+        .brandLogo{height:54px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px 7px;box-sizing:border-box;border-right:1px solid rgba(255,255,255,.18);font:900 12px/1.05 Arial,sans-serif;letter-spacing:.02em;color:#fff}
+        .brandLogo:nth-child(4n){border-right:0}
+        .brand-0{color:#ffd83d;font-size:16px;font-style:italic;text-shadow:0 0 7px #2677ff}
+        .brand-1{font-family:Georgia,serif;font-size:15px}.brand-2{color:#ff3b35;font-size:15px}.brand-3{color:#31dfff;font-size:14px;font-style:italic}.brand-4{color:#f0d39b;font-family:Georgia,serif}.brand-5{font-family:Georgia,serif;font-size:14px}.brand-6{font-size:12px}.brand-7{color:#ff77b7}.brand-8{color:#ff9b24;font-size:14px}.brand-9{color:#ef3a35;font-family:Georgia,serif}.brand-10{color:#55aaff;font-size:14px}
+        .brandFooter{text-align:right;margin-top:12px;color:rgba(220,235,255,.6);font:600 10px Arial,sans-serif}
+        .accountHero:hover .accountButton{filter:brightness(1.1)}
         .pokemonShowcase{min-height:100vh;width:100%;background:#080e18;color:#fff;overflow:hidden}
         .columnsStage{position:relative;min-height:100vh;overflow:hidden;background:linear-gradient(90deg,#080e18,#142338 50%,#080e18)}
         .columnsGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;padding:10px 4px;overflow:hidden}
@@ -99,7 +125,7 @@ export default function PokemonShowcase() {
         .verticalSet{width:100%;height:max-content;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:4px;padding:3px 0}
         .verticalCard{width:76px;height:106px;max-width:76px;max-height:106px;aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:3px;border:1px solid #52647a;border-radius:7px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 8px 20px #0008;overflow:hidden;box-sizing:border-box}
         .verticalCard img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
-        .centerBanner{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88%,1050px);min-height:250px;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:36px clamp(24px,8vw,120px);box-sizing:border-box;background:radial-gradient(ellipse at 78% 50%,#244c70 0,transparent 34%),linear-gradient(110deg,#24170f,#101b2a 58%,#111827);border:2px solid #b17a3d;border-radius:10px;box-shadow:0 20px 70px #000c}
+        .
         .bannerTexture{position:absolute;inset:0;z-index:-1;opacity:.15;background-image:radial-gradient(#f2c36b 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(90deg,#000,transparent)}
         .bannerCopy{position:relative;z-index:2;max-width:610px}.bannerCopy>span{font-size:9px;font-weight:900;letter-spacing:.22em;color:#efb65e}
         .bannerCopy h1{font-size:clamp(30px,4vw,52px);line-height:.98;letter-spacing:-.05em;margin:12px 0;color:#fff8ec}.bannerCopy h1 em{font-family:Georgia,serif;color:#f0b45b;font-weight:500}
@@ -109,6 +135,8 @@ export default function PokemonShowcase() {
         .orbBall{position:relative;width:90px;height:90px;border:7px solid #080e18;border-radius:50%;background:linear-gradient(to bottom,#e7474b 0 47%,#111a28 47% 54%,#eeeae0 54%);box-shadow:0 16px 35px #0008;transform:rotate(-12deg)}
         .orbBall:before{content:"";position:absolute;inset:0 0 50%;border-radius:100px 100px 0 0;background:linear-gradient(145deg,#ff7770,#bd2738)}
         .orbBall i{position:absolute;left:50%;top:50%;width:30px;height:30px;transform:translate(-50%,-50%);border:6px solid #111a28;border-radius:50%;background:#f4f0e7;box-shadow:0 0 0 3px #f4f0e7}
+        @media(max-width:900px){.accountCopy{width:58%}.accountVisuals{width:45%;right:0}.brandGrid{grid-template-columns:repeat(3,1fr)}.brandLogo:nth-child(4n){border-right:1px solid rgba(255,255,255,.18)}.brandLogo:nth-child(3n){border-right:0}}
+        @media(max-width:700px){.accountHero{min-height:430px;top:50%;}.accountCopy{width:100%;padding:28px 18px 0}.accountKicker{font-size:8px}.accountHero h1{font-size:46px}.accountBenefits{gap:10px}.accountVisuals{position:absolute;right:0;top:auto;bottom:0;width:100%;height:190px;padding:12px 14px 18px;background:linear-gradient(180deg,transparent,rgba(5,8,25,.85) 25%)}.brandTitle{font-size:11px;margin-bottom:8px}.brandGrid{grid-template-columns:repeat(4,1fr);gap:3px 4px}.brandLogo{height:34px;font-size:8px}.brandFooter{display:none}.accountButton{min-width:220px}}
         .showcaseLoading{min-height:100vh;display:flex;align-items:center;justify-content:center;gap:12px;background:#080e18;color:#d9c49f;font-size:13px}.showcaseLoading span{width:20px;height:20px;border:2px solid #57442c;border-top-color:#efb65e;border-radius:50%;animation:spin .8s linear infinite}
         @keyframes scrollUp{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-50%,0)}}
         @keyframes scrollDown{from{transform:translate3d(0,-50%,0)}to{transform:translate3d(0,0,0)}}
