@@ -56,8 +56,8 @@ export default function PokemonShowcase() {
     <div className={`verticalViewport ${column % 2 ? "down" : "up"}`} key={column}>
       <div className="verticalTrack">
         {[0, 1].map(copy => <div className="verticalSet" key={copy} aria-hidden={copy === 1}>
-          {items.map((card, index) => <div className="verticalCard" key={`${copy}-${card.id}`}>
-            <img src={card.image_url || ""} alt={copy === 0 ? card.name : ""} loading={index < 8 && copy === 0 ? "eager" : "lazy"} decoding="async" draggable={false} onError={e => { e.currentTarget.style.display = "none"; }}/>
+          {items.map((card, index) => <div className="verticalCard" key={`${copy}-${card.id}`} style={{ width: "76px", height: "106px", minWidth: "76px", maxWidth: "76px", minHeight: "106px", maxHeight: "106px", flex: "0 0 106px", boxSizing: "border-box" }}>
+            <img src={card.image_url || ""} alt={copy === 0 ? card.name : ""} loading={index < 8 && copy === 0 ? "eager" : "lazy"} decoding="async" draggable={false} style={{ display: "block", width: "100%", height: "100%", maxWidth: "100%", maxHeight: "100%", objectFit: "contain", flex: "0 0 auto" }} onError={e => { e.currentTarget.style.display = "none"; }}/>
           </div>)}
         </div>)}
       </div>
@@ -89,7 +89,7 @@ export default function PokemonShowcase() {
         .verticalViewport.down .verticalTrack{animation-name:scrollDown;animation-duration:58s}
         .verticalViewport:hover .verticalTrack{animation-play-state:paused}
         .verticalSet{width:100%;height:max-content;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:12px;padding:6px 0}
-        .verticalCard{width:min(100%,112px);aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:3px;border:1px solid #52647a;border-radius:7px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 8px 20px #0008;overflow:hidden;box-sizing:border-box}
+        .verticalCard{width:76px;height:106px;max-width:76px;max-height:106px;aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:3px;border:1px solid #52647a;border-radius:7px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 8px 20px #0008;overflow:hidden;box-sizing:border-box}
         .verticalCard img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
         .centerBanner{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88%,1050px);min-height:250px;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:36px clamp(24px,8vw,120px);box-sizing:border-box;background:radial-gradient(ellipse at 78% 50%,#244c70 0,transparent 34%),linear-gradient(110deg,#24170f,#101b2a 58%,#111827);border:2px solid #b17a3d;border-radius:10px;box-shadow:0 20px 70px #000c}
         .bannerTexture{position:absolute;inset:0;z-index:-1;opacity:.15;background-image:radial-gradient(#f2c36b 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(90deg,#000,transparent)}
@@ -106,7 +106,7 @@ export default function PokemonShowcase() {
         @keyframes scrollDown{from{transform:translate3d(0,-50%,0)}to{transform:translate3d(0,0,0)}}
         @keyframes orbFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-9px) rotate(5deg)}}
         @keyframes spin{to{transform:rotate(360deg)}}
-        @media(max-width:700px){.columnsStage{min-height:100svh}.columnsGrid{gap:7px;padding:12px 8px}.verticalSet{gap:9px}.verticalCard{width:min(100%,82px);padding:2px}.verticalTrack{animation-duration:34s}.verticalViewport.down .verticalTrack{animation-duration:39s}.centerBanner{width:94%;min-height:220px;padding:22px 16px}.bannerCopy{max-width:76%}.bannerCopy h1{font-size:clamp(25px,6vw,32px)}.bannerCopy p{font-size:10px;line-height:1.5}.bannerCopy>span{font-size:7px}.bannerButton{padding:11px 12px;gap:9px;font-size:8px}.bannerOrb{width:58px;height:58px;box-shadow:0 0 0 7px #e6b45a0b}.orbBall{width:38px;height:38px;border-width:3px}.orbBall i{width:15px;height:15px;border-width:3px}}
+        @media(max-width:700px){.columnsStage{min-height:100svh}.columnsGrid{gap:7px;padding:12px 8px}.verticalSet{gap:9px}.verticalCard{width:60px;height:84px;max-width:60px;max-height:84px;padding:2px}.verticalTrack{animation-duration:34s}.verticalViewport.down .verticalTrack{animation-duration:39s}.centerBanner{width:94%;min-height:220px;padding:22px 16px}.bannerCopy{max-width:76%}.bannerCopy h1{font-size:clamp(25px,6vw,32px)}.bannerCopy p{font-size:10px;line-height:1.5}.bannerCopy>span{font-size:7px}.bannerButton{padding:11px 12px;gap:9px;font-size:8px}.bannerOrb{width:58px;height:58px;box-shadow:0 0 0 7px #e6b45a0b}.orbBall{width:38px;height:38px;border-width:3px}.orbBall i{width:15px;height:15px;border-width:3px}}
         @media(prefers-reduced-motion:reduce){.verticalTrack,.bannerOrb,.showcaseLoading span{animation:none!important}.verticalTrack{transform:translate3d(0,0,0)}}
       `}</style>
     </main>
