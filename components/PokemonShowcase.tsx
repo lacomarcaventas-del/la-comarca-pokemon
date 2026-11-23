@@ -78,14 +78,14 @@ export default function PokemonShowcase() {
         <div className="columnsGrid">
           {strips.map((items, index) => renderColumn(items || cards, index))}
         </div>
-        <Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca">
-          <div className="accountCopy">
+        <Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca" style={{ position: "absolute", display: "block", left: 0, right: 0, top: "50%", transform: "translateY(-50%)", zIndex: 9999, width: "100%", minHeight: "300px", overflow: "hidden", textDecoration: "none", background: "radial-gradient(circle at 82% 45%, rgba(255,0,220,.2), transparent 27%), radial-gradient(circle at 12% 50%, rgba(0,220,255,.16), transparent 32%), linear-gradient(115deg,#050819,#0b0920 52%,#16051f)", borderTop: "1px solid rgba(0,238,255,.3)", borderBottom: "1px solid rgba(255,40,220,.45)" }}>
+          <div className="accountCopy" style={{ position: "relative", zIndex: 3, width: "55%", padding: "38px 20px 34px clamp(24px,7vw,110px)", boxSizing: "border-box" }}>
             <div className="accountKicker">18 AÑOS · LLEVANDO DIVERSIÓN A TODO MÉXICO</div>
             <h1>CREA TU <span>CUENTA HOY</span></h1>
             <div className="accountBenefits"><span>◈ COMPRA</span><span>◇ COLECCIONA</span><span>♧ DISFRUTA</span></div>
             <div className="accountButton">♙ &nbsp; CREAR CUENTA &nbsp; →</div>
           </div>
-          <div className="accountVisuals" aria-hidden="true">
+          <div className="accountVisuals" aria-hidden="true" style={{ position: "absolute", right: "2%", top: 0, width: "44%", height: "100%", padding: "24px 2.5% 22px", boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
             <div className="brandTitle">TUS MUNDOS FAVORITOS</div>
             <div className="brandGrid">
               {["Pokémon","Magic: The Gathering","Yu-Gi-Oh!","One Piece","Disney Lorcana","Weiß Schwarz","Gundam Card Game","hololive","RIFTBOUND","Dungeons & Dragons","HeroClix","Juegos de Mesa","Modelismo","Accesorios"].map((name,i) => <div className={`brandLogo brand-${i}`} key={name}>{name}</div>)}
