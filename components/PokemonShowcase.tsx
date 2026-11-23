@@ -20,16 +20,23 @@ export default function PokemonShowcase() {
         const supabase = supabaseBrowser();
         // ID verificado de la categoría Pokémon TCG en la base de datos de La Comarca.
         const pokemonCategoryId = "ca5d1774-27cc-4bc8-966b-e6078fa0d83e";
-        const pageSize = 500; let from = 0; let available: PokemonCard[] = [];
-        while (true) {
-          const { data, error: cardsError } = await supabase.from("cards").select("id,name,card_number,image_url,category_id").eq("published", true).gt("stock", 0).eq("category_id", pokemonCategoryId).order("name").range(from, from + pageSize - 1);
-          if (cardsError) throw cardsError;
-          const page = (data || []) as PokemonCard[];
-          available = available.concat(page);
-          if (page.length < pageSize) break;
-          from += pageSize;
+        // La exhibición es visual: cargar solo una muestra reduce solicitudes e imágenes iniciales.
+        const { data, error: cardsError } = await supabase.from("cards")
+          .select("id,name,card_number,image_url,category_id")
+          .eq("published", true)
+          .gt("stock", 0)
+          .eq("category_id", pokemonCategoryId)
+          .not("image_url", "is", null)
+          .order("name")
+          .limit(80);
+        if (cardsError) throw cardsError;
+        const available = (data || []) as PokemonCard[];
+        // Mezcla una muestra amplia para evitar que siempre aparezcan las primeras cartas alfabéticas.
+        for (let i = available.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [available[i], available[j]] = [available[j], available[i]];
         }
-        if (active) setCards(available.filter(c => !HIDDEN_PRODUCTS.has(normalize(c.name || "")) && !!c.image_url));
+        if (active) setCards(available.filter(c => !HIDDEN_PRODUCTS.has(normalize(c.name || "")) && !!c.image_url).slice(0, 50));
       } catch (cause) {
         console.error("No fue posible cargar la exhibición Pokémon", cause);
         if (active) setError("No pudimos cargar las cartas. Intenta nuevamente.");
@@ -66,7 +73,7 @@ export default function PokemonShowcase() {
       <div className="verticalTrack">
         {[0, 1].map(copy => <div className="verticalSet" key={copy} aria-hidden={copy === 1}>
           {items.map((card, index) => <div className="verticalCard" key={`${copy}-${card.id}`} style={{ width: "76px", height: "106px", minWidth: "76px", maxWidth: "76px", minHeight: "106px", maxHeight: "106px", flex: "0 0 106px", boxSizing: "border-box" }}>
-            <img src={card.image_url || ""} alt={copy === 0 ? card.name : ""} loading={index === 0 && copy === 0 ? "eager" : "lazy"} decoding="async" draggable={false} style={{ display: "block", width: "100%", height: "100%", maxWidth: "100%", maxHeight: "100%", objectFit: "contain", flex: "0 0 auto" }} onError={e => { e.currentTarget.style.display = "none"; }}/>
+            <img src={card.image_url || ""} alt={copy === 0 ? card.name : ""} loading={index === 0 && copy === 0 ? "eager" : "lazy"} fetchPriority={index === 0 && copy === 0 ? "high" : "low"} decoding="async" draggable={false} style={{ display: "block", width: "100%", height: "100%", maxWidth: "100%", maxHeight: "100%", objectFit: "contain", flex: "0 0 auto" }} onError={e => { e.currentTarget.style.display = "none"; }}/>
           </div>)}
         </div>)}
       </div>
