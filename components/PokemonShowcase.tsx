@@ -93,8 +93,9 @@ export default function PokemonShowcase() {
             <div className="brandFooter">La Comarca · TCG & Hobby</div>
           </div>
         </Link>
-      </section>      <style jsx>{`
-        .accountHero{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:4;display:block;min-height:300px;overflow:hidden;text-decoration:none;background:radial-gradient(circle at 82% 45%,rgba(255,0,220,.2),transparent 27%),radial-gradient(circle at 12% 50%,rgba(0,220,255,.16),transparent 32%),linear-gradient(115deg,#050819,#0b0920 52%,#16051f);border-top:1px solid rgba(0,238,255,.3);border-bottom:1px solid rgba(255,40,220,.45);isolation:isolate}
+      </section>
+      <style jsx>{`
+        .accountHero{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:50;display:flex;align-items:center;width:100%;min-height:300px;overflow:hidden;text-decoration:none;background:radial-gradient(circle at 82% 45%,rgba(255,0,220,.2),transparent 27%),radial-gradient(circle at 12% 50%,rgba(0,220,255,.16),transparent 32%),linear-gradient(115deg,#050819,#0b0920 52%,#16051f);border-top:1px solid rgba(0,238,255,.3);border-bottom:1px solid rgba(255,40,220,.45);isolation:isolate}
         .accountHero:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 150px,rgba(0,220,255,.035) 151px,rgba(255,30,220,.07) 152px,transparent 154px);pointer-events:none}
         .accountHero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#00eaff,#ff20e7,#00eaff,transparent);box-shadow:0 0 15px #00eaff,0 0 30px #ff20e7}
         .accountCopy{position:relative;z-index:3;width:55%;padding:38px 20px 34px clamp(24px,7vw,110px);box-sizing:border-box}
@@ -125,7 +126,6 @@ export default function PokemonShowcase() {
         .verticalSet{width:100%;height:max-content;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:4px;padding:3px 0}
         .verticalCard{width:76px;height:106px;max-width:76px;max-height:106px;aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:3px;border:1px solid #52647a;border-radius:7px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 8px 20px #0008;overflow:hidden;box-sizing:border-box}
         .verticalCard img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
-        .
         .bannerTexture{position:absolute;inset:0;z-index:-1;opacity:.15;background-image:radial-gradient(#f2c36b 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(90deg,#000,transparent)}
         .bannerCopy{position:relative;z-index:2;max-width:610px}.bannerCopy>span{font-size:9px;font-weight:900;letter-spacing:.22em;color:#efb65e}
         .bannerCopy h1{font-size:clamp(30px,4vw,52px);line-height:.98;letter-spacing:-.05em;margin:12px 0;color:#fff8ec}.bannerCopy h1 em{font-family:Georgia,serif;color:#f0b45b;font-weight:500}
@@ -136,7 +136,7 @@ export default function PokemonShowcase() {
         .orbBall:before{content:"";position:absolute;inset:0 0 50%;border-radius:100px 100px 0 0;background:linear-gradient(145deg,#ff7770,#bd2738)}
         .orbBall i{position:absolute;left:50%;top:50%;width:30px;height:30px;transform:translate(-50%,-50%);border:6px solid #111a28;border-radius:50%;background:#f4f0e7;box-shadow:0 0 0 3px #f4f0e7}
         @media(max-width:900px){.accountCopy{width:58%}.accountVisuals{width:45%;right:0}.brandGrid{grid-template-columns:repeat(3,1fr)}.brandLogo:nth-child(4n){border-right:1px solid rgba(255,255,255,.18)}.brandLogo:nth-child(3n){border-right:0}}
-        @media(max-width:700px){.accountHero{min-height:430px;top:50%;}.accountCopy{width:100%;padding:28px 18px 0}.accountKicker{font-size:8px}.accountHero h1{font-size:46px}.accountBenefits{gap:10px}.accountVisuals{position:absolute;right:0;top:auto;bottom:0;width:100%;height:190px;padding:12px 14px 18px;background:linear-gradient(180deg,transparent,rgba(5,8,25,.85) 25%)}.brandTitle{font-size:11px;margin-bottom:8px}.brandGrid{grid-template-columns:repeat(4,1fr);gap:3px 4px}.brandLogo{height:34px;font-size:8px}.brandFooter{display:none}.accountButton{min-width:220px}}
+        @media(max-width:700px){.accountHero{min-height:430px;top:50%;width:100%;}.accountCopy{width:100%;padding:28px 18px 0}.accountKicker{font-size:8px}.accountHero h1{font-size:46px}.accountBenefits{gap:10px}.accountVisuals{position:absolute;right:0;top:auto;bottom:0;width:100%;height:190px;padding:12px 14px 18px;background:linear-gradient(180deg,transparent,rgba(5,8,25,.85) 25%)}.brandTitle{font-size:11px;margin-bottom:8px}.brandGrid{grid-template-columns:repeat(4,1fr);gap:3px 4px}.brandLogo{height:34px;font-size:8px}.brandFooter{display:none}.accountButton{min-width:220px}}
         .showcaseLoading{min-height:100vh;display:flex;align-items:center;justify-content:center;gap:12px;background:#080e18;color:#d9c49f;font-size:13px}.showcaseLoading span{width:20px;height:20px;border:2px solid #57442c;border-top-color:#efb65e;border-radius:50%;animation:spin .8s linear infinite}
         @keyframes scrollUp{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-50%,0)}}
         @keyframes scrollDown{from{transform:translate3d(0,-50%,0)}to{transform:translate3d(0,0,0)}}
