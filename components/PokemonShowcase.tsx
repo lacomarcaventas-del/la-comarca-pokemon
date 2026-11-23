@@ -5,7 +5,7 @@ import Link from "next/link";
 import { supabaseBrowser } from "../lib/supabase";
 
 type PokemonCard = { id: string; name: string; card_number: string | null; image_url: string | null; category_id: string | null };
-const normalize = (value: string) => value.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").trim().toLowerCase();
+const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
 const HIDDEN_PRODUCTS = new Set(["producto al azar", "producto al azar 1", "producto al azar 2"]);
 
 export default function PokemonShowcase() {
