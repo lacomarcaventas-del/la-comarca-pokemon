@@ -118,11 +118,23 @@ export default function PokemonShowcase() {
         .brandFooter{text-align:right;margin-top:12px;color:rgba(220,235,255,.6);font:600 10px Arial,sans-serif}
         .accountHero:hover .accountButton{filter:brightness(1.1)}
         .pokemonShowcase{min-height:100vh;width:100%;background:#080e18;color:#fff;overflow:hidden}
-        .columnsStage{position:relative;min-height:100vh;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,rgba(20,53,83,.72),transparent 58%),linear-gradient(115deg,#050a13 0%,#101d2d 48%,#070d18 100%)}
-        .columnsStage:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background-image:radial-gradient(circle,rgba(118,183,220,.22) 1px,transparent 1.5px),radial-gradient(circle,rgba(235,169,91,.16) 1px,transparent 1.5px);background-size:67px 73px,113px 127px;background-position:13px 19px,43px 51px;opacity:.52}
-        .columnsStage:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(90deg,rgba(0,0,0,.28),transparent 12%,transparent 88%,rgba(0,0,0,.28)),linear-gradient(180deg,rgba(0,0,0,.22),transparent 14%,transparent 86%,rgba(0,0,0,.25))}
+        .columnsStage{position:relative;min-height:100vh;overflow:hidden;background:
+          radial-gradient(ellipse at 50% 48%,rgba(20,65,103,.72) 0%,rgba(9,24,42,.35) 38%,transparent 68%),
+          radial-gradient(ellipse at 4% 18%,rgba(0,154,255,.22),transparent 28%),
+          radial-gradient(ellipse at 96% 78%,rgba(255,151,59,.15),transparent 25%),
+          linear-gradient(125deg,#030812 0%,#0b1728 32%,#101e31 52%,#080f1d 100%)}
+        .columnsStage:before{content:"";position:absolute;inset:-10%;pointer-events:none;z-index:0;background:
+          radial-gradient(circle,rgba(130,204,255,.8) 0 1px,transparent 1.7px),
+          radial-gradient(circle,rgba(245,181,105,.8) 0 1px,transparent 1.8px),
+          repeating-linear-gradient(132deg,transparent 0 145px,rgba(38,153,225,.09) 146px,transparent 148px 290px),
+          linear-gradient(112deg,transparent 15%,rgba(0,157,255,.10) 15.2%,transparent 15.7% 82%,rgba(255,158,74,.08) 82.2%,transparent 82.7%);
+          background-size:61px 67px,109px 127px,auto,auto;background-position:13px 19px,43px 51px,center,center;opacity:.8}
+        .columnsStage:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:
+          linear-gradient(90deg,rgba(0,0,0,.36),transparent 10%,transparent 90%,rgba(0,0,0,.36)),
+          linear-gradient(180deg,rgba(0,0,0,.25),transparent 13%,transparent 87%,rgba(0,0,0,.3)),
+          radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.22) 100%)}
 
-        .columnsGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:clamp(5px,.7vw,12px);padding:14px clamp(5px,1vw,16px);overflow:hidden;z-index:0}
+        .columnsGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:clamp(5px,.7vw,12px);padding:14px clamp(5px,1vw,16px);overflow:hidden;z-index:1}
         .verticalViewport{background:linear-gradient(180deg,rgba(18,43,65,.28),rgba(7,15,27,.08) 45%,rgba(18,43,65,.24));border-left:1px solid rgba(114,174,211,.10);border-right:1px solid rgba(114,174,211,.10);border-radius:12px;box-shadow:inset 0 0 24px rgba(34,91,133,.07)}
         .verticalViewport:nth-child(odd){background:linear-gradient(180deg,rgba(31,56,77,.23),rgba(7,15,27,.04) 45%,rgba(31,56,77,.2))}
 
