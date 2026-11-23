@@ -90,12 +90,12 @@ export default function PokemonShowcase() {
       <style jsx>{`
         .pokemonShowcase{min-height:100vh;width:100%;background:#080e18;color:#fff;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
         .stripsBlock{width:100%;padding:10px 0;display:flex;flex-direction:column;gap:8px;background:linear-gradient(90deg,#080e18,#142338 50%,#080e18);overflow:hidden}
-        .stripViewport{width:100%;height:clamp(108px,11vw,138px);overflow:hidden;position:relative;display:block;mask-image:linear-gradient(90deg,transparent 0%,#000 4%,#000 96%,transparent 100%)}
+        .stripViewport{width:100%;height:190px;overflow:hidden;position:relative;display:block;mask-image:linear-gradient(90deg,transparent 0%,#000 4%,#000 96%,transparent 100%)}
         .stripTrack{height:100%;width:max-content;display:flex;flex-flow:row nowrap;align-items:center;will-change:transform;animation:slideLeft 58s linear infinite}
         .stripViewport.right .stripTrack{animation-name:slideRight;animation-duration:64s}
         .stripViewport:hover .stripTrack{animation-play-state:paused}
         .stripSet{height:100%;width:max-content;flex:0 0 auto;display:flex;flex-flow:row nowrap;align-items:center;gap:9px;padding:0 5px}
-        .stripCard{height:calc(100% - 8px);width:auto;aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:3px;border:1px solid #52647a;border-radius:8px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 9px 24px #0008;overflow:hidden}
+        .stripCard{height:190px;width:auto;aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:3px;border:1px solid #52647a;border-radius:8px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 9px 24px #0008;overflow:hidden}
         .stripCard img{display:block;width:100%;height:100%;max-width:none;object-fit:contain;border-radius:4px}
         .centerBanner{min-height:235px;position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:38px clamp(24px,11vw,165px);background:radial-gradient(ellipse at 78% 50%,#244c70 0,transparent 34%),linear-gradient(110deg,#24170f,#101b2a 58%,#111827);border-top:2px solid #b17a3d;border-bottom:2px solid #b17a3d}
         .bannerTexture{position:absolute;inset:0;z-index:-1;opacity:.15;background-image:radial-gradient(#f2c36b 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(90deg,#000,transparent)}
