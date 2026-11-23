@@ -43,16 +43,17 @@ export default function PokemonShowcase() {
 
   const strips = useMemo(() => {
     if (!cards.length) return [];
-    // Cada columna recibe una mezcla independiente para evitar patrones repetidos.
-    return Array.from({ length: 10 }, (_, column) => {
-      const shuffled = [...cards];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      // Desfase distinto para que las columnas no arranquen alineadas.
-      const offset = Math.floor(Math.random() * shuffled.length);
-      return [...shuffled.slice(offset), ...shuffled.slice(0, offset)];
+    // Mezcla global y reparte las cartas: evita descargar diez veces las mismas imágenes.
+    const shuffled = [...cards];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    const columns = Array.from({ length: 10 }, () => [] as PokemonCard[]);
+    shuffled.forEach((card, index) => columns[index % columns.length].push(card));
+    return columns.map((column, index) => {
+      const offset = column.length ? Math.floor(Math.random() * column.length) : 0;
+      return [...column.slice(offset), ...column.slice(0, offset)];
     });
   }, [cards]);
 
@@ -65,7 +66,7 @@ export default function PokemonShowcase() {
       <div className="verticalTrack">
         {[0, 1].map(copy => <div className="verticalSet" key={copy} aria-hidden={copy === 1}>
           {items.map((card, index) => <div className="verticalCard" key={`${copy}-${card.id}`} style={{ width: "76px", height: "106px", minWidth: "76px", maxWidth: "76px", minHeight: "106px", maxHeight: "106px", flex: "0 0 106px", boxSizing: "border-box" }}>
-            <img src={card.image_url || ""} alt={copy === 0 ? card.name : ""} loading={index < 8 && copy === 0 ? "eager" : "lazy"} decoding="async" draggable={false} style={{ display: "block", width: "100%", height: "100%", maxWidth: "100%", maxHeight: "100%", objectFit: "contain", flex: "0 0 auto" }} onError={e => { e.currentTarget.style.display = "none"; }}/>
+            <img src={card.image_url || ""} alt={copy === 0 ? card.name : ""} loading={index === 0 && copy === 0 ? "eager" : "lazy"} decoding="async" draggable={false} style={{ display: "block", width: "100%", height: "100%", maxWidth: "100%", maxHeight: "100%", objectFit: "contain", flex: "0 0 auto" }} onError={e => { e.currentTarget.style.display = "none"; }}/>
           </div>)}
         </div>)}
       </div>
@@ -78,8 +79,8 @@ export default function PokemonShowcase() {
         <div className="columnsGrid">
           {strips.map((items, index) => renderColumn(items || cards, index))}
         </div>
-        <Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca" style={{ position: "absolute", display: "flex", alignItems: "center", left: "50%", right: "auto", top: "50%", transform: "translate(-50%,-50%)", zIndex: 9999, width: "min(76%, 980px)", minHeight: "230px", overflow: "hidden", textDecoration: "none", background: "radial-gradient(circle at 82% 45%, rgba(255,0,220,.2), transparent 27%), radial-gradient(circle at 12% 50%, rgba(0,220,255,.16), transparent 32%), linear-gradient(115deg,#050819,#0b0920 52%,#16051f)", borderTop: "1px solid rgba(0,238,255,.3)", borderBottom: "1px solid rgba(255,40,220,.45)" }}>
-          <div className="accountCopy" style={{ position: "relative", zIndex: 3, width: "55%", padding: "28px 16px 26px clamp(24px,5vw,72px)", boxSizing: "border-box" }}>
+        <Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca" style={{ position: "absolute", display: "flex", alignItems: "center", left: "50%", right: "auto", top: "50%", transform: "translate(-50%,-50%)", zIndex: 9999, width: "min(66%, 900px)", minHeight: "210px", overflow: "hidden", textDecoration: "none", background: "radial-gradient(circle at 82% 45%, rgba(255,0,220,.2), transparent 27%), radial-gradient(circle at 12% 50%, rgba(0,220,255,.16), transparent 32%), linear-gradient(115deg,#050819,#0b0920 52%,#16051f)", borderTop: "1px solid rgba(0,238,255,.3)", borderBottom: "1px solid rgba(255,40,220,.45)" }}>
+          <div className="accountCopy" style={{ position: "relative", zIndex: 3, width: "55%", padding: "24px 14px 22px clamp(22px,4vw,58px)", boxSizing: "border-box" }}>
             <div className="accountKicker">18 AÑOS · LLEVANDO DIVERSIÓN A TODO MÉXICO</div>
             <h1>CREA TU <span>CUENTA HOY</span></h1>
             <div className="accountBenefits"><span>◈ COMPRA</span><span>◇ COLECCIONA</span><span>♧ DISFRUTA</span></div>
@@ -95,10 +96,10 @@ export default function PokemonShowcase() {
         </Link>
       </section>
       <style jsx>{`
-        .accountHero{position:absolute;left:50%;right:auto;top:50%;transform:translate(-50%,-50%);z-index:50;display:flex;align-items:center;width:min(76%,980px);min-height:230px;overflow:hidden;text-decoration:none;background:radial-gradient(circle at 82% 45%,rgba(255,0,220,.2),transparent 27%),radial-gradient(circle at 12% 50%,rgba(0,220,255,.16),transparent 32%),linear-gradient(115deg,#050819,#0b0920 52%,#16051f);border-top:1px solid rgba(0,238,255,.3);border-bottom:1px solid rgba(255,40,220,.45);isolation:isolate}
+        .accountHero{position:absolute;left:50%;right:auto;top:50%;transform:translate(-50%,-50%);z-index:50;display:flex;align-items:center;width:min(66%,900px);min-height:210px;overflow:hidden;text-decoration:none;background:radial-gradient(circle at 82% 45%,rgba(255,0,220,.2),transparent 27%),radial-gradient(circle at 12% 50%,rgba(0,220,255,.16),transparent 32%),linear-gradient(115deg,#050819,#0b0920 52%,#16051f);border-top:1px solid rgba(0,238,255,.3);border-bottom:1px solid rgba(255,40,220,.45);isolation:isolate}
         .accountHero:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 150px,rgba(0,220,255,.035) 151px,rgba(255,30,220,.07) 152px,transparent 154px);pointer-events:none}
         .accountHero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#00eaff,#ff20e7,#00eaff,transparent);box-shadow:0 0 15px #00eaff,0 0 30px #ff20e7}
-        .accountCopy{position:relative;z-index:3;width:55%;padding:28px 16px 26px clamp(24px,5vw,72px);box-sizing:border-box}
+        .accountCopy{position:relative;z-index:3;width:55%;padding:24px 14px 22px clamp(22px,4vw,58px);box-sizing:border-box}
         .accountKicker{font:800 11px/1.2 Arial,sans-serif;letter-spacing:.18em;color:#8defff;text-shadow:0 0 10px rgba(0,220,255,.7);margin-bottom:10px}
         .accountHero h1{margin:0;font:900 clamp(42px,6vw,70px)/.9 Arial,sans-serif;letter-spacing:-.045em;color:#fff;text-transform:uppercase;text-shadow:0 0 12px rgba(255,255,255,.25)}
         .accountHero h1 span{display:block;background:linear-gradient(90deg,#32eaff,#738cff,#ff3be7);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 12px rgba(255,35,220,.55))}
@@ -118,7 +119,7 @@ export default function PokemonShowcase() {
         .accountHero:hover .accountButton{filter:brightness(1.1)}
         .pokemonShowcase{min-height:100vh;width:100%;background:#080e18;color:#fff;overflow:hidden}
         .columnsStage{position:relative;min-height:100vh;overflow:hidden;background:linear-gradient(90deg,#080e18,#142338 50%,#080e18)}
-        .columnsGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;padding:10px 4px;overflow:hidden}
+        .columnsGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:2px;padding:8px 2px;overflow:hidden}
         .verticalViewport{height:100%;min-width:0;overflow:hidden;position:relative;mask-image:linear-gradient(180deg,transparent 0%,#000 8%,#000 92%,transparent 100%)}
         .verticalTrack{height:max-content;width:100%;display:flex;flex-direction:column;will-change:transform;animation:scrollUp 52s linear infinite}
         .verticalViewport.down .verticalTrack{animation-name:scrollDown;animation-duration:58s}
@@ -135,8 +136,8 @@ export default function PokemonShowcase() {
         .orbBall{position:relative;width:90px;height:90px;border:7px solid #080e18;border-radius:50%;background:linear-gradient(to bottom,#e7474b 0 47%,#111a28 47% 54%,#eeeae0 54%);box-shadow:0 16px 35px #0008;transform:rotate(-12deg)}
         .orbBall:before{content:"";position:absolute;inset:0 0 50%;border-radius:100px 100px 0 0;background:linear-gradient(145deg,#ff7770,#bd2738)}
         .orbBall i{position:absolute;left:50%;top:50%;width:30px;height:30px;transform:translate(-50%,-50%);border:6px solid #111a28;border-radius:50%;background:#f4f0e7;box-shadow:0 0 0 3px #f4f0e7}
-        @media(max-width:900px){.accountHero{width:88%;min-height:220px}.accountCopy{width:58%}.accountVisuals{width:45%;right:0}.brandGrid{grid-template-columns:repeat(3,1fr)}.brandLogo:nth-child(4n){border-right:1px solid rgba(255,255,255,.18)}.brandLogo:nth-child(3n){border-right:0}}
-        @media(max-width:700px){.accountHero{min-height:350px;top:50%;left:50%;width:94%;transform:translate(-50%,-50%);}.accountCopy{width:100%;padding:28px 18px 0}.accountKicker{font-size:8px}.accountHero h1{font-size:46px}.accountBenefits{gap:10px}.accountVisuals{position:absolute;right:0;top:auto;bottom:0;width:100%;height:190px;padding:12px 14px 18px;background:linear-gradient(180deg,transparent,rgba(5,8,25,.85) 25%)}.brandTitle{font-size:11px;margin-bottom:8px}.brandGrid{grid-template-columns:repeat(4,1fr);gap:3px 4px}.brandLogo{height:34px;font-size:8px}.brandFooter{display:none}.accountButton{min-width:220px}}
+        @media(max-width:900px){.accountHero{width:82%;min-height:205px}.accountCopy{width:58%}.accountVisuals{width:45%;right:0}.brandGrid{grid-template-columns:repeat(3,1fr)}.brandLogo:nth-child(4n){border-right:1px solid rgba(255,255,255,.18)}.brandLogo:nth-child(3n){border-right:0}}
+        @media(max-width:700px){.accountHero{min-height:320px;top:50%;left:50%;width:94%;transform:translate(-50%,-50%);}.accountCopy{width:100%;padding:28px 18px 0}.accountKicker{font-size:8px}.accountHero h1{font-size:46px}.accountBenefits{gap:10px}.accountVisuals{position:absolute;right:0;top:auto;bottom:0;width:100%;height:190px;padding:12px 14px 18px;background:linear-gradient(180deg,transparent,rgba(5,8,25,.85) 25%)}.brandTitle{font-size:11px;margin-bottom:8px}.brandGrid{grid-template-columns:repeat(4,1fr);gap:3px 4px}.brandLogo{height:34px;font-size:8px}.brandFooter{display:none}.accountButton{min-width:220px}}
         .showcaseLoading{min-height:100vh;display:flex;align-items:center;justify-content:center;gap:12px;background:#080e18;color:#d9c49f;font-size:13px}.showcaseLoading span{width:20px;height:20px;border:2px solid #57442c;border-top-color:#efb65e;border-radius:50%;animation:spin .8s linear infinite}
         @keyframes scrollUp{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-50%,0)}}
         @keyframes scrollDown{from{transform:translate3d(0,-50%,0)}to{transform:translate3d(0,0,0)}}
