@@ -27,8 +27,7 @@ export default function PokemonShowcase() {
           .gt("stock", 0)
           .eq("category_id", pokemonCategoryId)
           .not("image_url", "is", null)
-          .order("name")
-          .limit(80);
+          .limit(100);
         if (cardsError) throw cardsError;
         const available = (data || []) as PokemonCard[];
         // Mezcla una muestra amplia para evitar que siempre aparezcan las primeras cartas alfabéticas.
@@ -64,9 +63,6 @@ export default function PokemonShowcase() {
     });
   }, [cards]);
 
-  if (loading) return <div className="showcaseLoading"><span/>Cargando cartas Pokémon…</div>;
-  if (error) return <div className="showcaseLoading">{error}</div>;
-  if (!cards.length) return <div className="showcaseLoading">No hay cartas Pokémon con imagen disponibles en este momento.</div>;
 
   const renderColumn = (items: PokemonCard[], column: number) => (
     <div className={`verticalViewport ${column % 2 ? "down" : "up"}`} key={column}>
@@ -84,8 +80,11 @@ export default function PokemonShowcase() {
     <main className="pokemonShowcase">
       <section className="columnsStage" aria-label="Cartas Pokémon en columnas verticales">
         <div className="columnsGrid">
-          {strips.map((items, index) => renderColumn(items || cards, index))}
+          {strips.length ? strips.map((items, index) => renderColumn(items || cards, index)) :
+            Array.from({ length: 10 }, (_, column) => <div className={`verticalViewport ${column % 2 ? "down" : "up"}`} key={column}><div className="verticalTrack"><div className="verticalSet">{Array.from({ length: 7 }, (_, i) => <div className="cardSkeleton" key={i}/>)}</div></div></div>)}
         </div>
+        {error && <div className="loadNotice">{error}</div>}
+        {!loading && !error && !cards.length && <div className="loadNotice">No hay cartas disponibles en este momento.</div>}
         <Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca" style={{ position: "absolute", display: "flex", alignItems: "center", left: "50%", right: "auto", top: "50%", transform: "translate(-50%,-50%)", zIndex: 9999, width: "min(66%, 900px)", minHeight: "210px", overflow: "hidden", textDecoration: "none", background: "radial-gradient(circle at 82% 45%, rgba(255,0,220,.2), transparent 27%), radial-gradient(circle at 12% 50%, rgba(0,220,255,.16), transparent 32%), linear-gradient(115deg,#050819,#0b0920 52%,#16051f)", borderTop: "1px solid rgba(0,238,255,.3)", borderBottom: "1px solid rgba(255,40,220,.45)" }}>
           <div className="accountCopy" style={{ position: "relative", zIndex: 3, width: "55%", padding: "24px 14px 22px clamp(22px,4vw,58px)", boxSizing: "border-box" }}>
             <div className="accountKicker">18 AÑOS · LLEVANDO DIVERSIÓN A TODO MÉXICO</div>
@@ -154,6 +153,14 @@ export default function PokemonShowcase() {
         .verticalCard:after{content:"";position:absolute;inset:0;border-radius:8px;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent 30%,transparent 72%,rgba(103,183,229,.1))}
         .verticalCard img{position:relative;z-index:1}
         .verticalCard:hover{transform:scale(1.045);border-color:rgba(240,191,115,.85);box-shadow:0 10px 24px rgba(0,0,0,.62),0 0 18px rgba(64,173,224,.18)}
+        .cardSkeleton{width:76px;height:106px;flex:0 0 106px;border:1px solid rgba(95,165,210,.25);border-radius:9px;background:linear-gradient(110deg,rgba(21,42,62,.35) 8%,rgba(54,105,143,.28) 18%,rgba(21,42,62,.35) 33%);background-size:200% 100%;animation:skeletonShimmer 2.2s ease-in-out infinite}
+        .loadNotice{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:6;padding:7px 12px;border-radius:20px;background:rgba(4,12,22,.8);border:1px solid rgba(130,190,225,.25);color:#cbd8e5;font-size:11px}
+        @keyframes skeletonShimmer{to{background-position:-200% 0}}
+        .verticalViewport:nth-child(3n) .verticalTrack{animation-duration:47s}
+        .verticalViewport:nth-child(4n) .verticalTrack{animation-duration:61s}
+        .verticalViewport:nth-child(5n) .verticalTrack{animation-duration:55s}
+        .verticalViewport:nth-child(2n) .verticalTrack{animation-delay:-13s}
+        .verticalViewport:nth-child(3n) .verticalTrack{animation-delay:-27s}
 
         .verticalCard{width:76px;height:106px;max-width:76px;max-height:106px;aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:3px;border:1px solid #52647a;border-radius:7px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 8px 20px #0008;overflow:hidden;box-sizing:border-box}
         .verticalCard img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
@@ -174,7 +181,7 @@ export default function PokemonShowcase() {
         @keyframes orbFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-9px) rotate(5deg)}}
         @keyframes spin{to{transform:rotate(360deg)}}
         @media(max-width:700px){.columnsStage{min-height:100svh}.columnsGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:8px 4px}.verticalViewport{border-radius:8px}.verticalSet{gap:9px;padding:7px 0}.verticalCard{width:60px;height:84px;max-width:60px;max-height:84px;padding:2px}.verticalTrack{animation-duration:34s}.verticalViewport.down .verticalTrack{animation-duration:39s}.centerBanner{width:94%;min-height:220px;padding:22px 16px}.bannerCopy{max-width:76%}.bannerCopy h1{font-size:clamp(25px,6vw,32px)}.bannerCopy p{font-size:10px;line-height:1.5}.bannerCopy>span{font-size:7px}.bannerButton{padding:11px 12px;gap:9px;font-size:8px}.bannerOrb{width:58px;height:58px;box-shadow:0 0 0 7px #e6b45a0b}.orbBall{width:38px;height:38px;border-width:3px}.orbBall i{width:15px;height:15px;border-width:3px}}
-        @media(prefers-reduced-motion:reduce){.verticalTrack,.bannerOrb,.showcaseLoading span{animation:none!important}.verticalTrack{transform:translate3d(0,0,0)}}
+        @media(prefers-reduced-motion:reduce){.verticalTrack,.bannerOrb,.showcaseLoading span,.cardSkeleton{animation:none!important}.verticalTrack{transform:translate3d(0,0,0)}}
       `}</style>
     </main>
   );
