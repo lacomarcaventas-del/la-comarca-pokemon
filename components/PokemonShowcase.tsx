@@ -89,31 +89,31 @@ export default function PokemonShowcase() {
 
       <style jsx>{`
         .pokemonShowcase{min-height:100vh;width:100%;background:#080e18;color:#fff;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
-        .stripsBlock{width:100%;padding:22px 0;display:flex;flex-direction:column;gap:18px;background:linear-gradient(90deg,#080e18,#142338 50%,#080e18);overflow:hidden}
-        .stripViewport{width:100%;height:clamp(160px,19vw,245px);overflow:hidden;position:relative;display:block;mask-image:linear-gradient(90deg,transparent 0%,#000 4%,#000 96%,transparent 100%)}
-        .stripTrack{height:100%;width:max-content;display:flex;flex-flow:row nowrap;align-items:center;will-change:transform;animation:slideLeft 42s linear infinite}
-        .stripViewport.right .stripTrack{animation-name:slideRight;animation-duration:48s}
+        .stripsBlock{width:100%;padding:10px 0;display:flex;flex-direction:column;gap:8px;background:linear-gradient(90deg,#080e18,#142338 50%,#080e18);overflow:hidden}
+        .stripViewport{width:100%;height:clamp(108px,11vw,138px);overflow:hidden;position:relative;display:block;mask-image:linear-gradient(90deg,transparent 0%,#000 4%,#000 96%,transparent 100%)}
+        .stripTrack{height:100%;width:max-content;display:flex;flex-flow:row nowrap;align-items:center;will-change:transform;animation:slideLeft 58s linear infinite}
+        .stripViewport.right .stripTrack{animation-name:slideRight;animation-duration:64s}
         .stripViewport:hover .stripTrack{animation-play-state:paused}
-        .stripSet{height:100%;width:max-content;flex:0 0 auto;display:flex;flex-flow:row nowrap;align-items:center;gap:15px;padding:0 7px}
-        .stripCard{height:calc(100% - 12px);width:auto;aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:5px;border:1px solid #52647a;border-radius:8px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 9px 24px #0008;overflow:hidden}
+        .stripSet{height:100%;width:max-content;flex:0 0 auto;display:flex;flex-flow:row nowrap;align-items:center;gap:9px;padding:0 5px}
+        .stripCard{height:calc(100% - 8px);width:auto;aspect-ratio:2.5 / 3.5;flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:3px;border:1px solid #52647a;border-radius:8px;background:linear-gradient(145deg,#263950,#111d2c);box-shadow:0 9px 24px #0008;overflow:hidden}
         .stripCard img{display:block;width:100%;height:100%;max-width:none;object-fit:contain;border-radius:4px}
-        .centerBanner{min-height:310px;position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:38px clamp(24px,11vw,165px);background:radial-gradient(ellipse at 78% 50%,#244c70 0,transparent 34%),linear-gradient(110deg,#24170f,#101b2a 58%,#111827);border-top:2px solid #b17a3d;border-bottom:2px solid #b17a3d}
+        .centerBanner{min-height:235px;position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:38px clamp(24px,11vw,165px);background:radial-gradient(ellipse at 78% 50%,#244c70 0,transparent 34%),linear-gradient(110deg,#24170f,#101b2a 58%,#111827);border-top:2px solid #b17a3d;border-bottom:2px solid #b17a3d}
         .bannerTexture{position:absolute;inset:0;z-index:-1;opacity:.15;background-image:radial-gradient(#f2c36b 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(90deg,#000,transparent)}
         .bannerCopy{position:relative;z-index:2;max-width:610px}.bannerCopy>span{font-size:9px;font-weight:900;letter-spacing:.22em;color:#efb65e}
         .bannerCopy h1{font-size:clamp(34px,4.6vw,58px);line-height:.98;letter-spacing:-.05em;margin:12px 0;color:#fff8ec}.bannerCopy h1 em{font-family:Georgia,serif;color:#f0b45b;font-weight:500}
         .bannerCopy p{max-width:470px;margin:0 0 19px;color:#c4ced9;font-size:12px;line-height:1.7}
         .bannerButton{display:inline-flex;align-items:center;gap:22px;padding:13px 18px;border-radius:6px;background:linear-gradient(120deg,#f5c975,#d98b37);color:#1b1209;font-size:9px;font-weight:950;letter-spacing:.12em;transition:transform .2s,filter .2s}.bannerButton:hover{transform:translateY(-3px);filter:brightness(1.08)}.bannerButton b{font-size:15px}
-        .bannerOrb{width:210px;height:210px;flex:none;display:grid;place-items:center;border:1px solid #e6b45a66;border-radius:50%;box-shadow:0 0 0 18px #e6b45a0b,0 0 60px #e6b45a20;animation:orbFloat 6s ease-in-out infinite}
-        .orbBall{position:relative;width:130px;height:130px;border:7px solid #080e18;border-radius:50%;background:linear-gradient(to bottom,#e7474b 0 47%,#111a28 47% 54%,#eeeae0 54%);box-shadow:0 16px 35px #0008;transform:rotate(-12deg)}
+        .bannerOrb{width:160px;height:160px;flex:none;display:grid;place-items:center;border:1px solid #e6b45a66;border-radius:50%;box-shadow:0 0 0 18px #e6b45a0b,0 0 60px #e6b45a20;animation:orbFloat 6s ease-in-out infinite}
+        .orbBall{position:relative;width:100px;height:100px;border:7px solid #080e18;border-radius:50%;background:linear-gradient(to bottom,#e7474b 0 47%,#111a28 47% 54%,#eeeae0 54%);box-shadow:0 16px 35px #0008;transform:rotate(-12deg)}
         .orbBall:before{content:"";position:absolute;inset:0 0 50%;border-radius:100px 100px 0 0;background:linear-gradient(145deg,#ff7770,#bd2738)}
-        .orbBall i{position:absolute;left:50%;top:50%;width:44px;height:44px;transform:translate(-50%,-50%);border:7px solid #111a28;border-radius:50%;background:#f4f0e7;box-shadow:0 0 0 3px #f4f0e7}
+        .orbBall i{position:absolute;left:50%;top:50%;width:34px;height:34px;transform:translate(-50%,-50%);border:6px solid #111a28;border-radius:50%;background:#f4f0e7;box-shadow:0 0 0 3px #f4f0e7}
         .lowerBlock{padding-top:22px;padding-bottom:22px}
         .showcaseLoading{min-height:100vh;display:flex;align-items:center;justify-content:center;gap:12px;background:#080e18;color:#d9c49f;font-size:13px}.showcaseLoading span{width:20px;height:20px;border:2px solid #57442c;border-top-color:#efb65e;border-radius:50%;animation:spin .8s linear infinite}
         @keyframes slideLeft{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
         @keyframes slideRight{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
         @keyframes orbFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-9px) rotate(5deg)}}
         @keyframes spin{to{transform:rotate(360deg)}}
-        @media(max-width:700px){.stripsBlock{padding:12px 0;gap:10px}.stripViewport{height:145px}.stripSet{gap:8px;padding:0 4px}.stripCard{height:137px;width:auto;aspect-ratio:2.5 / 3.5;padding:4px}.stripTrack{animation-duration:32s}.stripViewport.right .stripTrack{animation-duration:37s}.centerBanner{min-height:235px;padding:25px 17px}.bannerCopy{max-width:74%}.bannerCopy h1{font-size:31px}.bannerCopy p{font-size:10px;line-height:1.55}.bannerCopy>span{font-size:7px}.bannerButton{padding:12px 13px;gap:10px;font-size:8px}.bannerOrb{width:83px;height:83px;box-shadow:0 0 0 8px #e6b45a0b}.orbBall{width:55px;height:55px;border-width:4px}.orbBall i{width:21px;height:21px;border-width:4px}.lowerBlock{padding-top:12px;padding-bottom:12px}}
+        @media(max-width:700px){.stripsBlock{padding:12px 0;gap:10px}.stripViewport{height:145px}.stripSet{gap:8px;padding:0 4px}.stripCard{height:137px;width:auto;aspect-ratio:2.5 / 3.5;padding:4px}.stripTrack{animation-duration:32s}.stripViewport.right .stripTrack{animation-duration:37s}.centerBanner{min-height:235px;padding:25px 17px}.bannerCopy{max-width:74%}.bannerCopy h1{font-size:31px}.bannerCopy p{font-size:10px;line-height:1.55}.bannerCopy>span{font-size:7px}.bannerButton{padding:12px 13px;gap:10px;font-size:8px}.bannerOrb{width:68px;height:68px;box-shadow:0 0 0 8px #e6b45a0b}.orbBall{width:45px;height:45px;border-width:3px}.orbBall i{width:17px;height:17px;border-width:3px}.lowerBlock{padding-top:12px;padding-bottom:12px}}
         @media(prefers-reduced-motion:reduce){.stripTrack,.bannerOrb,.showcaseLoading span{animation:none!important}.stripTrack{transform:translate3d(0,0,0)}}
       `}</style>
     </main>
