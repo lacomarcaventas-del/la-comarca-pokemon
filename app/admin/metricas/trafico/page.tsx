@@ -54,7 +54,18 @@ export default function TrafficAnalyticsPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  const visibleEvents = useMemo(() => trafficMode === "external" ? events.filter((e) => !e.payload.internal_device) : events, [events, trafficMode]);
+  // Classify at the session level: if any event in a browser session is tagged internal,
+  // exclude the entire session from customer-only metrics. This avoids splitting a session
+  // when a device is enrolled after it has already started browsing.
+  const internalSessionIds = useMemo(() => new Set(
+    events
+      .filter((event) => Boolean(event.payload.internal_device) || event.payload.traffic_class === "internal")
+      .map((event) => event.session_id)
+  ), [events]);
+  const visibleEvents = useMemo(
+    () => trafficMode === "external" ? events.filter((event) => !internalSessionIds.has(event.session_id)) : events,
+    [events, trafficMode, internalSessionIds]
+  );
 
   const sessions = useMemo(() => {
     const map = new Map<string, EventRow[]>();
@@ -67,7 +78,7 @@ export default function TrafficAnalyticsPage() {
     }).sort((a, b) => b.latest.occurred_at.localeCompare(a.latest.occurred_at));
   }, [visibleEvents]);
 
-  const internalSessionCount = useMemo(() => new Set(events.filter((event) => event.payload.internal_device).map((event) => event.session_id)).size, [events]);
+  const internalSessionCount = internalSessionIds.size;
 
   const summary = useMemo(() => {
     const count = (name: string) => visibleEvents.filter(e => e.event === name).length;
