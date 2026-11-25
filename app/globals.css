@@ -242,7 +242,7 @@
     content:"";
     position:fixed;
     inset:0;
-    background:rgba(255,255,255,.20);
+    background:#fff;
     mix-blend-mode:screen;
     opacity:.20;
     pointer-events:none;
