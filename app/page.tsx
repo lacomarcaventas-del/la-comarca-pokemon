@@ -14,7 +14,7 @@ const accountStyles=`
 const accountBrands=[["Pokémon","pokemon"],["Magic: The Gathering","magic"],["Yu-Gi-Oh!","yugioh"],["One Piece","onepiece"],["Disney Lorcana","lorcana"],["Weiß Schwarz","weiss"],["Gundam Card Game","gundam"],["hololive","hololive"],["RIFTBOUND","riftbound"],["Dungeons & Dragons","dnd"],["HeroClix","hero"],["Juegos de Mesa","hobby"],["Modelismo","hobby"],["Accesorios","hobby"]];
 
 export default function Home(){return <div className="siteShell"><style>{accountStyles}</style>
-<section className="shippingHero" aria-label="Envíos a todo México"><div className="shippingInner"><div className="shippingLead"><strong>ENVIAMOS A<br/>TODO EL PAÍS</strong></div><div className="shippingRoute"><span className="routeLine"></span><i>◆</i><i>◆</i><i>◆</i></div><div className="carrier mexpost"><b>▰ MEXPOST</b><span>3–5 días hábiles<br/>Cobertura nacional</span></div><div className="carrier fedex"><b><em>Fed</em>Ex</b><span>3 días hábiles<br/>Rápido y seguro</span></div></div></section>
+
 <header className="top siteTop"><Link href="/" className="logoLink"><BrandLogo/></Link><nav className="mainNav navPills"><Link href="/catalogo">Catálogo</Link><Link href="/tickets">Ligas</Link><a href="#comunidad">Comunidad</a><Link href="/eventos">Eventos</Link></nav><div className="topActions"><Link href="/cuenta">♙ Clientes</Link><Link href="/catalogo" className="cartMini">🛒 Carrito</Link></div></header>
 <main>
 <ProductCarousel/>
