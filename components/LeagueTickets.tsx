@@ -50,7 +50,7 @@ export default function LeagueTickets(){
 
   const total=cart.reduce((sum,i)=>sum+Number(i.card.price)*i.qty,0);
 
-  return <>
+  return <div className="publicStore">
     <header className="top"><a href="/">← La Comarca</a><b>La Comarca · Tickets</b><a href="/cuenta">👤 Clientes</a></header>
     <main className="wrap">
       {error&&<div className="panel">{error}</div>}
@@ -106,7 +106,7 @@ export default function LeagueTickets(){
       {cart.length>0&&<OrderForm cart={cart} onDone={()=>{setCart([]);setOpen(false);load()}}/>}
       <button className="btn2" onClick={()=>setOpen(false)}>Cerrar</button>
     </div></div>}
-    </>;
+    </div>;
 }
 
 function OrderForm({cart,onDone}:{cart:CartItem[];onDone:()=>void}){
