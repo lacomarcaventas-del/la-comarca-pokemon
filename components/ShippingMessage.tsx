@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 const messages = [
   { lang: "es", text: "ACEPTAMOS PAYPAL" },
   { lang: "es", text: "ENVIAMOS A TODO EL MUNDO" },
@@ -35,10 +37,43 @@ const messages = [
   { lang: "fr", text: "18 ANS D’EXPÉRIENCE À VOTRE SERVICE" },
 ];
 
-function MessageSet({ duplicate = false }: { duplicate?: boolean }) {
+type TickerMessage = (typeof messages)[number];
+
+function shuffle<T>(items: T[]): T[] {
+  const result = [...items];
+
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function getRandomizedMessages(): TickerMessage[] {
+  const groups = new Map<string, TickerMessage[]>();
+
+  for (const message of messages) {
+    const group = groups.get(message.lang) ?? [];
+    group.push(message);
+    groups.set(message.lang, group);
+  }
+
+  const randomizedLanguages = shuffle(Array.from(groups.keys()));
+
+  return randomizedLanguages.flatMap((language) => groups.get(language) ?? []);
+}
+
+function MessageSet({
+  items,
+  duplicate = false,
+}: {
+  items: TickerMessage[];
+  duplicate?: boolean;
+}) {
   return (
     <div className="tickerContinuousSet" aria-hidden={duplicate}>
-      {messages.map((message, index) => (
+      {items.map((message, index) => (
         <span className="tickerContinuousItem" lang={message.lang} key={`${message.lang}-${index}`}>
           {message.text}<span className="tickerContinuousDiamond"> ◆ </span>
         </span>
@@ -48,12 +83,18 @@ function MessageSet({ duplicate = false }: { duplicate?: boolean }) {
 }
 
 export default function ShippingMessage() {
+  const [orderedMessages, setOrderedMessages] = useState<TickerMessage[]>(messages);
+
+  useEffect(() => {
+    setOrderedMessages(getRandomizedMessages());
+  }, []);
+
   return (
     <div className="worldwideTicker" role="region" aria-label="La Comarca: pagos, envíos y atención al cliente">
       <div className="tickerScreen">
         <div className="tickerContinuousTrack">
-          <MessageSet />
-          <MessageSet duplicate />
+          <MessageSet items={orderedMessages} />
+          <MessageSet items={orderedMessages} duplicate />
         </div>
       </div>
     </div>
