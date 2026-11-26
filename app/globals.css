@@ -739,3 +739,21 @@
 @media(prefers-reduced-motion:reduce){
   .siteTop .tickerFlipLine{animation-name:tickerTravel!important;animation-duration:12s!important;animation-iteration-count:1!important}
 }
+
+
+/* Final ticker animation override: the reduced-motion shorthand previously cancelled it. */
+.siteTop .tickerFlipLine{
+  animation:tickerTravel 12s linear 1 forwards!important;
+  transform:translate3d(100vw,0,0);
+  will-change:transform;
+}
+@keyframes tickerTravel{
+  from{transform:translate3d(100vw,0,0)}
+  to{transform:translate3d(-100%,0,0)}
+}
+@media(max-width:700px){
+  .siteTop .tickerFlipLine{animation-duration:12s!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .siteTop .tickerFlipLine{animation:tickerTravel 12s linear 1 forwards!important}
+}
