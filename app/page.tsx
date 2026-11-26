@@ -3,6 +3,7 @@ import Image from "next/image";
 import FacebookFeed from "../components/FacebookFeed";
 import BrandLogo from "../components/BrandLogo";
 import ProductCarousel from "../components/ProductCarousel";
+import ShippingMessage from "../components/ShippingMessage";
 
 const lines=[
   ["Accesorios","accesorios","Accesorios","◆"],["Coleccionables","coleccionables","Coleccionables","●"],["Disney Lorcana","lorcana","Disney Lorcana","✦"],["Dungeons & Dragons","dnd","Dungeons & Dragons","⚔"],["Gundam Card Game","gundam","Gundam Card Game","◈"],["hololive OFFICIAL CARD GAME","hololive","hololive OFFICIAL CARD GAME","✦"],["Heroclix","heroclix","Heroclix","♙"],["Juegos de Mesa","juegos-mesa","Juegos de Mesa","♟"],["Magic: The Gathering","magic","Magic: The Gathering","✦"],["Miniaturas","miniaturas","Miniaturas","♙"],["Modelismo","modelismo","Modelismo","▰"],["One Piece Card Game","onepiece","One Piece Card Game","☠"],["Pokémon TCG","pokemon","Pokémon TCG","◉"],["Riftbound","riftbound","Riftbound","◈"],["Rol","rol","Rol","♙"],["Weiss Schwarz","weiss","Weiss Schwarz","✥"],["Yu-Gi-Oh!","yugioh","Yu-Gi-Oh!","◉"]
@@ -17,6 +18,7 @@ export default function Home(){return <div className="siteShell"><style>{account
 
 <header className="top siteTop"><Link href="/" className="logoLink"><BrandLogo/></Link><nav className="mainNav navPills"><Link href="/catalogo">Catálogo</Link><Link href="/tickets">Ligas</Link><a href="#comunidad">Comunidad</a><Link href="/eventos">Eventos</Link></nav><div className="topActions"><Link href="/cuenta">♙ Clientes</Link><Link href="/catalogo" className="cartMini">🛒 Carrito</Link></div></header>
 <main>
+<div className="shippingHero worldwideShipping"><div className="shippingInner"><div className="shippingLead"><ShippingMessage/></div></div></div>
 <ProductCarousel/>
 <Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca"><div className="accountCopy"><div className="accountKicker">18 AÑOS · LLEVANDO DIVERSIÓN A TODO MÉXICO</div><h1>CREA TU <span>CUENTA HOY</span></h1><div className="accountBenefits"><span>◈ COMPRA</span><span>◇ COLECCIONA</span><span>♧ DISFRUTA</span></div><div className="accountButton">♙ &nbsp; CREAR CUENTA &nbsp; →</div></div><div className="accountVisuals" aria-hidden="true"><div className="brandTitle">TUS MUNDOS FAVORITOS</div><div className="brandGrid">{accountBrands.map(([name,key],i)=><div className={`brandLogo ${key}`} key={name+i}>{name}</div>)}</div><div className="brandFooter">La Comarca · TCG & Hobby</div></div></Link>
 <section id="comunidad" className="wrap benefits"><div><b>◈</b><span><strong>Envíos a todo México</strong><small>Envíos seguros y rápidos</small></span></div><div><b>◇</b><span><strong>Tienda 100% segura</strong><small>Protección en tus compras</small></span></div><div><b>♧</b><span><strong>Atención personalizada</strong><small>Estamos para ayudarte</small></span></div><div><b>♙</b><span><strong>Comunidad La Comarca</strong><small>Eventos, torneos y más</small></span></div></section>
