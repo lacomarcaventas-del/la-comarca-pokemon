@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const messages = [
   { lang: "es", text: "ACEPTAMOS PAYPAL" },
@@ -39,7 +39,7 @@ const messages = [
 
 export default function ShippingMessage() {
   const [active, setActive] = useState(0);
-  const message = messages[active];
+  useEffect(() => {\n    const timer = window.setInterval(() => {\n      setActive((current) => (current + 1) % messages.length);\n    }, 12000);\n    return () => window.clearInterval(timer);\n  }, []);\n\n  const message = messages[active];
 
   return (
     <div className="worldwideTicker" role="region" aria-label="La Comarca: pagos, envíos y atención al cliente">
