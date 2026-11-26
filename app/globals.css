@@ -683,3 +683,14 @@
 @keyframes boardPulse{0%,100%{opacity:1}50%{opacity:.35}}
 @media(max-width:700px){.tickerBoardHead{min-height:23px;padding:4px 10px;letter-spacing:.12em}.tickerBoardName{font-size:8px}.tickerBoardStatus{font-size:7px;letter-spacing:.08em}.tickerScreen{padding:13px 0}.tickerItem{font-size:10px;letter-spacing:.06em;padding:0 15px}.tickerItem:after{margin-left:15px}}
 @media(prefers-reduced-motion:reduce){.tickerBoardStatus i{animation:none}}
+
+
+/* Single-line airport departure-board ticker: one message flips at a time. */
+.worldwideShipping{padding:0!important;background:#080909!important}
+.worldwideTicker{height:48px;padding:0!important;background:#080909!important;border:0!important;border-top:1px solid #51380f!important;border-bottom:1px solid #68460e!important;box-shadow:inset 0 1px rgba(255,210,90,.08),0 3px 12px rgba(0,0,0,.3)!important}
+.tickerScreen{height:100%;min-height:0;padding:0!important;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(180deg,#19150c 0%,#090a08 48%,#171207 100%)!important;perspective:700px}
+.tickerScreen:before,.tickerScreen:after{display:none!important}
+.tickerFlipLine{width:100%;padding:0 18px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#ffc94f;font:700 clamp(11px,1.05vw,14px)/1.2 'Courier New',Consolas,monospace;letter-spacing:.12em;text-shadow:0 0 4px rgba(255,177,35,.9),0 0 12px rgba(255,145,0,.42);animation:airportFlipIn .48s cubic-bezier(.2,.75,.25,1) both;backface-visibility:hidden}
+@keyframes airportFlipIn{from{opacity:0;transform:rotateX(-88deg) translateY(-5px)}to{opacity:1;transform:rotateX(0) translateY(0)}}
+@media(max-width:700px){.worldwideTicker{height:43px}.tickerFlipLine{padding:0 10px;font-size:10px;letter-spacing:.055em}}
+@media(prefers-reduced-motion:reduce){.tickerFlipLine{animation:none}}
