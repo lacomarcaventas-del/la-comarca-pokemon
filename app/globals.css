@@ -712,3 +712,30 @@
 @media(prefers-reduced-motion:reduce){
  .siteTop .tickerFlipLine{animation:none!important;transform:none!important;margin:auto}
 }
+
+
+/* Ensure the airport-style crawl always travels right-to-left, including reduced-motion systems. */
+.siteTop .tickerScreen{justify-content:flex-start!important}
+.siteTop .tickerFlipLine{
+  width:max-content!important;
+  max-width:none!important;
+  flex:0 0 auto!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  animation-name:tickerTravel!important;
+  animation-duration:12s!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:1!important;
+  animation-fill-mode:forwards!important;
+}
+@keyframes tickerTravel{
+  0%{transform:translate3d(100vw,0,0)}
+  100%{transform:translate3d(-100%,0,0)}
+}
+@media(max-width:700px){
+  .siteTop .tickerFlipLine{animation-duration:11s!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .siteTop .tickerFlipLine{animation-name:tickerTravel!important;animation-duration:12s!important;animation-iteration-count:1!important}
+}
