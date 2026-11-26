@@ -870,3 +870,58 @@
   .top.siteTop .mainNav.navPills a:first-child{background:linear-gradient(180deg,#765126,#382918)!important}
   .top.siteTop .topActions a{min-height:34px}
 }
+
+
+/* Ornamentación inspirada en cartografía fantástica para la cabecera. */
+.top.siteTop{
+  --header-gold:rgba(218,169,91,.72);
+}
+.top.siteTop:after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  inset:8px 12px 46px;
+  opacity:.52;
+  border-top:1px solid var(--header-gold);
+  border-bottom:1px solid rgba(218,169,91,.48);
+  background:
+    radial-gradient(circle at 50% 50%,transparent 0 34px,rgba(91,151,201,.13) 35px 36px,transparent 37px 54px,rgba(218,169,91,.16) 55px 56px,transparent 57px),
+    repeating-conic-gradient(from 0deg at 50% 50%,rgba(119,169,209,.10) 0deg 1deg,transparent 1deg 15deg);
+  mask-image:linear-gradient(90deg,transparent 0%,#000 17%,#000 83%,transparent 100%);
+}
+.top.siteTop .mainNav.navPills a{
+  position:relative;
+  border-radius:9px!important;
+  clip-path:none;
+}
+.top.siteTop .mainNav.navPills a:before,
+.top.siteTop .topActions a:before{
+  content:"";
+  position:absolute;
+  inset:3px;
+  border:1px solid rgba(190,211,229,.09);
+  border-radius:6px;
+  pointer-events:none;
+}
+.top.siteTop .mainNav.navPills a:first-child:before{
+  border-color:rgba(255,220,157,.22);
+}
+.top.siteTop .logoLink:after{
+  content:"";
+  position:absolute;
+  right:-5px;
+  top:50%;
+  width:8px;
+  height:8px;
+  transform:translateY(-50%) rotate(45deg);
+  border:1px solid rgba(220,174,104,.72);
+  background:#10243a;
+  box-shadow:0 0 9px rgba(77,150,211,.25);
+}
+@media(max-width:700px){
+  .top.siteTop:after{inset:5px 6px 43px;opacity:.34}
+  .top.siteTop .logoLink:after{display:none}
+  .top.siteTop .mainNav.navPills a:before,
+  .top.siteTop .topActions a:before{inset:2px}
+}
