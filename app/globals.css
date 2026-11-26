@@ -756,3 +756,22 @@
 @media(prefers-reduced-motion:reduce){
   .siteTop .tickerFlipLine{animation:tickerTravel 12s linear 1 forwards!important}
 }
+
+
+/* Continuous multilingual ticker: all announcements remain in one moving line. */
+.siteTop .worldwideTicker{height:40px!important;overflow:hidden!important}
+.siteTop .tickerScreen{justify-content:flex-start!important;overflow:hidden!important}
+.siteTop .tickerContinuousTrack{display:flex!important;align-items:center!important;width:max-content!important;min-width:max-content!important;flex-wrap:nowrap!important;animation:comarcaContinuousTicker 115s linear infinite!important;will-change:transform}
+.siteTop .tickerContinuousSet{display:flex!important;align-items:center!important;flex:0 0 auto!important;width:max-content!important;white-space:nowrap!important}
+.siteTop .tickerContinuousItem{display:inline-flex!important;align-items:center!important;flex:0 0 auto!important;white-space:nowrap!important;padding:0 22px!important;color:#ffc94f!important;font:700 11px/1.2 'Courier New',Consolas,monospace!important;letter-spacing:.105em!important;text-shadow:0 0 4px rgba(255,177,35,.85),0 0 11px rgba(255,145,0,.38)}
+.siteTop .tickerContinuousDiamond{padding-left:22px;color:#a86d17;font-size:9px;text-shadow:0 0 8px rgba(255,158,27,.55)}
+@keyframes comarcaContinuousTicker{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.siteTop .tickerContinuousTrack:hover{animation-play-state:paused!important}
+/* Deep navy navigation surface with subtle blue light and a warm gold edge. */
+.top.siteTop{background:linear-gradient(112deg,rgba(7,17,31,.98) 0%,rgba(12,25,43,.98) 48%,rgba(7,14,26,.98) 100%)!important;border-bottom:1px solid rgba(198,145,68,.42)!important;box-shadow:0 12px 32px rgba(0,0,0,.52),inset 0 1px 0 rgba(112,166,220,.13)!important}
+.top.siteTop:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% -70%,rgba(54,116,177,.25),transparent 68%),linear-gradient(90deg,rgba(34,78,124,.12),transparent 28%,transparent 72%,rgba(34,78,124,.12));opacity:.9}
+.top.siteTop .mainNav.navPills a{background:linear-gradient(180deg,rgba(27,48,72,.9),rgba(10,22,37,.94))!important;border-color:rgba(115,147,180,.42)!important;box-shadow:inset 0 1px rgba(255,255,255,.06),0 4px 12px rgba(0,0,0,.22)}
+.top.siteTop .mainNav.navPills a:first-child{background:linear-gradient(180deg,rgba(87,57,25,.92),rgba(34,27,20,.96))!important;border-color:#9b6c32!important}
+.top.siteTop .topActions a{background:linear-gradient(180deg,rgba(25,43,64,.86),rgba(10,20,33,.94));border-color:rgba(115,147,180,.4)}
+@media(max-width:700px){.siteTop .tickerContinuousTrack{animation-duration:95s!important}.siteTop .tickerContinuousItem{font-size:10px!important;padding:0 14px!important}.siteTop .tickerContinuousDiamond{padding-left:14px}.top.siteTop:before{opacity:.55}}
+@media(prefers-reduced-motion:reduce){.siteTop .tickerContinuousTrack{animation-duration:180s!important}}
