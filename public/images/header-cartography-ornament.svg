@@ -31,6 +31,19 @@
  <g id="capturedStar" fill="#ffe3a0" stroke="#d49a4d" stroke-width=".7">
   <path d="M0-7L2-2 7 0 2 2 0 7-2 2-7 0-2-2Z"/>
  </g>
+ <g id="vesicaMesh" fill="none" stroke="url(#arcaneGold)" stroke-width=".85">
+  <circle r="31" stroke="#75b8e8" stroke-width=".8" opacity=".8"/>
+  <circle cx="-19" cy="0" r="31" opacity=".75"/>
+  <circle cx="19" cy="0" r="31" opacity=".75"/>
+  <circle cx="0" cy="-19" r="31" opacity=".65"/>
+  <circle cx="0" cy="19" r="31" opacity=".65"/>
+  <circle cx="-13.4" cy="-13.4" r="31" opacity=".55"/>
+  <circle cx="13.4" cy="-13.4" r="31" opacity=".55"/>
+  <circle cx="-13.4" cy="13.4" r="31" opacity=".55"/>
+  <circle cx="13.4" cy="13.4" r="31" opacity=".55"/>
+  <path d="M-50 0H50M0-50V50M-35-35L35 35M35-35L-35 35" stroke="#75b8e8" stroke-width=".55" opacity=".7"/>
+  <path d="M-38-19L38 19M-38 19L38-19M-19-38L19 38M19-38L-19 38" stroke-width=".5" opacity=".6"/>
+ </g>
  <g id="arcaneEye" fill="none" stroke="url(#arcaneGold)" stroke-width="1.4" stroke-linejoin="round">
   <path d="M-31 0Q0-25 31 0Q0 25-31 0Z"/>
   <path d="M-23 0Q0-17 23 0Q0 17-23 0Z" stroke="#75b8e8" stroke-width=".9"/>
@@ -42,7 +55,16 @@
 
 <rect width="1800" height="150" fill="url(#aura)"/>
 <rect x="260" y="18" width="1280" height="114" fill="url(#sacredGrid)" opacity=".36"/>
-<!-- Fibonacci / golden-ratio construction: nested golden rectangles and logarithmic spiral motifs -->
+<!-- Interlocking circle lattice filling the open spans of the header -->
+<g opacity=".58">
+ <g transform="translate(690 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(755 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(820 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(980 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(1045 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(1110 75) scale(.70)"><use href="#vesicaMesh"/></g>
+</g>
+\n<!-- Fibonacci / golden-ratio construction: nested golden rectangles and logarithmic spiral motifs -->
 <g fill="none" stroke="url(#arcaneGold)" stroke-width=".9" opacity=".42">
  <path d="M610 24H1190V126H830V24H1052V126H914V24H999V126H966V24H979"/>
  <path d="M610 24A222 222 0 0 1 832 126A138 138 0 0 1 970 24A85 85 0 0 1 1055 126A53 53 0 0 1 1108 24A32 32 0 0 1 1140 126A20 20 0 0 1 1160 24"/>
