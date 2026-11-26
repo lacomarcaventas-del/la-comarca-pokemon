@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 const messages = [
   { lang: "es", text: "ACEPTAMOS PAYPAL" },
   { lang: "es", text: "ENVIAMOS A TODO EL MUNDO" },
@@ -37,24 +35,25 @@ const messages = [
   { lang: "fr", text: "18 ANS D’EXPÉRIENCE À VOTRE SERVICE" },
 ];
 
+function MessageSet({ duplicate = false }: { duplicate?: boolean }) {
+  return (
+    <div className="tickerContinuousSet" aria-hidden={duplicate}>
+      {messages.map((message, index) => (
+        <span className="tickerContinuousItem" lang={message.lang} key={`${message.lang}-${index}`}>
+          {message.text}<span className="tickerContinuousDiamond"> ◆ </span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function ShippingMessage() {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActive((current) => (current + 1) % messages.length);
-    }, 12000);
-
-    return () => window.clearInterval(timer);
-  }, []);
-
-  const message = messages[active];
-
   return (
     <div className="worldwideTicker" role="region" aria-label="La Comarca: pagos, envíos y atención al cliente">
       <div className="tickerScreen">
-        <div className="tickerFlipLine" key={active} lang={message.lang}>
-          {message.text}
+        <div className="tickerContinuousTrack">
+          <MessageSet />
+          <MessageSet duplicate />
         </div>
       </div>
     </div>
