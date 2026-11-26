@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const messages = [
   { lang: "es", text: "ACEPTAMOS PAYPAL" },
@@ -39,20 +39,17 @@ const messages = [
 
 export default function ShippingMessage() {
   const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setActive((current) => (current + 1) % messages.length);
-    }, 3200);
-    return () => window.clearInterval(interval);
-  }, []);
-
   const message = messages[active];
 
   return (
-    <div className="worldwideTicker" role="status" aria-live="polite" aria-atomic="true" aria-label="La Comarca: pagos, envíos y atención al cliente">
+    <div className="worldwideTicker" role="region" aria-label="La Comarca: pagos, envíos y atención al cliente">
       <div className="tickerScreen">
-        <div className="tickerFlipLine" key={active} lang={message.lang}>
+        <div
+          className="tickerFlipLine"
+          key={active}
+          lang={message.lang}
+          onAnimationEnd={() => setActive((current) => (current + 1) % messages.length)}
+        >
           {message.text}
         </div>
       </div>
