@@ -17,7 +17,15 @@
   <path d="M17 0L34 17 17 34 0 17Z M0 0L34 34M34 0L0 34" fill="none" stroke="#6ca8d5" stroke-width=".45" opacity=".22"/>
   <circle cx="17" cy="17" r="5" fill="none" stroke="#d7a85e" stroke-width=".5" opacity=".35"/>
  </pattern>
- </defs>
+ 
+ <g id="arcaneEye" fill="none" stroke="url(#arcaneGold)" stroke-width="1.4" stroke-linejoin="round">
+  <path d="M-31 0Q0-25 31 0Q0 25-31 0Z"/>
+  <path d="M-23 0Q0-17 23 0Q0 17-23 0Z" stroke="#75b8e8" stroke-width=".9"/>
+  <circle r="9" stroke="#e9c47f"/><circle r="4" fill="#e9c47f" stroke="#e9c47f"/>
+  <path d="M0-31V-24M0 24V31M-38 0H-31M31 0H38M-27-27L-22-22M27-27L22-22M-27 27L-22 22M27 27L22 22" stroke="#e9c47f" stroke-width="1"/>
+ </g>
+
+</defs>
 
 <rect width="1800" height="150" fill="url(#aura)"/>
 <rect x="260" y="18" width="1280" height="114" fill="url(#sacredGrid)" opacity=".36"/>
@@ -27,6 +35,7 @@
  <path d="M610 24A222 222 0 0 1 832 126A138 138 0 0 1 970 24A85 85 0 0 1 1055 126A53 53 0 0 1 1108 24A32 32 0 0 1 1140 126A20 20 0 0 1 1160 24"/>
  <path d="M1190 24H610V126H970V24H748V126H886V24H801V126H854V24H821" opacity=".45"/>
 </g>
+<g transform="translate(900 75) scale(.62)" opacity=".58"><use href="#arcaneEye"/></g>
 <g fill="none" stroke="#8bc3e8" stroke-width=".8" opacity=".28">
  <path d="M280 75H600M1200 75H1520M900 16V134"/>
  <circle cx="900" cy="75" r="62" stroke-dasharray="2 7"/><circle cx="900" cy="75" r="48" stroke-dasharray="1 5"/>
@@ -41,8 +50,8 @@
 <path d="M0 14H1800M0 136H1800" stroke="#80b9e5" stroke-width=".65" opacity=".3"/>
 <path d="M18 10L43 10 25 28 10 43V18ZM1782 10H1757L1775 28 1790 43V18ZM18 140L43 140 25 122 10 107V132ZM1782 140H1757L1775 122 1790 107V132Z" fill="none" stroke="url(#gold)" stroke-width="2"/>
 <path d="M10 27L29 27 29 10M1790 27L1771 27 1771 10M10 123L29 123 29 140M1790 123L1771 123 1771 140" fill="none" stroke="#f0c77d" stroke-width="1.2"/>
-<g transform="translate(420 75) scale(.82)"><use href="#ward"/></g>
-<g transform="translate(1380 75) scale(.82)"><use href="#ward"/></g>
+<g transform="translate(420 75) scale(.82)"><use href="#ward"/><use href="#arcaneEye" transform="scale(.78)"/></g>
+<g transform="translate(1380 75) scale(.82)"><use href="#ward"/><use href="#arcaneEye" transform="scale(.78)"/></g>
 <g fill="none" stroke="#5f9bc9" stroke-width="1" opacity=".22">
  <path d="M300 120L330 90 350 105 380 55 405 80 435 45 465 90 500 120M1300 120L1330 90 1350 105 1380 55 1405 80 1435 45 1465 90 1500 120"/>
  <path d="M520 24L545 45 570 24M1230 24L1255 45 1280 24M520 126L545 105 570 126M1230 126L1255 105 1280 126"/>
