@@ -925,3 +925,35 @@
   .top.siteTop .mainNav.navPills a:before,
   .top.siteTop .topActions a:before{inset:2px}
 }
+
+
+/* Reproducción fiel del concepto ilustrado: cartografía, brújula y marco dorado. */
+.top.siteTop:after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  inset:0 0 40px;
+  opacity:.96;
+  border:0;
+  background-image:url('/images/header-cartography-ornament.svg');
+  background-position:center;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  mask-image:none;
+}
+.top.siteTop:before{
+  opacity:.58;
+  background:
+    radial-gradient(ellipse at 23% 55%,rgba(15,76,120,.23),transparent 30%),
+    radial-gradient(ellipse at 76% 55%,rgba(15,76,120,.23),transparent 30%),
+    linear-gradient(90deg,rgba(3,12,22,.2),transparent 24%,transparent 76%,rgba(3,12,22,.2));
+}
+@media(max-width:700px){
+  .top.siteTop:after{
+    inset:0 0 34px;
+    opacity:.62;
+    background-size:auto 100%;
+    background-position:center;
+  }
+}
