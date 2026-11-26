@@ -48,19 +48,22 @@ export default function PokemonShowcase() {
   }, []);
 
   const strips = useMemo(() => {
-    if (!cards.length) return [];
-    // Mezcla global y reparte las cartas: evita descargar diez veces las mismas imágenes.
+    if (!cards.length) return { desktop: [] as PokemonCard[][], mobile: [] as PokemonCard[][] };
+    // Una sola mezcla se distribuye en dos composiciones: 10 columnas en escritorio y 4 en móvil.
     const shuffled = [...cards];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    const columns = Array.from({ length: 10 }, () => [] as PokemonCard[]);
-    shuffled.forEach((card, index) => columns[index % columns.length].push(card));
-    return columns.map((column, index) => {
-      const offset = column.length ? Math.floor(Math.random() * column.length) : 0;
-      return [...column.slice(offset), ...column.slice(0, offset)];
-    });
+    const distribute = (count: number) => {
+      const columns = Array.from({ length: count }, () => [] as PokemonCard[]);
+      shuffled.forEach((card, index) => columns[index % count].push(card));
+      return columns.map((column) => {
+        const offset = column.length ? Math.floor(Math.random() * column.length) : 0;
+        return [...column.slice(offset), ...column.slice(0, offset)];
+      });
+    };
+    return { desktop: distribute(10), mobile: distribute(4) };
   }, [cards]);
 
 
@@ -79,9 +82,13 @@ export default function PokemonShowcase() {
   return (
     <main className="pokemonShowcase">
       <section className="columnsStage" aria-label="Cartas Pokémon en columnas verticales">
-        <div className="columnsGrid">
-          {strips.length ? strips.map((items, index) => renderColumn(items || cards, index)) :
+        <div className="columnsGrid desktopColumns">
+          {strips.desktop.length ? strips.desktop.map((items, index) => renderColumn(items, index)) :
             Array.from({ length: 10 }, (_, column) => <div className={`verticalViewport ${column % 2 ? "down" : "up"}`} key={column}><div className="verticalTrack"><div className="verticalSet">{Array.from({ length: 7 }, (_, i) => <div className="cardSkeleton" key={i}/>)}</div></div></div>)}
+        </div>
+        <div className="columnsGrid mobileColumns">
+          {strips.mobile.length ? strips.mobile.map((items, index) => renderColumn(items, index)) :
+            Array.from({ length: 4 }, (_, column) => <div className={`verticalViewport ${column % 2 ? "down" : "up"}`} key={column}><div className="verticalTrack"><div className="verticalSet">{Array.from({ length: 7 }, (_, i) => <div className="cardSkeleton" key={i}/>)}</div></div></div>)}
         </div>
         {error && <div className="loadNotice">{error}</div>}
         {!loading && !error && !cards.length && <div className="loadNotice">No hay cartas disponibles en este momento.</div>}
@@ -141,6 +148,7 @@ export default function PokemonShowcase() {
           radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.22) 100%)}
 
         .columnsGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:clamp(5px,.7vw,12px);padding:14px clamp(5px,1vw,16px);overflow:hidden;z-index:1}
+        .mobileColumns{display:none}
         .verticalViewport{background:linear-gradient(180deg,rgba(18,43,65,.28),rgba(7,15,27,.08) 45%,rgba(18,43,65,.24));border-left:1px solid rgba(114,174,211,.10);border-right:1px solid rgba(114,174,211,.10);border-radius:12px;box-shadow:inset 0 0 24px rgba(34,91,133,.07)}
         .verticalViewport:nth-child(odd){background:linear-gradient(180deg,rgba(31,56,77,.23),rgba(7,15,27,.04) 45%,rgba(31,56,77,.2))}
 
@@ -180,7 +188,7 @@ export default function PokemonShowcase() {
         @keyframes scrollDown{from{transform:translate3d(0,-50%,0)}to{transform:translate3d(0,0,0)}}
         @keyframes orbFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-9px) rotate(5deg)}}
         @keyframes spin{to{transform:rotate(360deg)}}
-        @media(max-width:700px){.columnsStage{min-height:100svh}.columnsGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:8px 4px}.verticalViewport{border-radius:8px}.verticalSet{gap:9px;padding:7px 0}.verticalCard{width:60px;height:84px;max-width:60px;max-height:84px;padding:2px}.verticalTrack{animation-duration:34s}.verticalViewport.down .verticalTrack{animation-duration:39s}.centerBanner{width:94%;min-height:220px;padding:22px 16px}.bannerCopy{max-width:76%}.bannerCopy h1{font-size:clamp(25px,6vw,32px)}.bannerCopy p{font-size:10px;line-height:1.5}.bannerCopy>span{font-size:7px}.bannerButton{padding:11px 12px;gap:9px;font-size:8px}.bannerOrb{width:58px;height:58px;box-shadow:0 0 0 7px #e6b45a0b}.orbBall{width:38px;height:38px;border-width:3px}.orbBall i{width:15px;height:15px;border-width:3px}}
+        @media(max-width:700px){.columnsStage{min-height:100svh}.desktopColumns{display:none!important}.mobileColumns{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:8px 4px}.verticalViewport{border-radius:8px}.verticalSet{gap:9px;padding:7px 0}.verticalCard{width:60px;height:84px;max-width:60px;max-height:84px;padding:2px}.verticalTrack{animation-duration:34s}.verticalViewport.down .verticalTrack{animation-duration:39s}.centerBanner{width:94%;min-height:220px;padding:22px 16px}.bannerCopy{max-width:76%}.bannerCopy h1{font-size:clamp(25px,6vw,32px)}.bannerCopy p{font-size:10px;line-height:1.5}.bannerCopy>span{font-size:7px}.bannerButton{padding:11px 12px;gap:9px;font-size:8px}.bannerOrb{width:58px;height:58px;box-shadow:0 0 0 7px #e6b45a0b}.orbBall{width:38px;height:38px;border-width:3px}.orbBall i{width:15px;height:15px;border-width:3px}}
         @media(prefers-reduced-motion:reduce){.verticalTrack,.bannerOrb,.showcaseLoading span,.cardSkeleton{animation:none!important}.verticalTrack{transform:translate3d(0,0,0)}}
       `}</style>
     </main>
