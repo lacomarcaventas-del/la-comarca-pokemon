@@ -775,3 +775,98 @@
 .top.siteTop .topActions a{background:linear-gradient(180deg,rgba(25,43,64,.86),rgba(10,20,33,.94));border-color:rgba(115,147,180,.4)}
 @media(max-width:700px){.siteTop .tickerContinuousTrack{animation-duration:95s!important}.siteTop .tickerContinuousItem{font-size:10px!important;padding:0 14px!important}.siteTop .tickerContinuousDiamond{padding-left:14px}.top.siteTop:before{opacity:.55}}
 @media(prefers-reduced-motion:reduce){.siteTop .tickerContinuousTrack{animation-duration:180s!important}}
+
+
+/* Cabecera superior — acabado premium azul acero, oro y luz ambiental. */
+.top.siteTop{
+  position:sticky;
+  isolation:isolate;
+  overflow:visible;
+  background:
+    radial-gradient(ellipse at 50% -95%,rgba(76,143,207,.34),transparent 65%),
+    radial-gradient(ellipse at 12% 50%,rgba(25,83,139,.22),transparent 38%),
+    linear-gradient(105deg,#071321 0%,#10243a 28%,#142b43 52%,#0b1a2b 78%,#071321 100%)!important;
+  border-top:1px solid rgba(130,178,220,.22)!important;
+  border-bottom:1px solid rgba(222,171,91,.62)!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08),inset 0 -10px 24px rgba(0,0,0,.16)!important;
+}
+.top.siteTop:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.48;
+  background:
+    linear-gradient(115deg,transparent 0 17%,rgba(117,166,211,.07) 17.15%,transparent 17.4% 78%,rgba(117,166,211,.055) 78.2%,transparent 78.5%),
+    repeating-linear-gradient(90deg,transparent 0 95px,rgba(163,194,224,.025) 96px,transparent 97px 190px);
+}
+.top.siteTop .logoLink{
+  position:relative;
+  padding-right:26px;
+  border-right:1px solid rgba(148,181,211,.24);
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.45));
+}
+.top.siteTop .mainNav.navPills{gap:10px}
+.top.siteTop .mainNav.navPills a{
+  min-height:40px;
+  padding:10px 17px!important;
+  color:#e2eaf2!important;
+  background:linear-gradient(180deg,rgba(44,69,94,.82),rgba(13,29,47,.96))!important;
+  border:1px solid rgba(143,177,208,.38)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 5px 14px rgba(0,0,0,.24)!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+}
+.top.siteTop .mainNav.navPills a:hover{
+  color:#fff!important;
+  border-color:rgba(242,190,112,.9)!important;
+  background:linear-gradient(180deg,#294866,#142b43)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 0 18px rgba(79,143,201,.2)!important;
+}
+.top.siteTop .mainNav.navPills a:first-child{
+  color:#ffe0a3!important;
+  background:linear-gradient(180deg,#765126,#382918)!important;
+  border-color:#c28b42!important;
+  box-shadow:inset 0 1px 0 rgba(255,229,177,.2),0 5px 16px rgba(0,0,0,.3),0 0 14px rgba(196,139,66,.12)!important;
+}
+.top.siteTop .topActions a{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#e6edf5;
+  background:linear-gradient(180deg,rgba(35,58,81,.92),rgba(10,24,40,.98));
+  border:1px solid rgba(135,169,200,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 5px 14px rgba(0,0,0,.22);
+}
+.top.siteTop .topActions a:hover{
+  border-color:#e8b66c;
+  color:#ffe0a3;
+  box-shadow:0 0 16px rgba(225,169,89,.16);
+}
+.top.siteTop .topActions a.cartMini{
+  color:#fff8ed;
+  border-color:#e5a24d;
+  background:linear-gradient(120deg,#e9872b,#b82a2e);
+  box-shadow:0 6px 18px rgba(190,73,37,.28),inset 0 1px rgba(255,255,255,.2);
+}
+@media(max-width:900px){
+  .top.siteTop .logoLink{padding-right:14px}
+  .top.siteTop .mainNav.navPills{gap:7px}
+  .top.siteTop .mainNav.navPills a{padding:9px 12px!important}
+}
+@media(max-width:700px){
+  .top.siteTop{
+    background:
+      radial-gradient(ellipse at 50% -75%,rgba(76,143,207,.28),transparent 68%),
+      linear-gradient(110deg,#071321,#142b43 52%,#081727)!important;
+  }
+  .top.siteTop .logoLink{border-right:0;padding-right:0}
+  .top.siteTop .mainNav.navPills a{
+    min-height:35px;
+    padding:8px 12px!important;
+    background:linear-gradient(180deg,#29425c,#102238)!important;
+  }
+  .top.siteTop .mainNav.navPills a:first-child{background:linear-gradient(180deg,#765126,#382918)!important}
+  .top.siteTop .topActions a{min-height:34px}
+}
