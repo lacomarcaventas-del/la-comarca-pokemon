@@ -39,17 +39,21 @@ const messages = [
 
 export default function ShippingMessage() {
   const [active, setActive] = useState(0);
-  useEffect(() => {\n    const timer = window.setInterval(() => {\n      setActive((current) => (current + 1) % messages.length);\n    }, 12000);\n    return () => window.clearInterval(timer);\n  }, []);\n\n  const message = messages[active];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActive((current) => (current + 1) % messages.length);
+    }, 12000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const message = messages[active];
 
   return (
     <div className="worldwideTicker" role="region" aria-label="La Comarca: pagos, envíos y atención al cliente">
       <div className="tickerScreen">
-        <div
-          className="tickerFlipLine"
-          key={active}
-          lang={message.lang}
-          onAnimationEnd={() => setActive((current) => (current + 1) % messages.length)}
-        >
+        <div className="tickerFlipLine" key={active} lang={message.lang}>
           {message.text}
         </div>
       </div>
