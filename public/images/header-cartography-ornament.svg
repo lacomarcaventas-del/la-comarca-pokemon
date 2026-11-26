@@ -64,7 +64,8 @@
  <g transform="translate(1045 75) scale(.70)"><use href="#vesicaMesh"/></g>
  <g transform="translate(1110 75) scale(.70)"><use href="#vesicaMesh"/></g>
 </g>
-\n<!-- Fibonacci / golden-ratio construction: nested golden rectangles and logarithmic spiral motifs -->
+
+<!-- Fibonacci / golden-ratio construction: nested golden rectangles and logarithmic spiral motifs -->
 <g fill="none" stroke="url(#arcaneGold)" stroke-width=".9" opacity=".42">
  <path d="M610 24H1190V126H830V24H1052V126H914V24H999V126H966V24H979"/>
  <path d="M610 24A222 222 0 0 1 832 126A138 138 0 0 1 970 24A85 85 0 0 1 1055 126A53 53 0 0 1 1108 24A32 32 0 0 1 1140 126A20 20 0 0 1 1160 24"/>
@@ -93,7 +94,8 @@
  <use href="#capturedStar" transform="translate(-12 8) scale(.65)"/>
  <path d="M-48 30Q-22 48 0 39M48-30Q22-48 0-39" fill="none" stroke="#75b8e8" stroke-width=".8" stroke-dasharray="2 4"/>
 </g>
-\n<ellipse cx="900" cy="75" rx="650" ry="100" fill="url(#aura)"/>
+
+<ellipse cx="900" cy="75" rx="650" ry="100" fill="url(#aura)"/>
 <path d="M0 10H1800M0 140H1800" stroke="url(#gold)" stroke-width="1.6"/>
 <path d="M0 14H1800M0 136H1800" stroke="#80b9e5" stroke-width=".65" opacity=".3"/>
 <path d="M18 10L43 10 25 28 10 43V18ZM1782 10H1757L1775 28 1790 43V18ZM18 140L43 140 25 122 10 107V132ZM1782 140H1757L1775 122 1790 107V132Z" fill="none" stroke="url(#gold)" stroke-width="2"/>
