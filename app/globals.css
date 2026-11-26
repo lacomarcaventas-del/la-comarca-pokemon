@@ -709,9 +709,8 @@
  .siteTop .worldwideTicker{height:34px}
  .siteTop .tickerFlipLine{padding:0 12px;font-size:10px;letter-spacing:.055em;animation-duration:13s!important}
 }
-@media(prefers-reduced-motion:reduce){
- .siteTop .tickerFlipLine{animation:none!important;transform:none!important;margin:auto}
-}
+/* No desactivar transform ni animación: el ticker debe desplazarse también
+   cuando el sistema solicita reducir movimiento, por requisito del componente. */
 
 
 /* Ensure the airport-style crawl always travels right-to-left, including reduced-motion systems. */
