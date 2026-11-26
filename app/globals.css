@@ -236,19 +236,7 @@
 /* Catalog image zoom viewer */
 .imageZoomTrigger{position:relative;border:0;cursor:zoom-in;padding:0;color:inherit;font:inherit}.imageZoomHint{position:absolute;right:10px;bottom:10px;padding:5px 9px;border-radius:999px;background:#05080dcc;color:#fff;font-size:11px;opacity:0;transition:opacity .18s;pointer-events:none}.card:hover .imageZoomHint,.imageZoomTrigger:focus-visible .imageZoomHint{opacity:1}.imageViewer{position:fixed;inset:0;z-index:10000;background:rgba(2,5,9,.94);display:flex;align-items:center;justify-content:center;padding:56px 24px 64px;backdrop-filter:blur(8px)}.imageViewerStage{width:min(94vw,1100px);height:min(82vh,900px);display:flex;align-items:center;justify-content:center;overflow:auto;cursor:zoom-in}.imageViewerStage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;transition:transform .22s ease;transform:scale(1);transform-origin:center}.imageViewerStage img.zoomed{transform:scale(1.8);cursor:zoom-out}.imageViewerClose{position:absolute;top:16px;right:20px;width:44px;height:44px;border:1px solid #ffffff55;border-radius:50%;background:#111a;color:#fff;font-size:30px;line-height:1;cursor:pointer}.imageViewerCaption{position:absolute;bottom:18px;left:16px;right:16px;text-align:center;color:#e8e8e8;font-size:13px;pointer-events:none}@media(max-width:640px){.imageViewer{padding:54px 10px 62px}.imageViewerStage{width:100%;height:78vh}.imageViewerStage img.zoomed{transform:scale(1.5)}.imageZoomHint{opacity:1}}
 
-/* Brillo móvil +20%: capa de luz sutil, sin alterar colores ni imágenes originales. */
-@media(max-width:700px){
-  body:after{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:#fff;
-    mix-blend-mode:screen;
-    opacity:.20;
-    pointer-events:none;
-    z-index:29;
-  }
-}
+/* Eliminada la capa blanca global en móvil: preserva los colores y el contraste originales. */
 
 /* La Comarca public storefront UI refresh — scoped to public pages only */
 .siteShell .top.siteTop,
