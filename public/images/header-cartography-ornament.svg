@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 150" preserveAspectRatio="none">
+<defs>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#80501f"/><stop offset=".2" stop-color="#f2c879"/><stop offset=".5" stop-color="#dca44e"/><stop offset=".8" stop-color="#f2c879"/><stop offset="1" stop-color="#80501f"/></linearGradient>
+ <radialGradient id="aura"><stop stop-color="#236a9d" stop-opacity=".34"/><stop offset=".55" stop-color="#12436b" stop-opacity=".16"/><stop offset="1" stop-color="#071321" stop-opacity="0"/></radialGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="4"/></filter>
+ <g id="ward" fill="none" stroke="#6ca8d5" stroke-width="1.15" opacity=".28">
+  <circle r="53"/><circle r="46" stroke="#d5a85e" stroke-width=".8"/><circle r="34"/><circle r="22" stroke-dasharray="3 5"/>
+  <path d="M0-62V62M-62 0H62M-44-44L44 44M44-44L-44 44"/>
+  <path d="M0-53L12-12 53 0 12 12 0 53-12 12-53 0-12-12Z" stroke="#d5a85e"/>
+  <path d="M0-34L8-8 34 0 8 8 0 34-8 8-34 0-8-8Z"/>
+  <path d="M-26-26L-17-17M26-26L17-17M-26 26L-17 17M26 26L17 17"/>
+  <path d="M-6-69L0-77 6-69M-6 69L0 77 6 69M-69-6L-77 0-69 6M69-6L77 0 69 6" stroke="#e7bd72"/>
+ </g>
+
+ <linearGradient id="arcaneGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe3a0"/><stop offset=".5" stop-color="#c58a3b"/><stop offset="1" stop-color="#f2cf86"/></linearGradient>
+ <pattern id="sacredGrid" width="34" height="34" patternUnits="userSpaceOnUse">
+  <path d="M17 0L34 17 17 34 0 17Z M0 0L34 34M34 0L0 34" fill="none" stroke="#6ca8d5" stroke-width=".45" opacity=".22"/>
+  <circle cx="17" cy="17" r="5" fill="none" stroke="#d7a85e" stroke-width=".5" opacity=".35"/>
+ </pattern>
+ 
+ <g id="starSnare" fill="none" stroke="url(#arcaneGold)" stroke-width="1">
+  <circle r="34" stroke-dasharray="2 4" opacity=".85"/>
+  <circle r="27" stroke="#75b8e8" stroke-width=".8"/>
+  <circle r="19" stroke-dasharray="12 3 2 3" opacity=".8"/>
+  <path d="M0-39L5-24 19-19 24-5 39 0 24 5 19 19 5 24 0 39-5 24-19 19-24 5-39 0-24-5-19-19-5-24Z" opacity=".65"/>
+  <path d="M-25-25L25 25M25-25L-25 25M0-30V30M-30 0H30" stroke="#75b8e8" stroke-width=".65" opacity=".65"/>
+  <path d="M0-15L4-4 15 0 4 4 0 15-4 4-15 0-4-4Z" stroke-width="1.1"/>
+  <path d="M-15-8L-11-12-7-8-11-4Z M16 9L20 5 24 9 20 13Z" fill="#ffe3a0"/>
+  <path d="M-2-2L2 2M-2 2L2-2" stroke="#ffe3a0" stroke-width="1.5"/>
+ </g>
+ <g id="capturedStar" fill="#ffe3a0" stroke="#d49a4d" stroke-width=".7">
+  <path d="M0-7L2-2 7 0 2 2 0 7-2 2-7 0-2-2Z"/>
+ </g>
+ <g id="vesicaMesh" fill="none" stroke="url(#arcaneGold)" stroke-width=".85">
+  <circle r="31" stroke="#75b8e8" stroke-width=".8" opacity=".8"/>
+  <circle cx="-19" cy="0" r="31" opacity=".75"/>
+  <circle cx="19" cy="0" r="31" opacity=".75"/>
+  <circle cx="0" cy="-19" r="31" opacity=".65"/>
+  <circle cx="0" cy="19" r="31" opacity=".65"/>
+  <circle cx="-13.4" cy="-13.4" r="31" opacity=".55"/>
+  <circle cx="13.4" cy="-13.4" r="31" opacity=".55"/>
+  <circle cx="-13.4" cy="13.4" r="31" opacity=".55"/>
+  <circle cx="13.4" cy="13.4" r="31" opacity=".55"/>
+  <path d="M-50 0H50M0-50V50M-35-35L35 35M35-35L-35 35" stroke="#75b8e8" stroke-width=".55" opacity=".7"/>
+  <path d="M-38-19L38 19M-38 19L38-19M-19-38L19 38M19-38L-19 38" stroke-width=".5" opacity=".6"/>
+ </g>
+ <g id="arcaneEye" fill="none" stroke="url(#arcaneGold)" stroke-width="1.4" stroke-linejoin="round">
+  <path d="M-31 0Q0-25 31 0Q0 25-31 0Z"/>
+  <path d="M-23 0Q0-17 23 0Q0 17-23 0Z" stroke="#75b8e8" stroke-width=".9"/>
+  <circle r="9" stroke="#e9c47f"/><circle r="4" fill="#e9c47f" stroke="#e9c47f"/>
+  <path d="M0-31V-24M0 24V31M-38 0H-31M31 0H38M-27-27L-22-22M27-27L22-22M-27 27L-22 22M27 27L22 22" stroke="#e9c47f" stroke-width="1"/>
+ </g>
+
+</defs>
+
+<rect width="1800" height="150" fill="url(#aura)"/>
+<rect x="260" y="18" width="1280" height="114" fill="url(#sacredGrid)" opacity=".36"/>
+<!-- Interlocking circle lattice filling the open spans of the header -->
+<g opacity=".58">
+ <g transform="translate(690 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(755 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(820 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(980 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(1045 75) scale(.70)"><use href="#vesicaMesh"/></g>
+ <g transform="translate(1110 75) scale(.70)"><use href="#vesicaMesh"/></g>
+</g>
+
+<!-- Fibonacci / golden-ratio construction: nested golden rectangles and logarithmic spiral motifs -->
+<g fill="none" stroke="url(#arcaneGold)" stroke-width=".9" opacity=".42">
+ <path d="M610 24H1190V126H830V24H1052V126H914V24H999V126H966V24H979"/>
+ <path d="M610 24A222 222 0 0 1 832 126A138 138 0 0 1 970 24A85 85 0 0 1 1055 126A53 53 0 0 1 1108 24A32 32 0 0 1 1140 126A20 20 0 0 1 1160 24"/>
+ <path d="M1190 24H610V126H970V24H748V126H886V24H801V126H854V24H821" opacity=".45"/>
+</g>
+<g transform="translate(900 75) scale(.62)" opacity=".58"><use href="#arcaneEye"/></g>
+<g fill="none" stroke="#8bc3e8" stroke-width=".8" opacity=".28">
+ <path d="M280 75H600M1200 75H1520M900 16V134"/>
+ <circle cx="900" cy="75" r="62" stroke-dasharray="2 7"/><circle cx="900" cy="75" r="48" stroke-dasharray="1 5"/>
+</g>
+<g fill="#e7c27e" font-family="Georgia,serif" opacity=".58" text-anchor="middle">
+ <text x="900" y="35" font-size="13" letter-spacing="3">φ · 1 : 1.618</text>
+ <text x="900" y="119" font-size="8" letter-spacing="4">1  ·  1  ·  2  ·  3  ·  5  ·  8  ·  13</text>
+</g>
+
+<!-- Twin astral containment circles: stars caught in the ward lattice -->
+<g transform="translate(555 75) scale(.78)" opacity=".88">
+ <use href="#starSnare"/>
+ <use href="#capturedStar" transform="translate(-10 -9) scale(.8)"/>
+ <use href="#capturedStar" transform="translate(12 8) scale(.65)"/>
+ <path d="M-48-30Q-22-48 0-39M48 30Q22 48 0 39" fill="none" stroke="#75b8e8" stroke-width=".8" stroke-dasharray="2 4"/>
+</g>
+<g transform="translate(1245 75) scale(.78)" opacity=".88">
+ <use href="#starSnare"/>
+ <use href="#capturedStar" transform="translate(10 -9) scale(.8)"/>
+ <use href="#capturedStar" transform="translate(-12 8) scale(.65)"/>
+ <path d="M-48 30Q-22 48 0 39M48-30Q22-48 0-39" fill="none" stroke="#75b8e8" stroke-width=".8" stroke-dasharray="2 4"/>
+</g>
+
+<ellipse cx="900" cy="75" rx="650" ry="100" fill="url(#aura)"/>
+<path d="M0 10H1800M0 140H1800" stroke="url(#gold)" stroke-width="1.6"/>
+<path d="M0 14H1800M0 136H1800" stroke="#80b9e5" stroke-width=".65" opacity=".3"/>
+<path d="M18 10L43 10 25 28 10 43V18ZM1782 10H1757L1775 28 1790 43V18ZM18 140L43 140 25 122 10 107V132ZM1782 140H1757L1775 122 1790 107V132Z" fill="none" stroke="url(#gold)" stroke-width="2"/>
+<path d="M10 27L29 27 29 10M1790 27L1771 27 1771 10M10 123L29 123 29 140M1790 123L1771 123 1771 140" fill="none" stroke="#f0c77d" stroke-width="1.2"/>
+<g transform="translate(420 75) scale(.82)"><use href="#ward"/><use href="#arcaneEye" transform="scale(.78)"/></g>
+<g transform="translate(1380 75) scale(.82)"><use href="#ward"/><use href="#arcaneEye" transform="scale(.78)"/></g>
+<g fill="none" stroke="#5f9bc9" stroke-width="1" opacity=".22">
+ <path d="M300 120L330 90 350 105 380 55 405 80 435 45 465 90 500 120M1300 120L1330 90 1350 105 1380 55 1405 80 1435 45 1465 90 1500 120"/>
+ <path d="M520 24L545 45 570 24M1230 24L1255 45 1280 24M520 126L545 105 570 126M1230 126L1255 105 1280 126"/>
+</g>
+<g fill="none" stroke="#e2b365" stroke-width="1.3" opacity=".9">
+ <path d="M0 75H18M1782 75H1800M28 10L55 10 38 27 28 27ZM1772 10L1745 10 1762 27 1772 27Z"/>
+ <path d="M870 10L890 10 900 0 910 10 930 10M870 140L890 140 900 150 910 140 930 140"/>
+ <path d="M888 75L900 63 912 75 900 87Z" stroke-width="2"/><path d="M895 75L900 70 905 75 900 80Z" fill="#d9a65b"/>
+ <path d="M750 10L765 10M1035 10L1050 10M750 140L765 140M1035 140L1050 140"/>
+</g>
+<path d="M120 10H760M1040 10H1680M120 140H760M1040 140H1680" stroke="#53a7e8" stroke-width="3" opacity=".2" filter="url(#glow)"/>
+<path d="M120 10H760M1040 10H1680" stroke="#7ab9e9" stroke-width=".8" opacity=".4"/>
+</svg>

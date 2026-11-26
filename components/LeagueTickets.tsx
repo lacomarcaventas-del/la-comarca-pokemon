@@ -50,7 +50,7 @@ export default function LeagueTickets(){
 
   const total=cart.reduce((sum,i)=>sum+Number(i.card.price)*i.qty,0);
 
-  return <>
+  return <div className="publicStore">
     <header className="top"><a href="/">← La Comarca</a><b>La Comarca · Tickets</b><a href="/cuenta">👤 Clientes</a></header>
     <main className="wrap">
       {error&&<div className="panel">{error}</div>}
@@ -95,8 +95,8 @@ export default function LeagueTickets(){
           </div>
         </div>
       </section>
-      <section style={{marginBottom:30,paddingTop:18}}>
-        <img src="/circuito-mensual-ligas-q80.webp" alt="Circuito mensual de ligas por cada línea" style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}/>
+      <section style={{margin:"30px auto 36px",maxWidth:1000}}>
+        <img src="/1000359515.png" alt="Compra tu entrada anticipada a las ligas de La Comarca" style={{width:"100%",height:"auto",display:"block",borderRadius:18,border:"1px solid rgba(255,255,255,.16)"}}/>
       </section>
       <button className="cart" onClick={()=>{if(!user){window.alert("Necesitas una cuenta de cliente para comprar. Regístrate o inicia sesión para continuar.");router.push("/cuenta");return}setOpen(true)}}>🛒 Carrito ({cart.reduce((sum,x)=>sum+x.qty,0)})</button>
     </main>
@@ -106,21 +106,7 @@ export default function LeagueTickets(){
       {cart.length>0&&<OrderForm cart={cart} onDone={()=>{setCart([]);setOpen(false);load()}}/>}
       <button className="btn2" onClick={()=>setOpen(false)}>Cerrar</button>
     </div></div>}
-      <section style={{marginTop:28,marginBottom:18}}>
-        <img
-          src="/liga_septiembre_optimizada.webp"
-          alt="Ranking de Ligas · Septiembre"
-          style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}
-        />
-      </section>
-      <section style={{marginTop:28,marginBottom:36}}>
-        <img
-          src="/liga-ranking-agosto.webp"
-          alt="Ranking de Ligas · Agosto"
-          style={{width:"100%",maxWidth:1000,height:"auto",display:"block",margin:"0 auto",borderRadius:18}}
-        />
-      </section>
-    </>;
+    </div>;
 }
 
 function OrderForm({cart,onDone}:{cart:CartItem[];onDone:()=>void}){

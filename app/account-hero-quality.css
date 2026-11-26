@@ -1,4 +1,4 @@
 .accountHero{height:auto!important;min-height:0!important;aspect-ratio:1981/794!important;background-image:url('/account-hero.png')!important;background-size:100% 100%!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#030817!important;box-shadow:none!important;border:0!important;cursor:pointer!important}
 .accountHero:before,.accountHero:after{display:none!important}
 .accountHero .accountCopy,.accountHero .accountVisuals{display:none!important}
-@media(max-width:700px){.accountHero{height:auto!important;min-height:0!important;aspect-ratio:1981/794!important;background-size:100% 100%!important}}
+@media(max-width:700px){.accountHero{height:auto!important;min-height:0!important;aspect-ratio:1981/794!important;background-size:100% 100%!important;filter:brightness(1.3)}}

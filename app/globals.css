@@ -235,3 +235,725 @@
 
 /* Catalog image zoom viewer */
 .imageZoomTrigger{position:relative;border:0;cursor:zoom-in;padding:0;color:inherit;font:inherit}.imageZoomHint{position:absolute;right:10px;bottom:10px;padding:5px 9px;border-radius:999px;background:#05080dcc;color:#fff;font-size:11px;opacity:0;transition:opacity .18s;pointer-events:none}.card:hover .imageZoomHint,.imageZoomTrigger:focus-visible .imageZoomHint{opacity:1}.imageViewer{position:fixed;inset:0;z-index:10000;background:rgba(2,5,9,.94);display:flex;align-items:center;justify-content:center;padding:56px 24px 64px;backdrop-filter:blur(8px)}.imageViewerStage{width:min(94vw,1100px);height:min(82vh,900px);display:flex;align-items:center;justify-content:center;overflow:auto;cursor:zoom-in}.imageViewerStage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;transition:transform .22s ease;transform:scale(1);transform-origin:center}.imageViewerStage img.zoomed{transform:scale(1.8);cursor:zoom-out}.imageViewerClose{position:absolute;top:16px;right:20px;width:44px;height:44px;border:1px solid #ffffff55;border-radius:50%;background:#111a;color:#fff;font-size:30px;line-height:1;cursor:pointer}.imageViewerCaption{position:absolute;bottom:18px;left:16px;right:16px;text-align:center;color:#e8e8e8;font-size:13px;pointer-events:none}@media(max-width:640px){.imageViewer{padding:54px 10px 62px}.imageViewerStage{width:100%;height:78vh}.imageViewerStage img.zoomed{transform:scale(1.5)}.imageZoomHint{opacity:1}}
+
+/* Brillo móvil +20%: capa de luz sutil, sin alterar colores ni imágenes originales. */
+@media(max-width:700px){
+  body:after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:#fff;
+    mix-blend-mode:screen;
+    opacity:.20;
+    pointer-events:none;
+    z-index:29;
+  }
+}
+
+/* La Comarca public storefront UI refresh — scoped to public pages only */
+.siteShell .top.siteTop,
+.publicStore .top{
+  background:linear-gradient(105deg,rgba(7,13,22,.98),rgba(15,23,34,.97));
+  border-bottom:1px solid rgba(240,180,91,.55);
+  box-shadow:0 9px 28px rgba(0,0,0,.42),0 1px 0 rgba(255,210,120,.08);
+}
+.siteShell .navPills a,
+.publicStore .navPills a{
+  border-color:rgba(240,180,91,.48)!important;
+  background:linear-gradient(180deg,rgba(25,38,54,.96),rgba(9,16,25,.98));
+  color:#f4ead9;
+  box-shadow:inset 0 1px rgba(255,255,255,.07);
+}
+.siteShell .navPills a:first-child,
+.publicStore .navPills a:first-child{
+  color:#ffe0a0;
+  border-color:#ffc45e!important;
+  background:linear-gradient(135deg,#6b390e,#24190f);
+  box-shadow:0 0 14px rgba(240,160,45,.22),inset 0 1px rgba(255,255,255,.15);
+}
+.siteShell .topActions a,
+.publicStore .top>a{
+  border:1px solid rgba(240,180,91,.55);
+  background:linear-gradient(180deg,#1a2939,#0b121c);
+  color:#fff4df;
+  box-shadow:inset 0 1px rgba(255,255,255,.08);
+}
+.siteShell .topActions .cartMini,
+.publicStore .top>a:last-child{
+  border-color:#ff9c45;
+  background:linear-gradient(115deg,#f28b22,#c51d2a);
+  color:#fff;
+  box-shadow:0 5px 18px rgba(205,54,26,.28),inset 0 1px rgba(255,255,255,.22);
+}
+.siteShell button.btn,.publicStore button.btn,
+.siteShell .btn,.publicStore .btn{
+  border:1px solid #ffc36a;
+  background:linear-gradient(115deg,#ff9c24 0%,#ed5a19 48%,#bd202d 100%);
+  color:#fff;
+  box-shadow:0 7px 20px rgba(221,83,25,.25),inset 0 1px rgba(255,255,255,.24);
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
+}
+.siteShell button.btn:hover,.publicStore button.btn:hover,
+.siteShell .btn:hover,.publicStore .btn:hover{
+  filter:brightness(1.12);
+  box-shadow:0 9px 24px rgba(236,116,32,.34),inset 0 1px rgba(255,255,255,.3);
+}
+.siteShell .btn2,.publicStore .btn2{
+  border:1px solid rgba(240,180,91,.72);
+  background:linear-gradient(145deg,#1d2d40,#101925);
+  color:#ffe4b5;
+  box-shadow:inset 0 1px rgba(255,255,255,.08);
+}
+.siteShell .danger,.publicStore .danger{
+  border:1px solid rgba(237,115,115,.55);
+  background:linear-gradient(135deg,#4a2027,#28151c);
+  color:#ffc1bc;
+}
+.publicStore .top{
+  position:sticky;
+  top:0;
+  z-index:30;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:14px clamp(14px,3vw,32px);
+  color:#fff;
+}
+.publicStore .top>b{
+  margin-right:auto;
+  color:#ffda9a;
+  font-family:'Cinzel',Georgia,serif;
+  letter-spacing:.035em;
+}
+.publicStore .top>a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:9px 15px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+.publicStore .wrap{padding-top:22px}
+.publicStore .categoryPanel{
+  border-color:rgba(240,180,91,.48);
+  background:linear-gradient(145deg,#172638,#0b1420);
+  box-shadow:0 12px 32px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.045);
+}
+.publicStore .categoryHeader h2,
+.publicStore .panel h2,
+.publicStore .panel h3{color:#ffda9a}
+.publicStore .categoryGrid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+}
+.publicStore .categoryCard{
+  flex:0 1 auto;
+  min-height:42px;
+  padding:9px 15px;
+  border-radius:999px;
+  border-color:rgba(240,180,91,.48);
+  background:linear-gradient(180deg,#1b2a3b,#0d1723);
+  box-shadow:inset 0 1px rgba(255,255,255,.06);
+}
+.publicStore .categoryCard span{font-size:12px;color:#f8efdf}
+.publicStore .categoryCard small{display:none}
+.publicStore .categoryCard:hover,
+.publicStore .categoryCard.active{
+  border-color:#ffc45e;
+  background:linear-gradient(135deg,#8a4b12,#33200f);
+  color:#fff2d5;
+  box-shadow:0 0 16px rgba(240,160,45,.22);
+}
+.publicStore .panel:not(.categoryPanel){
+  border-color:rgba(240,180,91,.35);
+  background:linear-gradient(145deg,#172536,#0c1521);
+}
+.publicStore input:not([type=radio]):not([type=checkbox]),
+.publicStore select,
+.publicStore textarea{
+  border-color:rgba(240,180,91,.58);
+  background:#101d2b;
+  color:#fff7e9;
+  box-shadow:inset 0 1px 5px rgba(0,0,0,.28);
+}
+.publicStore input:focus,.publicStore select:focus,.publicStore textarea:focus{
+  border-color:#ffc45e;
+  box-shadow:0 0 0 3px rgba(240,180,91,.17),0 0 18px rgba(240,160,45,.12);
+}
+.publicStore .card{
+  border-color:rgba(240,180,91,.4);
+  background:linear-gradient(145deg,#19283a,#0b1420);
+  box-shadow:0 9px 24px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.04);
+}
+.publicStore .card:hover{
+  border-color:#ffc45e;
+  box-shadow:0 13px 30px rgba(0,0,0,.38),0 0 16px rgba(240,160,45,.12);
+}
+.publicStore .price{color:#ffc15e}
+.publicStore .cart{
+  border:1px solid #ffd17d;
+  background:linear-gradient(115deg,#ff9c24,#e4541d 55%,#bd202d);
+  box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 18px rgba(230,100,32,.2);
+}
+.siteShell .productShowcaseHeading span{color:#c5ceda}
+.siteShell .productCarouselCard{
+  border-color:rgba(240,180,91,.42);
+  background:linear-gradient(145deg,#1a293b,#0b1420);
+  box-shadow:0 8px 22px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.05);
+}
+.siteShell .productCarouselCard:hover{
+  border-color:#ffc45e;
+  box-shadow:0 12px 28px rgba(0,0,0,.38),0 0 18px rgba(240,160,45,.14);
+}
+.siteShell .productCarouselPrice{color:#ffc15e}
+.siteShell .productCarouselStock{color:#a9d88d}
+.siteShell .productCarouselArrow{
+  border-color:#ffc45e;
+  background:linear-gradient(145deg,#26384c,#101a27);
+  color:#ffd17d;
+  box-shadow:0 5px 16px rgba(0,0,0,.4),0 0 12px rgba(240,160,45,.14);
+}
+.siteShell .productCarouselFooter,
+.siteShell .productShowcaseHeading a{color:#ffd17d}
+@media(max-width:700px){
+  .siteShell .top.siteTop{
+    background:linear-gradient(110deg,rgba(7,13,22,.99),rgba(18,29,43,.99));
+    border-bottom:1px solid rgba(240,180,91,.58);
+  }
+  .siteShell .navPills a{
+    min-height:36px;
+    padding:8px 13px!important;
+    font-size:12px;
+  }
+  .siteShell .topActions a{
+    min-height:34px;
+    padding:7px 11px;
+  }
+  .publicStore .top{
+    flex-wrap:wrap;
+    gap:8px;
+    padding:10px 12px;
+  }
+  .publicStore .top>b{
+    flex:1 1 100%;
+    order:3;
+    font-size:13px;
+    text-align:center;
+  }
+  .publicStore .top>a{
+    padding:8px 11px;
+    font-size:12px;
+  }
+  .publicStore .wrap{padding-top:14px}
+  .publicStore .categoryGrid{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    padding:2px 1px 8px;
+    scrollbar-width:thin;
+    scrollbar-color:#b77a34 transparent;
+  }
+  .publicStore .categoryCard{flex:0 0 auto}
+  .publicStore .row{gap:10px}
+  .publicStore .row>*{min-width:0}
+  .publicStore .search{max-width:none}
+  .publicStore .card{border-radius:15px}
+  .publicStore .info{padding:12px}
+  .publicStore .info b{line-height:1.35}
+  .publicStore .price{font-size:19px}
+  .publicStore .cart{right:14px;bottom:16px}
+}
+@media(prefers-reduced-motion:reduce){
+  .siteShell button,.publicStore button,
+  .siteShell a,.publicStore a{transition:none!important}
+}
+
+/* Header identity refinement: cleaner wordmark and modern shipping headline */
+.siteTop{min-height:82px;padding-top:10px;padding-bottom:10px;gap:clamp(14px,2vw,28px)}
+.siteTop .logoLink{width:clamp(168px,15vw,205px);height:58px;flex:0 0 auto;display:flex;align-items:center;overflow:hidden}
+.siteTop .logoLink .brandLogo{width:100%;height:100%;display:flex;align-items:center}
+.siteTop .logoLink .brandLogo img{width:100%;height:100%;max-height:58px;object-fit:contain;object-position:left center}
+.siteFooter .brandLogo{width:150px;height:42px;overflow:hidden;display:flex;align-items:center}
+.siteFooter .brandLogo img{width:100%;height:100%;object-fit:contain}
+.shippingLead strong{
+  font-family:'DM Sans',Arial,sans-serif;
+  font-size:clamp(24px,2.2vw,30px);
+  font-weight:800;
+  line-height:1.08;
+  letter-spacing:.045em;
+  color:#f5d2a2;
+  text-shadow:0 2px 12px rgba(0,0,0,.42);
+}
+@media(max-width:900px){
+ .siteTop{gap:12px}
+ .siteTop .logoLink{width:155px;height:48px}
+ .siteTop .logoLink .brandLogo img{max-height:48px}
+}
+@media(max-width:700px){
+ .siteTop{min-height:68px;padding:8px 12px;gap:8px}
+ .siteTop .logoLink{width:132px;height:42px}
+ .siteTop .logoLink .brandLogo img{max-height:42px}
+ .shippingLead strong{font-size:clamp(19px,5vw,25px);letter-spacing:.025em}
+}
+
+/* Ajuste puntual del encabezado público: logo y título de envíos */
+.siteTop .logoLink{
+  width:190px;
+  height:62px;
+  flex:0 0 190px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  overflow:hidden;
+}
+.siteTop .logoLink .brandLogo{
+  width:100%;
+  height:auto;
+  max-height:54px;
+  display:flex;
+  align-items:center;
+  line-height:0;
+}
+.siteTop .logoLink .brandLogo img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:54px;
+  object-fit:contain;
+  object-position:left center;
+}
+.shippingInner{
+  grid-template-columns:minmax(230px,280px) minmax(140px,1fr) minmax(170px,200px) minmax(150px,180px);
+  gap:24px;
+}
+.shippingLead strong{
+  font-family:'DM Sans',Arial,sans-serif;
+  font-size:clamp(25px,2.1vw,30px);
+  font-weight:800;
+  line-height:1.08;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+  color:#f3c889;
+  text-shadow:0 2px 10px rgba(0,0,0,.5);
+}
+@media(max-width:900px){
+  .siteTop .logoLink{width:165px;flex-basis:165px;height:58px}
+  .shippingInner{
+    grid-template-columns:minmax(180px,240px) minmax(100px,1fr) minmax(140px,180px) minmax(125px,150px);
+    gap:14px;
+    padding:18px 22px;
+  }
+  .shippingLead strong{font-size:24px}
+}
+@media(max-width:700px){
+  .siteTop .logoLink{width:145px;flex-basis:145px;height:48px}
+  .siteTop .logoLink .brandLogo,
+  .siteTop .logoLink .brandLogo img{max-height:44px}
+  .shippingInner{
+    grid-template-columns:1fr 1fr;
+    min-height:0;
+    gap:14px 18px;
+    padding:18px 16px;
+  }
+  .shippingLead strong{font-size:22px;line-height:1.05}
+  .shippingRoute{height:54px}
+  .shippingRoute .routeLine{top:27px}
+  .carrier{min-height:74px;padding-left:14px;gap:6px}
+  .carrier b{font-size:22px}
+  .fedex b{font-size:25px}
+  .carrier span{font-size:11px;line-height:1.45}
+}
+
+
+/* Worldwide shipping banner — compact, no carrier logos, responsive. */
+.worldwideShipping{
+  display:block;
+  min-height:0;
+  margin:0;
+  padding:13px 20px;
+  border-bottom:1px solid rgba(240,180,91,.35);
+  background:linear-gradient(100deg,#111923,#182333 50%,#111923);
+  box-shadow:inset 0 1px rgba(255,255,255,.035);
+}
+.worldwideShipping .shippingInner{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:0;
+  padding:0;
+}
+.worldwideShipping .shippingLead{
+  width:100%;
+  text-align:center;
+}
+.worldwideShipping .shippingWorldMessage{
+  display:inline-block;
+  color:#f3c889;
+  font-family:'DM Sans',Arial,sans-serif;
+  font-size:clamp(15px,1.55vw,21px);
+  font-weight:800;
+  line-height:1.25;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  text-shadow:0 2px 10px rgba(0,0,0,.45);
+  animation:worldwideMessageIn .35s ease both;
+}
+@keyframes worldwideMessageIn{
+  from{opacity:0;transform:translateY(4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(max-width:700px){
+  .worldwideShipping{padding:11px 12px}
+  .worldwideShipping .shippingWorldMessage{
+    font-size:clamp(13px,3.7vw,17px);
+    letter-spacing:.025em;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .worldwideShipping .shippingWorldMessage{animation:none}
+}
+
+
+/* La Comarca — ticker superior premium, integrado con la cabecera. */
+.worldwideShipping{padding:0;overflow:hidden;background:#0b1018}
+.worldwideShipping .shippingInner{display:block;width:100%;padding:0}
+.worldwideShipping .shippingLead{display:block;width:100%;overflow:hidden;text-align:left}
+.worldwideTicker{
+  position:relative;
+  width:100%;
+  overflow:hidden;
+  padding:12px 0;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(190,133,62,.13),transparent 58%),
+    linear-gradient(180deg,#151b24 0%,#0d131c 100%);
+  border-top:1px solid rgba(220,174,111,.24);
+  border-bottom:1px solid rgba(220,174,111,.32);
+  box-shadow:inset 0 1px rgba(255,255,255,.035),0 5px 18px rgba(0,0,0,.22);
+}
+.worldwideTicker:before,.worldwideTicker:after{
+  content:"";position:absolute;z-index:2;top:0;bottom:0;width:58px;pointer-events:none
+}
+.worldwideTicker:before{left:0;background:linear-gradient(90deg,#111822 0%,rgba(17,24,34,.78) 38%,transparent 100%)}
+.worldwideTicker:after{right:0;background:linear-gradient(270deg,#111822 0%,rgba(17,24,34,.78) 38%,transparent 100%)}
+.worldwideTickerTrack{display:flex;width:max-content;align-items:center;animation:comarcaTicker 105s linear infinite;will-change:transform}
+.worldwideTicker:hover .worldwideTickerTrack{animation-play-state:paused}
+.tickerLanguage{display:inline-flex;align-items:center;flex:none;white-space:nowrap}
+.tickerItem{
+  display:inline-flex;align-items:center;gap:9px;padding:0 30px;
+  color:#e8d7bd;font:700 11px/1.4 'DM Sans',Arial,sans-serif;
+  letter-spacing:.085em;text-transform:uppercase
+}
+.tickerItem:after{content:"✦";margin-left:28px;color:#c18a4e;font-size:9px;text-shadow:0 0 9px rgba(193,138,78,.32)}
+.tickerPayPalMark{
+  display:inline-flex;width:19px;height:19px;align-items:center;justify-content:center;
+  border:1px solid rgba(155,188,232,.65);border-radius:50%;
+  background:rgba(70,105,150,.12);color:#b8d4fa;font-size:11px;font-style:italic;font-weight:900
+}
+@keyframes comarcaTicker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:700px){
+ .worldwideTicker{padding:10px 0}
+ .worldwideTicker:before,.worldwideTicker:after{width:22px}
+ .tickerItem{padding:0 17px;font-size:9px;letter-spacing:.055em;gap:7px}
+ .tickerItem:after{margin-left:15px}
+ .tickerPayPalMark{width:16px;height:16px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .worldwideTickerTrack{animation:none;transform:none;flex-wrap:wrap;width:100%;justify-content:center;gap:8px 0}
+ .tickerLanguage{display:contents}
+ .tickerItem{white-space:normal;text-align:center;padding:4px 12px}
+ .tickerItem:after{margin-left:12px}
+}
+
+
+/* Exchange-board treatment inspired by classic financial market tickers. */
+.worldwideTicker{padding:0;background:#080909;border-top:1px solid #4b3512;border-bottom:1px solid #5a3b0c;box-shadow:inset 0 1px 0 rgba(255,211,89,.08),inset 0 -1px 0 rgba(255,174,36,.08),0 5px 18px rgba(0,0,0,.35)}
+.tickerBoardHead{min-height:25px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:4px clamp(12px,2.4vw,34px);background:linear-gradient(180deg,#171717,#0d0d0d);border-bottom:1px solid rgba(255,174,36,.22);color:#b98a35;font:700 9px/1.2 'DM Sans',Arial,sans-serif;letter-spacing:.19em}
+.tickerBoardName{color:#e6c06a}.tickerBoardName b{color:#f4d987;font-weight:900}
+.tickerBoardStatus{display:inline-flex;align-items:center;gap:8px;color:#8c7448;font-size:8px;letter-spacing:.16em}
+.tickerBoardStatus i{width:6px;height:6px;border-radius:50%;background:#e6a52e;box-shadow:0 0 7px #e6a52e;animation:boardPulse 1.8s ease-in-out infinite}
+.tickerScreen{position:relative;overflow:hidden;padding:15px 0 16px;background:repeating-linear-gradient(0deg,rgba(255,190,65,.018) 0 1px,transparent 1px 3px),radial-gradient(ellipse at 50% 50%,#211707 0%,#100d07 48%,#050606 100%)}
+.tickerScreen:before,.tickerScreen:after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:clamp(20px,5vw,65px);pointer-events:none}
+.tickerScreen:before{left:0;background:linear-gradient(90deg,#080807 0%,rgba(8,8,7,.8) 32%,transparent 100%)}
+.tickerScreen:after{right:0;background:linear-gradient(270deg,#080807 0%,rgba(8,8,7,.8) 32%,transparent 100%)}
+.worldwideTickerTrack{animation-duration:145s}.tickerLanguage{align-items:center}
+.tickerItem{padding:0 clamp(18px,2.8vw,38px);color:#ffc84d;font:700 clamp(11px,.95vw,14px)/1.4 'Courier New',Consolas,monospace;letter-spacing:.105em;text-shadow:0 0 4px rgba(255,175,35,.78),0 0 11px rgba(255,145,0,.36)}
+.tickerItem:after{content:"◆";margin-left:clamp(18px,2.8vw,38px);color:#a86d17;font-size:8px;text-shadow:0 0 7px rgba(255,158,27,.6)}
+.tickerPayPalMark{width:18px;height:18px;border:1px solid #b7862c;border-radius:2px;background:#171006;color:#ffd36a;font:900 italic 12px/1 Arial,sans-serif;text-shadow:0 0 7px rgba(255,190,70,.7)}
+@keyframes boardPulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media(max-width:700px){.tickerBoardHead{min-height:23px;padding:4px 10px;letter-spacing:.12em}.tickerBoardName{font-size:8px}.tickerBoardStatus{font-size:7px;letter-spacing:.08em}.tickerScreen{padding:13px 0}.tickerItem{font-size:10px;letter-spacing:.06em;padding:0 15px}.tickerItem:after{margin-left:15px}}
+@media(prefers-reduced-motion:reduce){.tickerBoardStatus i{animation:none}}
+
+
+/* Single-line airport departure-board ticker: one message flips at a time. */
+.worldwideShipping{padding:0!important;background:#080909!important}
+.worldwideTicker{height:48px;padding:0!important;background:#080909!important;border:0!important;border-top:1px solid #51380f!important;border-bottom:1px solid #68460e!important;box-shadow:inset 0 1px rgba(255,210,90,.08),0 3px 12px rgba(0,0,0,.3)!important}
+.tickerScreen{height:100%;min-height:0;padding:0!important;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(180deg,#19150c 0%,#090a08 48%,#171207 100%)!important;perspective:700px}
+.tickerScreen:before,.tickerScreen:after{display:none!important}
+.tickerFlipLine{width:100%;padding:0 18px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#ffc94f;font:700 clamp(11px,1.05vw,14px)/1.2 'Courier New',Consolas,monospace;letter-spacing:.12em;text-shadow:0 0 4px rgba(255,177,35,.9),0 0 12px rgba(255,145,0,.42);animation:airportFlipIn .48s cubic-bezier(.2,.75,.25,1) both;backface-visibility:hidden}
+@keyframes airportFlipIn{from{opacity:0;transform:rotateX(-88deg) translateY(-5px)}to{opacity:1;transform:rotateX(0) translateY(0)}}
+@media(max-width:700px){.worldwideTicker{height:43px}.tickerFlipLine{padding:0 10px;font-size:10px;letter-spacing:.055em}}
+@media(prefers-reduced-motion:reduce){.tickerFlipLine{animation:none}}
+
+
+/* Ticker docked directly to the sticky navigation; it scrolls like an airport ticker. */
+.siteTop{flex-wrap:wrap;row-gap:0}
+.siteTop .siteTickerDock{flex:0 0 calc(100% + 60px);width:calc(100% + 60px);margin:0 -30px -11px;order:5;min-width:0}
+.siteTop .worldwideTicker{height:38px;padding:0!important;background:#080909!important;border:0!important;border-top:1px solid #51380f!important;border-bottom:1px solid #68460e!important;box-shadow:inset 0 1px rgba(255,210,90,.08)!important}
+.siteTop .tickerScreen{height:100%;width:100%;display:flex;align-items:center;justify-content:flex-start;overflow:hidden;padding:0!important;background:linear-gradient(180deg,#19150c 0%,#090a08 48%,#171207 100%)!important}
+.siteTop .tickerScreen:before,.siteTop .tickerScreen:after{display:none!important}
+.siteTop .tickerFlipLine{display:inline-block;flex:0 0 auto;width:max-content;max-width:none;padding:0 18px;white-space:nowrap;overflow:visible;text-overflow:clip;text-align:left;color:#ffc94f;font:700 11px/1.2 'Courier New',Consolas,monospace;letter-spacing:.12em;text-shadow:0 0 4px rgba(255,177,35,.9),0 0 12px rgba(255,145,0,.42);animation:tickerTravel 15s linear both!important;backface-visibility:visible}
+@keyframes tickerTravel{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+@media(max-width:700px){
+ .siteTop .siteTickerDock{flex-basis:calc(100% + 28px);width:calc(100% + 28px);margin:0 -14px -10px}
+ .siteTop .worldwideTicker{height:34px}
+ .siteTop .tickerFlipLine{padding:0 12px;font-size:10px;letter-spacing:.055em;animation-duration:13s!important}
+}
+/* No desactivar transform ni animación: el ticker debe desplazarse también
+   cuando el sistema solicita reducir movimiento, por requisito del componente. */
+
+
+/* Ensure the airport-style crawl always travels right-to-left, including reduced-motion systems. */
+.siteTop .tickerScreen{justify-content:flex-start!important}
+.siteTop .tickerFlipLine{
+  width:max-content!important;
+  max-width:none!important;
+  flex:0 0 auto!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  animation-name:tickerTravel!important;
+  animation-duration:12s!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:1!important;
+  animation-fill-mode:forwards!important;
+}
+@keyframes tickerTravel{
+  0%{transform:translate3d(100vw,0,0)}
+  100%{transform:translate3d(-100%,0,0)}
+}
+@media(max-width:700px){
+  .siteTop .tickerFlipLine{animation-duration:11s!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .siteTop .tickerFlipLine{animation-name:tickerTravel!important;animation-duration:12s!important;animation-iteration-count:1!important}
+}
+
+
+/* Final ticker animation override: the reduced-motion shorthand previously cancelled it. */
+.siteTop .tickerFlipLine{
+  animation:tickerTravel 12s linear 1 forwards!important;
+  transform:translate3d(100vw,0,0);
+  will-change:transform;
+}
+@keyframes tickerTravel{
+  from{transform:translate3d(100vw,0,0)}
+  to{transform:translate3d(-100%,0,0)}
+}
+@media(max-width:700px){
+  .siteTop .tickerFlipLine{animation-duration:12s!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .siteTop .tickerFlipLine{animation:tickerTravel 12s linear 1 forwards!important}
+}
+
+
+/* Continuous multilingual ticker: all announcements remain in one moving line. */
+.siteTop .worldwideTicker{height:40px!important;overflow:hidden!important}
+.siteTop .tickerScreen{justify-content:flex-start!important;overflow:hidden!important}
+.siteTop .tickerContinuousTrack{display:flex!important;align-items:center!important;width:max-content!important;min-width:max-content!important;flex-wrap:nowrap!important;animation:comarcaContinuousTicker 115s linear infinite!important;will-change:transform}
+.siteTop .tickerContinuousSet{display:flex!important;align-items:center!important;flex:0 0 auto!important;width:max-content!important;white-space:nowrap!important}
+.siteTop .tickerContinuousItem{display:inline-flex!important;align-items:center!important;flex:0 0 auto!important;white-space:nowrap!important;padding:0 22px!important;color:#ffc94f!important;font:700 11px/1.2 'Courier New',Consolas,monospace!important;letter-spacing:.105em!important;text-shadow:0 0 4px rgba(255,177,35,.85),0 0 11px rgba(255,145,0,.38)}
+.siteTop .tickerContinuousDiamond{padding-left:22px;color:#a86d17;font-size:9px;text-shadow:0 0 8px rgba(255,158,27,.55)}
+@keyframes comarcaContinuousTicker{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.siteTop .tickerContinuousTrack:hover{animation-play-state:paused!important}
+/* Deep navy navigation surface with subtle blue light and a warm gold edge. */
+.top.siteTop{background:linear-gradient(112deg,rgba(7,17,31,.98) 0%,rgba(12,25,43,.98) 48%,rgba(7,14,26,.98) 100%)!important;border-bottom:1px solid rgba(198,145,68,.42)!important;box-shadow:0 12px 32px rgba(0,0,0,.52),inset 0 1px 0 rgba(112,166,220,.13)!important}
+.top.siteTop:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% -70%,rgba(54,116,177,.25),transparent 68%),linear-gradient(90deg,rgba(34,78,124,.12),transparent 28%,transparent 72%,rgba(34,78,124,.12));opacity:.9}
+.top.siteTop .mainNav.navPills a{background:linear-gradient(180deg,rgba(27,48,72,.9),rgba(10,22,37,.94))!important;border-color:rgba(115,147,180,.42)!important;box-shadow:inset 0 1px rgba(255,255,255,.06),0 4px 12px rgba(0,0,0,.22)}
+.top.siteTop .mainNav.navPills a:first-child{background:linear-gradient(180deg,rgba(87,57,25,.92),rgba(34,27,20,.96))!important;border-color:#9b6c32!important}
+.top.siteTop .topActions a{background:linear-gradient(180deg,rgba(25,43,64,.86),rgba(10,20,33,.94));border-color:rgba(115,147,180,.4)}
+@media(max-width:700px){.siteTop .tickerContinuousTrack{animation-duration:95s!important}.siteTop .tickerContinuousItem{font-size:10px!important;padding:0 14px!important}.siteTop .tickerContinuousDiamond{padding-left:14px}.top.siteTop:before{opacity:.55}}
+@media(prefers-reduced-motion:reduce){.siteTop .tickerContinuousTrack{animation-duration:180s!important}}
+
+
+/* Cabecera superior — acabado premium azul acero, oro y luz ambiental. */
+.top.siteTop{
+  position:sticky;
+  isolation:isolate;
+  overflow:visible;
+  background:
+    radial-gradient(ellipse at 50% -95%,rgba(76,143,207,.34),transparent 65%),
+    radial-gradient(ellipse at 12% 50%,rgba(25,83,139,.22),transparent 38%),
+    linear-gradient(105deg,#071321 0%,#10243a 28%,#142b43 52%,#0b1a2b 78%,#071321 100%)!important;
+  border-top:1px solid rgba(130,178,220,.22)!important;
+  border-bottom:1px solid rgba(222,171,91,.62)!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08),inset 0 -10px 24px rgba(0,0,0,.16)!important;
+}
+.top.siteTop:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.48;
+  background:
+    linear-gradient(115deg,transparent 0 17%,rgba(117,166,211,.07) 17.15%,transparent 17.4% 78%,rgba(117,166,211,.055) 78.2%,transparent 78.5%),
+    repeating-linear-gradient(90deg,transparent 0 95px,rgba(163,194,224,.025) 96px,transparent 97px 190px);
+}
+.top.siteTop .logoLink{
+  position:relative;
+  padding-right:26px;
+  border-right:1px solid rgba(148,181,211,.24);
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.45));
+}
+.top.siteTop .mainNav.navPills{gap:10px}
+.top.siteTop .mainNav.navPills a{
+  min-height:40px;
+  padding:10px 17px!important;
+  color:#e2eaf2!important;
+  background:linear-gradient(180deg,rgba(44,69,94,.82),rgba(13,29,47,.96))!important;
+  border:1px solid rgba(143,177,208,.38)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 5px 14px rgba(0,0,0,.24)!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+}
+.top.siteTop .mainNav.navPills a:hover{
+  color:#fff!important;
+  border-color:rgba(242,190,112,.9)!important;
+  background:linear-gradient(180deg,#294866,#142b43)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 0 18px rgba(79,143,201,.2)!important;
+}
+.top.siteTop .mainNav.navPills a:first-child{
+  color:#ffe0a3!important;
+  background:linear-gradient(180deg,#765126,#382918)!important;
+  border-color:#c28b42!important;
+  box-shadow:inset 0 1px 0 rgba(255,229,177,.2),0 5px 16px rgba(0,0,0,.3),0 0 14px rgba(196,139,66,.12)!important;
+}
+.top.siteTop .topActions a{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#e6edf5;
+  background:linear-gradient(180deg,rgba(35,58,81,.92),rgba(10,24,40,.98));
+  border:1px solid rgba(135,169,200,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 5px 14px rgba(0,0,0,.22);
+}
+.top.siteTop .topActions a:hover{
+  border-color:#e8b66c;
+  color:#ffe0a3;
+  box-shadow:0 0 16px rgba(225,169,89,.16);
+}
+.top.siteTop .topActions a.cartMini{
+  color:#fff8ed;
+  border-color:#e5a24d;
+  background:linear-gradient(120deg,#e9872b,#b82a2e);
+  box-shadow:0 6px 18px rgba(190,73,37,.28),inset 0 1px rgba(255,255,255,.2);
+}
+@media(max-width:900px){
+  .top.siteTop .logoLink{padding-right:14px}
+  .top.siteTop .mainNav.navPills{gap:7px}
+  .top.siteTop .mainNav.navPills a{padding:9px 12px!important}
+}
+@media(max-width:700px){
+  .top.siteTop{
+    background:
+      radial-gradient(ellipse at 50% -75%,rgba(76,143,207,.28),transparent 68%),
+      linear-gradient(110deg,#071321,#142b43 52%,#081727)!important;
+  }
+  .top.siteTop .logoLink{border-right:0;padding-right:0}
+  .top.siteTop .mainNav.navPills a{
+    min-height:35px;
+    padding:8px 12px!important;
+    background:linear-gradient(180deg,#29425c,#102238)!important;
+  }
+  .top.siteTop .mainNav.navPills a:first-child{background:linear-gradient(180deg,#765126,#382918)!important}
+  .top.siteTop .topActions a{min-height:34px}
+}
+
+
+/* Ornamentación inspirada en cartografía fantástica para la cabecera. */
+.top.siteTop{
+  --header-gold:rgba(218,169,91,.72);
+}
+.top.siteTop:after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  inset:8px 12px 46px;
+  opacity:.52;
+  border-top:1px solid var(--header-gold);
+  border-bottom:1px solid rgba(218,169,91,.48);
+  background:
+    radial-gradient(circle at 50% 50%,transparent 0 34px,rgba(91,151,201,.13) 35px 36px,transparent 37px 54px,rgba(218,169,91,.16) 55px 56px,transparent 57px),
+    repeating-conic-gradient(from 0deg at 50% 50%,rgba(119,169,209,.10) 0deg 1deg,transparent 1deg 15deg);
+  mask-image:linear-gradient(90deg,transparent 0%,#000 17%,#000 83%,transparent 100%);
+}
+.top.siteTop .mainNav.navPills a{
+  position:relative;
+  border-radius:9px!important;
+  clip-path:none;
+}
+.top.siteTop .mainNav.navPills a:before,
+.top.siteTop .topActions a:before{
+  content:"";
+  position:absolute;
+  inset:3px;
+  border:1px solid rgba(190,211,229,.09);
+  border-radius:6px;
+  pointer-events:none;
+}
+.top.siteTop .mainNav.navPills a:first-child:before{
+  border-color:rgba(255,220,157,.22);
+}
+.top.siteTop .logoLink:after{
+  content:"";
+  position:absolute;
+  right:-5px;
+  top:50%;
+  width:8px;
+  height:8px;
+  transform:translateY(-50%) rotate(45deg);
+  border:1px solid rgba(220,174,104,.72);
+  background:#10243a;
+  box-shadow:0 0 9px rgba(77,150,211,.25);
+}
+@media(max-width:700px){
+  .top.siteTop:after{inset:5px 6px 43px;opacity:.34}
+  .top.siteTop .logoLink:after{display:none}
+  .top.siteTop .mainNav.navPills a:before,
+  .top.siteTop .topActions a:before{inset:2px}
+}
+
+
+/* Reproducción fiel del concepto ilustrado: cartografía, brújula y marco dorado. */
+.top.siteTop:after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  inset:0 0 40px;
+  opacity:.96;
+  border:0;
+  background-image:url('/images/header-cartography-ornament.svg');
+  background-position:center;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  mask-image:none;
+}
+.top.siteTop:before{
+  opacity:.58;
+  background:
+    radial-gradient(ellipse at 23% 55%,rgba(15,76,120,.23),transparent 30%),
+    radial-gradient(ellipse at 76% 55%,rgba(15,76,120,.23),transparent 30%),
+    linear-gradient(90deg,rgba(3,12,22,.2),transparent 24%,transparent 76%,rgba(3,12,22,.2));
+}
+@media(max-width:700px){
+  .top.siteTop:after{
+    inset:0 0 34px;
+    opacity:.62;
+    background-size:auto 100%;
+    background-position:center;
+  }
+}
