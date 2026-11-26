@@ -694,3 +694,21 @@
 @keyframes airportFlipIn{from{opacity:0;transform:rotateX(-88deg) translateY(-5px)}to{opacity:1;transform:rotateX(0) translateY(0)}}
 @media(max-width:700px){.worldwideTicker{height:43px}.tickerFlipLine{padding:0 10px;font-size:10px;letter-spacing:.055em}}
 @media(prefers-reduced-motion:reduce){.tickerFlipLine{animation:none}}
+
+
+/* Ticker docked directly to the sticky navigation; it scrolls like an airport ticker. */
+.siteTop{flex-wrap:wrap;row-gap:0}
+.siteTop .siteTickerDock{flex:0 0 calc(100% + 60px);width:calc(100% + 60px);margin:0 -30px -11px;order:5;min-width:0}
+.siteTop .worldwideTicker{height:38px;padding:0!important;background:#080909!important;border:0!important;border-top:1px solid #51380f!important;border-bottom:1px solid #68460e!important;box-shadow:inset 0 1px rgba(255,210,90,.08)!important}
+.siteTop .tickerScreen{height:100%;width:100%;display:flex;align-items:center;justify-content:flex-start;overflow:hidden;padding:0!important;background:linear-gradient(180deg,#19150c 0%,#090a08 48%,#171207 100%)!important}
+.siteTop .tickerScreen:before,.siteTop .tickerScreen:after{display:none!important}
+.siteTop .tickerFlipLine{display:inline-block;flex:0 0 auto;width:max-content;max-width:none;padding:0 18px;white-space:nowrap;overflow:visible;text-overflow:clip;text-align:left;color:#ffc94f;font:700 11px/1.2 'Courier New',Consolas,monospace;letter-spacing:.12em;text-shadow:0 0 4px rgba(255,177,35,.9),0 0 12px rgba(255,145,0,.42);animation:tickerTravel 15s linear both!important;backface-visibility:visible}
+@keyframes tickerTravel{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+@media(max-width:700px){
+ .siteTop .siteTickerDock{flex-basis:calc(100% + 28px);width:calc(100% + 28px);margin:0 -14px -10px}
+ .siteTop .worldwideTicker{height:34px}
+ .siteTop .tickerFlipLine{padding:0 12px;font-size:10px;letter-spacing:.055em;animation-duration:13s!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .siteTop .tickerFlipLine{animation:none!important;transform:none!important;margin:auto}
+}
