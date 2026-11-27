@@ -6,7 +6,18 @@ import { supabaseBrowser } from "../../../../lib/supabase";
 import InternalTrafficEnrollment from "../../../../components/InternalTrafficEnrollment";
 
 type EventRow = { id: string; event: string; session_id: string; occurred_at: string; payload: Record<string, string | number> };
-type Tab = "resumen" | "audiencia" | "comportamiento" | "conversion";
+type Tab = "resumen" | "audiencia" | "comportamiento" | "conversion" | "busquedas";
+const TIME_ZONE = "America/Merida";
+const zonedDateKey = (value: string | Date) => new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(value));
+const localDayStartUtc = (daysAgo: number) => {
+  const now = new Date();
+  const localNow = new Date(now.toLocaleString("en-US", { timeZone: TIME_ZONE }));
+  localNow.setDate(localNow.getDate() - daysAgo);
+  localNow.setHours(0, 0, 0, 0);
+  const offset = new Date(now.toLocaleString("en-US", { timeZone: TIME_ZONE })).getTime() - now.getTime();
+  return new Date(localNow.getTime() - offset);
+};
+const localDateLabel = (date: Date) => new Intl.DateTimeFormat("es-MX", { timeZone: TIME_ZONE, day: "2-digit", month: "short" }).format(date);
 const decodeGeo = (value: string) => { try { return decodeURIComponent(value); } catch { return value; } };
 const money = (n: number) => new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
 const labels: Record<string, string> = { page_view: "Página vista", product_view: "Interacción con producto", search: "Búsqueda", category_view: "Categoría", add_to_cart: "Añadido al carrito", cart_open: "Carrito abierto", checkout_started: "Checkout iniciado", purchase: "Compra confirmada" };
@@ -41,7 +52,8 @@ export default function TrafficAnalyticsPage() {
       const { data: profile, error: profileError } = await sb.from("profiles").select("role").eq("id", auth.user.id).maybeSingle();
       if (profileError) throw profileError;
       if (profile?.role !== "admin") { router.replace("/login"); return; }
-      const since = new Date(Date.now() - days * 86400000).toISOString();
+      // Periods are calendar days in Campeche time, including today; do not use rolling 24-hour windows.
+      const since = localDayStartUtc(days - 1).toISOString();
       const { data, error: queryError } = await sb.from("analytics_events").select("id,event,session_id,occurred_at,payload").gte("occurred_at", since).order("occurred_at", { ascending: false }).limit(5000);
       if (queryError) throw queryError;
       setEvents((data || []) as EventRow[]); setTruncated((data || []).length === 5000);
@@ -96,11 +108,17 @@ export default function TrafficAnalyticsPage() {
   const topProducts = useMemo(() => { const map = new Map<string, number>(); for (const e of visibleEvents.filter(x => x.event === "product_view" || x.event === "add_to_cart")) { const id = String(e.payload.product_id || ""); if (id) map.set(id, (map.get(id) || 0) + 1); } return [...map.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8).map(([id,n])=>[productNames[id] || id.slice(0,8),n] as [string,number]); }, [visibleEvents, productNames]);
 
   const daily = useMemo(() => {
-    const today = new Date(); const start = new Date(today); start.setDate(today.getDate() - days + 1); start.setHours(0,0,0,0);
-    const buckets = Array.from({ length: days }, (_, i) => { const date = new Date(start); date.setDate(start.getDate() + i); return { date, views: 0, sessions: new Set<string>() }; });
-    const index = new Map(buckets.map((b, i) => [b.date.toISOString().slice(0,10), i]));
-    for (const e of visibleEvents) if (e.event === "page_view") { const i = index.get(new Date(e.occurred_at).toISOString().slice(0,10)); if (i !== undefined) { buckets[i].views++; buckets[i].sessions.add(e.session_id); } }
-    return buckets.map(b => ({ date: b.date, views: b.views, sessions: b.sessions.size }));
+    const buckets = Array.from({ length: days }, (_, i) => {
+      const date = localDayStartUtc(days - 1 - i);
+      return { date, key: zonedDateKey(date), views: 0, sessions: new Set<string>() };
+    });
+    const index = new Map(buckets.map((b, i) => [b.key, i]));
+    for (const event of visibleEvents) {
+      if (event.event !== "page_view") continue;
+      const i = index.get(zonedDateKey(event.occurred_at));
+      if (i !== undefined) { buckets[i].views++; buckets[i].sessions.add(event.session_id); }
+    }
+    return buckets.map(({ date, views, sessions }) => ({ date, views, sessions: sessions.size }));
   }, [visibleEvents, days]);
 
   const maxDaily = Math.max(1, ...daily.map(x => x.views));
@@ -109,14 +127,31 @@ export default function TrafficAnalyticsPage() {
   const chartArea = chartPath + (chartPoints.length ? ` L ${chartPoints[chartPoints.length - 1].x} 96 L 12 96 Z` : "");
   const funnel = [{ label: "Sesiones", value: summary.sessions }, { label: "Vieron producto", value: summary.productSessions }, { label: "Añadieron al carrito", value: summary.cartSessions }, { label: "Iniciaron checkout", value: summary.checkoutSessions }, { label: "Compra atribuida", value: summary.purchaseSessions }];
   const funnelMax = Math.max(1, funnel[0].value);
-  const tabs: { id: Tab; label: string }[] = [{ id: "resumen", label: "Resumen" }, { id: "audiencia", label: "Audiencia" }, { id: "comportamiento", label: "Comportamiento" }, { id: "conversion", label: "Conversión" }];
+  const searchEvents = visibleEvents.filter(event => event.event === "search");
+  const searchRows = useMemo(() => {
+    const map = new Map<string, { count: number; sessions: Set<string>; noResults: number; latest: string }>();
+    for (const event of searchEvents) {
+      const term = String(event.payload.search_term || "").trim();
+      if (!term) continue;
+      const key = term.toLocaleLowerCase("es-MX");
+      const current = map.get(key) || { count: 0, sessions: new Set<string>(), noResults: 0, latest: event.occurred_at };
+      current.count++;
+      current.sessions.add(event.session_id);
+      if (Number(event.payload.results_count) === 0) current.noResults++;
+      if (event.occurred_at > current.latest) current.latest = event.occurred_at;
+      map.set(key, current);
+    }
+    return [...map.entries()].map(([term, value]) => ({ term, ...value })).sort((a,b) => b.count-a.count);
+  }, [visibleEvents]);
+  const noResultSearches = searchRows.filter(row => row.noResults > 0).sort((a,b) => b.noResults-a.noResults);
+  const tabs: { id: Tab; label: string }[] = [{ id: "resumen", label: "Resumen" }, { id: "audiencia", label: "Audiencia" }, { id: "comportamiento", label: "Comportamiento" }, { id: "conversion", label: "Conversión" }, { id: "busquedas", label: "Búsquedas" }];
 
   return <>
-    <header className="top"><a href="/admin/metricas">← Métricas</a><b>La Comarca · Inteligencia</b><div className="actions"><select aria-label="Periodo" value={days} onChange={e => setDays(Number(e.target.value))}><option value="7">7 días</option><option value="30">30 días</option><option value="90">90 días</option></select><button className="btn2" onClick={load} disabled={loading}>↻ Actualizar</button></div></header>
+    <header className="top"><a href="/admin/metricas">← Métricas</a><b>La Comarca · Inteligencia</b><div className="actions"><select aria-label="Periodo" value={days} onChange={e => setDays(Number(e.target.value))}><option value="1">Hoy</option><option value="2">Ayer y hoy</option><option value="7">7 días naturales</option><option value="30">30 días</option><option value="90">90 días</option></select><button className="btn2" onClick={load} disabled={loading}>↻ Actualizar</button></div></header>
     <main className="wrap" style={{ maxWidth: 1440 }}>
       <div className="panel" style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
-          <div><div className="muted" style={{ fontSize: 12, letterSpacing: ".08em", textTransform: "uppercase" }}>Centro de inteligencia comercial</div><h1 style={{ margin: "5px 0", fontSize: "clamp(24px,3vw,34px)" }}>¿Qué está pasando en La Comarca?</h1><p className="muted" style={{ margin: 0 }}>{trafficMode === "external" ? "Tráfico externo · excluye dispositivos internos registrados" : "Tráfico total · incluye dispositivos internos"} · Últimos {days} días</p></div>
+          <div><div className="muted" style={{ fontSize: 12, letterSpacing: ".08em", textTransform: "uppercase" }}>Centro de inteligencia comercial</div><h1 style={{ margin: "5px 0", fontSize: "clamp(24px,3vw,34px)" }}>¿Qué está pasando en La Comarca?</h1><p className="muted" style={{ margin: 0 }}>{trafficMode === "external" ? "Tráfico externo · excluye dispositivos internos registrados" : "Tráfico total · incluye dispositivos internos"} · {days === 1 ? "Hoy" : days === 2 ? "Ayer y hoy" : `Últimos ${days} días naturales`} · hora de Campeche</p></div>
           <div className="muted" style={{ fontSize: 12 }}>{loading ? "Actualizando datos…" : `Actualizado ${new Date().toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}`}</div>
         </div>
         {error && <div className="notice" style={{ border: "1px solid #dc2626", marginTop: 14 }}>⚠️ {error}</div>}
@@ -149,7 +184,7 @@ export default function TrafficAnalyticsPage() {
 
       {tab === "resumen" && <>
         <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 16 }}>
-          <section className="panel"><h2>Actividad del sitio</h2><p className="muted">Páginas vistas por día</p>{daily.some(d => d.views > 0) ? <><svg viewBox="0 0 320 112" role="img" aria-label="Gráfica de páginas vistas por día" style={{ width: "100%", height: 180, overflow: "visible" }}><path d={chartArea} fill="#16a34a" opacity=".12"/><path d={chartPath} fill="none" stroke="#16a34a" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/>{chartPoints.filter((_,i)=>i===0 || i===chartPoints.length-1 || i%Math.max(1,Math.floor(days/7))===0).map((p,i)=><circle key={i} cx={p.x} cy={p.y} r="3" fill="#16a34a"/>)}<line x1="8" y1="96" x2="312" y2="96" stroke="currentColor" opacity=".18"/></svg><div className="muted" style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}><span>{shortDate(daily[0].date)}</span><span>{shortDate(daily[daily.length-1].date)}</span></div></> : <p className="muted">Todavía no hay páginas vistas en este periodo.</p>}</section>
+          <section className="panel"><h2>Actividad del sitio</h2><p className="muted">Páginas vistas por día</p>{daily.some(d => d.views > 0) ? <><svg viewBox="0 0 320 112" role="img" aria-label="Gráfica de páginas vistas por día" style={{ width: "100%", height: 180, overflow: "visible" }}><path d={chartArea} fill="#16a34a" opacity=".12"/><path d={chartPath} fill="none" stroke="#16a34a" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/>{chartPoints.filter((_,i)=>i===0 || i===chartPoints.length-1 || i%Math.max(1,Math.floor(days/7))===0).map((p,i)=><circle key={i} cx={p.x} cy={p.y} r="3" fill="#16a34a"/>)}<line x1="8" y1="96" x2="312" y2="96" stroke="currentColor" opacity=".18"/></svg><div className="muted" style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}><span>{localDateLabel(daily[0].date)}</span><span>{localDateLabel(daily[daily.length-1].date)}</span></div></> : <p className="muted">Todavía no hay páginas vistas en este periodo.</p>}</section>
           <Ranking title="Páginas más visitadas" rows={topPages} empty="Aún no hay páginas registradas." />
         </div>
         <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 16, marginTop: 16 }}>
@@ -174,6 +209,20 @@ export default function TrafficAnalyticsPage() {
         <section className="panel"><h2>Acciones en la tienda</h2>{[["Búsquedas", visibleEvents.filter(e=>e.event==="search").length],["Carritos abiertos",summary.cartOpens],["Añadidos al carrito",summary.carts],["Checkouts iniciados",summary.checkouts]].map(([name,n])=><div className="row" key={String(name)}><span>{name}</span><b>{Number(n).toLocaleString("es-MX")}</b></div>)}</section>
       </div>}
 
+      {tab === "busquedas" && <>
+        <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 12 }}>
+          <Metric label="Búsquedas registradas" value={searchEvents.length.toLocaleString("es-MX")} detail="Eventos capturados" />
+          <Metric label="Términos distintos" value={searchRows.length.toLocaleString("es-MX")} detail="Búsquedas únicas por texto" />
+          <Metric label="Intentos sin resultados" value={searchEvents.filter(event => Number(event.payload.results_count) === 0).length.toLocaleString("es-MX")} detail="El catálogo no mostró coincidencias" />
+          <Metric label="Sesiones que buscaron" value={new Set(searchEvents.map(event => event.session_id)).size.toLocaleString("es-MX")} detail="Navegadores con búsqueda" />
+        </div>
+        <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 16, marginTop: 16 }}>
+          <section className="panel"><h2>Términos más buscados</h2>{searchRows.length ? <div style={{ overflowX: "auto" }}><table className="table"><thead><tr><th>Término</th><th>Búsquedas</th><th>Sesiones</th><th>Sin resultados</th></tr></thead><tbody>{searchRows.slice(0,20).map(row => <tr key={row.term}><td><b>{row.term}</b></td><td>{row.count}</td><td>{row.sessions.size}</td><td>{row.noResults}</td></tr>)}</tbody></table></div> : <p className="muted">Aún no hay términos de búsqueda disponibles. Los eventos antiguos que solo guardaban la longitud del texto no pueden reconstruir el término.</p>}</section>
+          <section className="panel"><h2>Búsquedas sin resultados</h2>{noResultSearches.length ? <div style={{ overflowX: "auto" }}><table className="table"><thead><tr><th>Término</th><th>Intentos</th><th>Sesiones</th><th>Último intento</th></tr></thead><tbody>{noResultSearches.slice(0,20).map(row => <tr key={row.term}><td><b>{row.term}</b></td><td>{row.noResults}</td><td>{row.sessions.size}</td><td>{new Date(row.latest).toLocaleString("es-MX", { timeZone: TIME_ZONE })}</td></tr>)}</tbody></table></div> : <p className="muted">No se han registrado búsquedas sin resultados con término disponible en este periodo.</p>}</section>
+        </div>
+        <section className="panel" style={{ marginTop: 16 }}><h2>Actividad de búsqueda por sesión</h2><p className="muted">Identificadores anónimos del navegador; no permiten identificar directamente a una persona.</p>{searchEvents.length ? <div style={{ overflowX: "auto" }}><table className="table"><thead><tr><th>Fecha (Campeche)</th><th>Sesión</th><th>Término</th><th>Resultados</th><th>Ciudad</th></tr></thead><tbody>{searchEvents.slice(0,50).map(event => <tr key={event.id}><td>{new Date(event.occurred_at).toLocaleString("es-MX", { timeZone: TIME_ZONE })}</td><td><code>{event.session_id.slice(0,8)}</code></td><td>{String(event.payload.search_term || "Término no disponible")}</td><td>{event.payload.results_count === undefined ? "—" : String(event.payload.results_count)}</td><td>{decodeGeo(String(event.payload.city || "—"))}</td></tr>)}</tbody></table></div> : <p className="muted">No hay búsquedas registradas en el periodo seleccionado.</p>}</section>
+      </>}
+
       {tab === "conversion" && <>
         <section className="panel"><h2>Embudo de compra</h2><p className="muted">Sesiones que registraron cada paso. Una misma sesión puede realizar varias acciones.</p><div style={{ display: "grid", gap: 18, maxWidth: 760, marginTop: 20 }}>{funnel.map((step, i) => <div key={step.label} style={{ display: "grid", gap: 7 }}><div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}><b>{i+1}. {step.label}</b><span>{step.value.toLocaleString("es-MX")} <span className="muted">· {summary.sessions ? ((step.value / summary.sessions) * 100).toFixed(1) : "0.0"}%</span></span></div><div style={{ height: 15, background: "var(--muted, #e5e7eb)", borderRadius: 20, overflow: "hidden" }}><div style={{ width: `${(step.value / funnelMax) * 100}%`, height: "100%", background: "#16a34a", borderRadius: 20, minWidth: step.value ? 3 : 0 }} /></div></div>)}</div><p className="muted" style={{ marginTop: 20, fontSize: 12 }}>La compra solo se atribuye cuando el pago confirmado regresa a la página de resultado y se registra en esa sesión. El embudo refleja los eventos disponibles, no necesariamente todas las compras reales.</p></section>
         <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 12 }}><Metric label="Carritos abiertos" value={summary.cartOpens} detail="Aperturas registradas" /><Metric label="Añadidos" value={summary.carts} detail="Eventos de carrito" /><Metric label="Checkouts" value={summary.checkouts} detail="Inicios registrados" /><Metric label="Ventas atribuidas" value={money(summary.revenue)} detail={`${summary.purchases} compras confirmadas`} /></div>
@@ -182,7 +231,7 @@ export default function TrafficAnalyticsPage() {
       <section className="panel" style={{ marginTop: 16 }}><div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}><div><h2 style={{ marginBottom: 4 }}>Actividad reciente</h2><p className="muted" style={{ margin: 0 }}>Sesiones anónimas del periodo · No identifica personas</p></div><span className="muted" style={{ fontSize: 12 }}>{sessions.length} sesiones</span></div>
         {loading ? <div className="empty">Cargando actividad…</div> : sessions.length ? <div style={{ overflowX: "auto", marginTop: 12 }}><table className="table"><thead><tr><th>Sesión</th><th>Tipo</th><th>Ubicación</th><th>Origen</th><th>Páginas</th><th>Acciones</th><th>Última actividad</th></tr></thead><tbody>{sessions.slice(0, 30).map(s => <tr key={s.id} style={s.internalDevice ? { background: "rgba(22,163,74,.10)" } : undefined}><td><code>{s.id.slice(0, 8)}</code></td><td>{s.internalDevice ? <span style={{ display: "inline-flex", alignItems: "center", gap: 5, borderRadius: 999, padding: "4px 9px", background: "rgba(22,163,74,.18)", color: "#4ade80", border: "1px solid rgba(74,222,128,.35)", fontSize: 11, fontWeight: 800, whiteSpace: "nowrap" }}><span style={{ width: 7, height: 7, borderRadius: 99, background: "#22c55e" }} />{s.internalDevice === "store_pc" ? "PC LA COMARCA" : s.internalDevice === "marco_mobile_chrome" ? "MÓVIL MARCO" : "INTERNO"}</span> : <span className="muted" style={{ fontSize: 12 }}>Cliente</span>}</td><td>{s.city}{s.region ? ", " + s.region : ""} · {s.country}</td><td>{s.source}</td><td>{s.pages.length ? s.pages.join(" → ") : "—"}</td><td>{s.rows.map(x => labels[x.event] || x.event).join(" · ")}</td><td>{new Date(s.latest.occurred_at).toLocaleString("es-MX")}</td></tr>)}</tbody></table></div> : <div className="empty">Todavía no hay sesiones registradas. Navega por la tienda para generar eventos.</div>}
       </section>
-      <p className="muted" style={{ fontSize: 12, textAlign: "center", margin: "18px 0" }}>Datos anónimos. No se almacenan direcciones IP, nombres, correos ni términos de búsqueda. Las sesiones representan navegadores, no personas únicas.</p>
+      <p className="muted" style={{ fontSize: 12, textAlign: "center", margin: "18px 0" }}>Datos anónimos. No se almacenan direcciones IP, nombres ni correos. Los términos de búsqueda se registran con filtros para omitir textos que parezcan datos de contacto. Las sesiones representan navegadores, no personas únicas.</p>
     </main>
   </>;
 }

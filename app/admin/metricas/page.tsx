@@ -29,6 +29,10 @@ type Audit = {
 const isPlaceholderProduct = (name: string) =>
   /^producto al azar(?:\s+\d+)?$/i.test((name || "").trim());
 
+// League admission tickets are registrations, not retail inventory or merchandise sales.
+const isLeagueTicket = (name: string) =>
+  /^entrada a la liga\s*[–-]/i.test((name || "").trim());
+
 // Only confirmed/fulfilled orders represent sales. Pending, contacted and
 // cancelled orders must not inflate revenue.
 const SALE_STATUSES = new Set(["paid", "preparing", "shipped", "completed"]);
@@ -162,7 +166,7 @@ export default function Metrics() {
   const rows = useMemo(() => {
     // Demo placeholders are excluded from reporting, but never deleted or
     // modified in the database. Inventory uses currently published products.
-    const reportCards = cards.filter((card) => !isPlaceholderProduct(card.name));
+    const reportCards = cards.filter((card) => !isPlaceholderProduct(card.name) && !isLeagueTicket(card.name));
     const activeCards = reportCards.filter((card) => card.published);
 
     return cats.map((cat) => {
