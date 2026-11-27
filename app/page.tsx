@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import FacebookFeed from "../components/FacebookFeed";
 import BrandLogo from "../components/BrandLogo";
-import ProductCarousel from "../components/ProductCarousel";
+import ProductBackdrop from "../components/ProductBackdrop";
 import ShippingMessage from "../components/ShippingMessage";
 
 const lines=[
@@ -14,13 +14,36 @@ const accountStyles=`
 .leagueEntry{margin:28px auto 0;position:relative;overflow:hidden;border:1px solid rgba(240,180,91,.28);border-radius:20px;background:linear-gradient(135deg,#0c121b,#101827 55%,#0d1118);box-shadow:0 16px 45px rgba(0,0,0,.28)}.leagueEntry:before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle at 20% 40%,rgba(245,158,11,.12),transparent 24%),radial-gradient(circle at 80% 55%,rgba(124,58,237,.13),transparent 26%);pointer-events:none}.leagueEntryInner{position:relative;z-index:1;padding:25px}.leagueEntryHead{text-align:center;margin-bottom:20px}.leagueEntryKicker{color:#f0b45b;font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}.leagueEntryTitle{margin:6px 0 5px;color:#fff;font-family:'Cinzel',Georgia,serif;font-size:clamp(22px,4vw,32px)}.leagueEntrySub{margin:0;color:#9fa9b7;font-size:12px}.leagueEntryGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.leagueEntryCard{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:78px;padding:14px 16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;color:#fff;transition:.18s ease}.leagueEntryCard:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3);box-shadow:0 10px 25px rgba(0,0,0,.25)}.leagueEntryCard.pkm{background:linear-gradient(135deg,#d88908,#f59e0b)}.leagueEntryCard.mtg{background:linear-gradient(135deg,#253448,#3b4c63)}.leagueEntryCard.hcx{background:linear-gradient(135deg,#6530c7,#7c3aed)}.leagueEntryCardMain{display:flex;flex-direction:column;gap:4px}.leagueEntryCard strong{font-size:15px}.leagueEntryCard small{font-size:10px;opacity:.86}.leagueEntryPrice{font-size:15px;font-weight:900;white-space:nowrap}.leagueEntryAction{display:flex;justify-content:center;margin-top:16px}.leagueEntryButton{display:inline-flex;align-items:center;justify-content:center;padding:11px 22px;border-radius:999px;background:linear-gradient(135deg,#f0b45b,#d68b27);color:#15100b;font-size:11px;font-weight:900;letter-spacing:.08em;box-shadow:0 8px 22px rgba(214,139,39,.2)}.leagueEntryButton:hover{transform:translateY(-1px);filter:brightness(1.06)}@media(max-width:700px){.leagueEntry{margin-top:22px;border-radius:16px}.leagueEntryInner{padding:20px 14px}.leagueEntryGrid{grid-template-columns:1fr;gap:8px}.leagueEntryCard{min-height:64px;padding:12px 14px}.leagueEntryButton{width:100%}}`;
 const accountBrands=[["Pokémon","pokemon"],["Magic: The Gathering","magic"],["Yu-Gi-Oh!","yugioh"],["One Piece","onepiece"],["Disney Lorcana","lorcana"],["Weiß Schwarz","weiss"],["Gundam Card Game","gundam"],["hololive","hololive"],["RIFTBOUND","riftbound"],["Dungeons & Dragons","dnd"],["HeroClix","hero"],["Juegos de Mesa","hobby"],["Modelismo","hobby"],["Accesorios","hobby"]];
 
-export default function Home(){return <div className="siteShell"><style>{accountStyles}</style>
+export default function Home(){return <div className="siteShell"><style>{accountStyles}
+.accountBackdrop{position:relative;isolation:isolate;min-height:520px;overflow:hidden;background:radial-gradient(ellipse at center,#17243a 0%,#0a101b 55%,#060a11 100%);border-top:1px solid rgba(240,180,91,.2);border-bottom:1px solid rgba(240,180,91,.2)}
+.productBackdropLayer{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.productBackdropImage{position:absolute;display:block;object-fit:contain;filter:drop-shadow(0 12px 16px rgba(0,0,0,.65));opacity:.78;user-select:none;pointer-events:none}
+.accountBackdrop .accountHero{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:520px;margin:0;padding:42px 20px;background:transparent;border:0;overflow:visible;isolation:isolate;text-align:center}
+.accountBackdrop .accountHero:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(5,9,18,.12),rgba(5,9,18,.48) 68%,rgba(5,9,18,.15));pointer-events:none;z-index:-1}
+.accountBackdrop .accountCopy{width:min(620px,92%);max-width:620px;padding:38px 34px;border:1px solid rgba(240,180,91,.48);border-radius:22px;background:linear-gradient(145deg,rgba(12,20,33,.94),rgba(8,13,23,.91));box-shadow:0 24px 80px rgba(0,0,0,.58),0 0 38px rgba(65,122,190,.12);backdrop-filter:blur(10px);text-align:center}
+.accountBackdrop .accountKicker{font-size:11px;letter-spacing:.22em;color:#f0b45b;margin-bottom:16px}
+.accountBackdrop .accountHero h1{font-size:clamp(42px,6vw,68px);line-height:.98;letter-spacing:-.04em}
+.accountBackdrop .accountHero h1 span{display:block;background:linear-gradient(90deg,#f6d28b,#f0a64d,#fff0c5);-webkit-background-clip:text;background-clip:text;color:transparent;filter:none}
+.accountIntro{margin:18px 0 0;color:#d2d9e4;font-size:14px;line-height:1.5}
+.accountBackdrop .accountButton{display:inline-flex;align-items:center;justify-content:center;margin-top:26px;min-height:52px;padding:14px 24px;border:1px solid #f5c879;border-radius:12px;background:linear-gradient(110deg,#a85b1c,#e5a343);color:#17100a;font-size:13px;font-weight:900;letter-spacing:.035em;box-shadow:0 8px 28px rgba(213,139,50,.28);transition:transform .2s,filter .2s}
+.accountBackdrop .accountButton:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.accountBackdrop .accountVisuals{display:none}
+@media(max-width:700px){.accountBackdrop,.accountBackdrop .accountHero{min-height:560px}.accountBackdrop .accountHero{padding:28px 14px}.accountBackdrop .accountCopy{width:min(100%,440px);padding:30px 18px;border-radius:18px}.accountBackdrop .accountHero h1{font-size:42px}.accountBackdrop .accountButton{width:100%;font-size:11px;padding:13px 10px}.productBackdropImage{opacity:.52}}
+</style>
 
 <header className="top siteTop"><Link href="/" className="logoLink"><BrandLogo/></Link><nav className="mainNav navPills"><Link href="/catalogo">Catálogo</Link><Link href="/tickets">Ligas</Link><a href="#comunidad">Comunidad</a><Link href="/eventos">Eventos</Link></nav><div className="topActions"><Link href="/cuenta">♙ Clientes</Link><Link href="/catalogo" className="cartMini">🛒 Carrito</Link></div><div className="siteTickerDock"><ShippingMessage/></div></header>
 <main>
 
-<ProductCarousel/>
-<Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca"><div className="accountCopy"><div className="accountKicker">18 AÑOS · LLEVANDO DIVERSIÓN A TODO MÉXICO</div><h1>CREA TU <span>CUENTA HOY</span></h1><div className="accountBenefits"><span>◈ COMPRA</span><span>◇ COLECCIONA</span><span>♧ DISFRUTA</span></div><div className="accountButton">♙ &nbsp; CREAR CUENTA &nbsp; →</div></div><div className="accountVisuals" aria-hidden="true"><div className="brandTitle">TUS MUNDOS FAVORITOS</div><div className="brandGrid">{accountBrands.map(([name,key],i)=><div className={`brandLogo ${key}`} key={name+i}>{name}</div>)}</div><div className="brandFooter">La Comarca · TCG & Hobby</div></div></Link>
+<ProductBackdrop>
+<section className="accountHero" aria-label="Acceso de clientes La Comarca">
+  <div className="accountCopy">
+    <div className="accountKicker">LA COMARCA · TCG & HOBBY</div>
+    <h1>ENTRA A <span>TU COMARCA</span></h1>
+    <p className="accountIntro">Compra, colecciona y forma parte de nuestra comunidad.</p>
+    <Link href="/cuenta" className="accountButton">♙ &nbsp; INICIAR SESIÓN / CREAR CUENTA &nbsp; →</Link>
+  </div>
+</section>
+</ProductBackdrop>
 <section id="comunidad" className="wrap benefits"><div><b>◈</b><span><strong>Envíos a todo México</strong><small>Envíos seguros y rápidos</small></span></div><div><b>◇</b><span><strong>Tienda 100% segura</strong><small>Protección en tus compras</small></span></div><div><b>♧</b><span><strong>Personalized Customer Service</strong><small>Estamos para ayudarte</small></span></div><div><b>♙</b><span><strong>Comunidad La Comarca</strong><small>Eventos, torneos y más</small></span></div></section>
 <section className="wrap feedSection"><div className="sectionTitle"><h2>Últimas publicaciones</h2><a href="https://www.facebook.com/ComarcaTCG" target="_blank" rel="noreferrer">Ver Facebook →</a></div><FacebookFeed/></section></main>
 <footer className="siteFooter"><BrandLogo/><span>La Comarca · Campeche, México · TCG · Juegos · Coleccionismo · Hobby</span></footer></div>}
