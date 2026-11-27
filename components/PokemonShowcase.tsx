@@ -109,7 +109,7 @@ export default function PokemonShowcase() {
         </Link>
       </section>
       <style jsx>{`
-        .accountHero{position:absolute;left:50%;right:auto;top:50%;transform:translate(-50%,-50%);z-index:50;display:flex;align-items:center;width:min(66%,900px);min-height:210px;overflow:hidden;text-decoration:none;background:radial-gradient(circle at 82% 45%,rgba(255,0,220,.2),transparent 27%),radial-gradient(circle at 12% 50%,rgba(0,220,255,.16),transparent 32%),linear-gradient(115deg,#050819,#0b0920 52%,#16051f);border-top:1px solid rgba(0,238,255,.3);border-bottom:1px solid rgba(255,40,220,.45);isolation:isolate}
+        .accountHero{position:absolute;left:50%;right:auto;top:50%;transform:translate(-50%,-50%);z-index:20;display:flex;align-items:center;width:min(66%,900px);min-height:210px;overflow:hidden;text-decoration:none;background:radial-gradient(circle at 82% 45%,rgba(255,0,220,.2),transparent 27%),radial-gradient(circle at 12% 50%,rgba(0,220,255,.16),transparent 32%),linear-gradient(115deg,#050819,#0b0920 52%,#16051f);border-top:1px solid rgba(0,238,255,.3);border-bottom:1px solid rgba(255,40,220,.45);isolation:isolate}
         .accountHero:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 150px,rgba(0,220,255,.035) 151px,rgba(255,30,220,.07) 152px,transparent 154px);pointer-events:none}
         .accountHero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,#00eaff,#ff20e7,#00eaff,transparent);box-shadow:0 0 15px #00eaff,0 0 30px #ff20e7}
         .accountCopy{position:relative;z-index:3;width:55%;padding:24px 14px 22px clamp(22px,4vw,58px);box-sizing:border-box}
