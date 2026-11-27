@@ -72,7 +72,7 @@ export default function PokemonShowcase() {
       <div className="verticalTrack">
         {[0, 1].map(copy => <div className="verticalSet" key={copy} aria-hidden={copy === 1}>
           {items.map((card, index) => <div className="verticalCard" key={`${copy}-${card.id}`}>
-            <img src={card.image_url || ""} alt={copy === 0 ? card.name : ""} loading={index === 0 && copy === 0 ? "eager" : "lazy"} fetchPriority={index === 0 && copy === 0 ? "high" : "low"} decoding="async" draggable={false} style={{ display: "block", width: "100%", height: "100%", maxWidth: "100%", maxHeight: "100%", objectFit: "contain", flex: "0 0 auto" }} onError={e => { e.currentTarget.style.display = "none"; }}/>
+            <img src={card.image_url || ""} alt={copy === 0 ? card.name : ""} loading={index === 0 && copy === 0 ? "eager" : "lazy"} fetchPriority={index === 0 && copy === 0 ? "high" : "low"} decoding="async" draggable={false} onError={e => { e.currentTarget.style.display = "none"; }}/>
           </div>)}
         </div>)}
       </div>
@@ -92,14 +92,14 @@ export default function PokemonShowcase() {
         </div>
         {error && <div className="loadNotice">{error}</div>}
         {!loading && !error && !cards.length && <div className="loadNotice">No hay cartas disponibles en este momento.</div>}
-        <Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca" style={{ position: "absolute", display: "flex", alignItems: "center", left: "50%", right: "auto", top: "50%", transform: "translate(-50%,-50%)", zIndex: 9999, width: "min(66%, 900px)", minHeight: "210px", overflow: "hidden", textDecoration: "none", background: "radial-gradient(circle at 82% 45%, rgba(255,0,220,.2), transparent 27%), radial-gradient(circle at 12% 50%, rgba(0,220,255,.16), transparent 32%), linear-gradient(115deg,#050819,#0b0920 52%,#16051f)", borderTop: "1px solid rgba(0,238,255,.3)", borderBottom: "1px solid rgba(255,40,220,.45)" }}>
-          <div className="accountCopy" style={{ position: "relative", zIndex: 3, width: "55%", padding: "24px 14px 22px clamp(22px,4vw,58px)", boxSizing: "border-box" }}>
-            <div className="accountKicker">18 AÑOS · LLEVANDO DIVERSIÓN A TODO MÉXICO</div>
+        <Link href="/cuenta" className="accountHero" aria-label="Crear cuenta en La Comarca">
+          <div className="accountCopy">
+            <div className="accountKicker">15 AÑOS · LLEVANDO DIVERSIÓN A TODO MÉXICO</div>
             <h1>CREA TU <span>CUENTA HOY</span></h1>
             <div className="accountBenefits"><span>◈ COMPRA</span><span>◇ COLECCIONA</span><span>♧ DISFRUTA</span></div>
             <div className="accountButton">♙ &nbsp; CREAR CUENTA &nbsp; →</div>
           </div>
-          <div className="accountVisuals" aria-hidden="true" style={{ position: "absolute", right: "2%", top: 0, width: "42%", height: "100%", padding: "24px 2.5% 22px", boxSizing: "border-box", display: "flex", flexDirection: "column", justifyContent: "center", zIndex: 2 }}>
+          <div className="accountVisuals" aria-hidden="true">
             <div className="brandTitle">TUS MUNDOS FAVORITOS</div>
             <div className="brandGrid">
               {["Pokémon","Magic: The Gathering","Yu-Gi-Oh!","One Piece","Disney Lorcana","Weiß Schwarz","Gundam Card Game","hololive","RIFTBOUND","Dungeons & Dragons","HeroClix","Juegos de Mesa","Modelismo","Accesorios"].map((name,i) => <div className={`brandLogo brand-${i}`} key={name}>{name}</div>)}
