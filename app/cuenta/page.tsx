@@ -14,7 +14,7 @@ e.preventDefault();setBusy(true);setErr("");setMsg("");setBlocked(false);setRegi
 const normalizedEmail=email.trim().toLowerCase();
 const requiredValues=[name,phone,address,city,state,postalCode,country];
 if(requiredValues.some(value=>!value.trim())){setErr("Completa todos los campos obligatorios antes de solicitar tu cuenta.");setBusy(false);return}
-if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(normalizedEmail)){setErr("Escribe un correo electrónico válido.");setBusy(false);return}
+if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)){setErr("Escribe un correo electrónico válido.");setBusy(false);return}
 if(password.length<8){setErr("La contraseña debe tener al menos 8 caracteres.");setBusy(false);return}
 try{
 const{data,error}=await sb.auth.signUp({email:normalizedEmail,password,options:{data:{full_name:name.trim(),phone:phone.trim(),shipping_address:address.trim(),shipping_city:city.trim(),shipping_state:state.trim(),shipping_postal_code:postalCode.trim(),shipping_country:country.trim()}}});
