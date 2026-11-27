@@ -71,7 +71,7 @@ export default function PokemonShowcase() {
     <div className={`verticalViewport ${column % 2 ? "down" : "up"}`} key={column}>
       <div className="verticalTrack">
         {[0, 1].map(copy => <div className="verticalSet" key={copy} aria-hidden={copy === 1}>
-          {items.map((card, index) => <div className="verticalCard" key={`${copy}-${card.id}`} style={{ width: "76px", height: "106px", minWidth: "76px", maxWidth: "76px", minHeight: "106px", maxHeight: "106px", flex: "0 0 106px", boxSizing: "border-box" }}>
+          {items.map((card, index) => <div className="verticalCard" key={`${copy}-${card.id}`}>
             <img src={card.image_url || ""} alt={copy === 0 ? card.name : ""} loading={index === 0 && copy === 0 ? "eager" : "lazy"} fetchPriority={index === 0 && copy === 0 ? "high" : "low"} decoding="async" draggable={false} style={{ display: "block", width: "100%", height: "100%", maxWidth: "100%", maxHeight: "100%", objectFit: "contain", flex: "0 0 auto" }} onError={e => { e.currentTarget.style.display = "none"; }}/>
           </div>)}
         </div>)}
@@ -188,7 +188,7 @@ export default function PokemonShowcase() {
         @keyframes scrollDown{from{transform:translate3d(0,-50%,0)}to{transform:translate3d(0,0,0)}}
         @keyframes orbFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-9px) rotate(5deg)}}
         @keyframes spin{to{transform:rotate(360deg)}}
-        @media(max-width:700px){.columnsStage{min-height:100svh}.desktopColumns{display:none!important}.mobileColumns{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:8px 4px}.verticalViewport{border-radius:8px}.verticalSet{gap:9px;padding:7px 0}.verticalCard{width:60px;height:84px;max-width:60px;max-height:84px;padding:2px}.verticalTrack{animation-duration:34s}.verticalViewport.down .verticalTrack{animation-duration:39s}.centerBanner{width:94%;min-height:220px;padding:22px 16px}.bannerCopy{max-width:76%}.bannerCopy h1{font-size:clamp(25px,6vw,32px)}.bannerCopy p{font-size:10px;line-height:1.5}.bannerCopy>span{font-size:7px}.bannerButton{padding:11px 12px;gap:9px;font-size:8px}.bannerOrb{width:58px;height:58px;box-shadow:0 0 0 7px #e6b45a0b}.orbBall{width:38px;height:38px;border-width:3px}.orbBall i{width:15px;height:15px;border-width:3px}}
+        @media(max-width:700px){.columnsStage{min-height:100svh}.desktopColumns{display:none!important}.mobileColumns{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:8px 4px}.verticalViewport{border-radius:8px}.verticalSet{gap:9px;padding:7px 0}.verticalCard{width:60px;height:84px;max-width:60px;max-height:84px;padding:2px}.cardSkeleton{width:60px;height:84px;flex:0 0 84px}.verticalTrack{animation-duration:34s}.verticalViewport.down .verticalTrack{animation-duration:39s}.centerBanner{width:94%;min-height:220px;padding:22px 16px}.bannerCopy{max-width:76%}.bannerCopy h1{font-size:clamp(25px,6vw,32px)}.bannerCopy p{font-size:10px;line-height:1.5}.bannerCopy>span{font-size:7px}.bannerButton{padding:11px 12px;gap:9px;font-size:8px}.bannerOrb{width:58px;height:58px;box-shadow:0 0 0 7px #e6b45a0b}.orbBall{width:38px;height:38px;border-width:3px}.orbBall i{width:15px;height:15px;border-width:3px}}
         @media(prefers-reduced-motion:reduce){.verticalTrack,.bannerOrb,.showcaseLoading span,.cardSkeleton{animation:none!important}.verticalTrack{transform:translate3d(0,0,0)}}
       `}</style>
     </main>
