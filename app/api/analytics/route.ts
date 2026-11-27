@@ -36,7 +36,13 @@ function safePayload(input: Record<string, unknown>, request: NextRequest) {
     payload.query_length = Math.max(0, Math.min(120, Number(input.query_length)));
   }
   const searchTerm = cleanText(input.search_term, 120);
-  if (searchTerm) payload.search_term = searchTerm;
+  const looksLikeEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(searchTerm);
+  const looksLikePhone = /\+?\d[\d\s().-]{7,}\d/.test(searchTerm);
+  if (searchTerm && !looksLikeEmail && !looksLikePhone) payload.search_term = searchTerm;
+  const deploymentEnvironment = process.env.VERCEL_ENV;
+  if (deploymentEnvironment === "preview" || deploymentEnvironment === "production" || deploymentEnvironment === "development") {
+    payload.deployment_environment = deploymentEnvironment;
+  }
   if (Number.isInteger(input.results_count)) {
     payload.results_count = Math.max(0, Math.min(100000, Number(input.results_count)));
   }
