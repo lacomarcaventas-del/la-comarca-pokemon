@@ -35,6 +35,11 @@ function safePayload(input: Record<string, unknown>, request: NextRequest) {
   if (Number.isInteger(input.query_length)) {
     payload.query_length = Math.max(0, Math.min(120, Number(input.query_length)));
   }
+  const searchTerm = cleanText(input.search_term, 120);
+  if (searchTerm) payload.search_term = searchTerm;
+  if (Number.isInteger(input.results_count)) {
+    payload.results_count = Math.max(0, Math.min(100000, Number(input.results_count)));
+  }
   if (typeof input.value === "number" && Number.isFinite(input.value) && input.value >= 0 && input.value <= 1000000) {
     payload.value = Math.round(input.value * 100) / 100;
     payload.currency = "MXN";
